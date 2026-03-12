@@ -165,7 +165,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		MIKU(		"Hatsune Miku",		"In your wifi, and your heart.", "hbm:block.miku"),
 		NERU(		"Akita Neru",		"Careful, she might electrocute you.", "hbm:block.akita"),
 		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy"),
-		COPPER(		"Copper",			"One hard shell taco...", "hbm:block.squeakyToy"),
+		COPPER(		"Copper",			"One hard shell taco...", "hbm:block.copper"),
 		CREPER(		"Mr. Creper",			"When the", "hbm:block.squeakyToy");
 
 		public String label;
