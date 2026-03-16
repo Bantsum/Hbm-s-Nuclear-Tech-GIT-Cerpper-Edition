@@ -1501,6 +1501,12 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 						new OreDictStack(AL.plate(), 8),
 						new ComparableStack(ModItems.motor, 4)));
 
+		// astrosmurf
+		this.register(new GenericRecipe("ass.astroturf").setup(100, 100).outputItems(new ItemStack(ModBlocks.astroturf, 16))
+				.inputItems(
+						new ComparableStack(Blocks.dirt, 16),
+						new OreDictStack(ANY_PLASTIC.ingot(), 1)));
+
 
 		/// UNBEND ///
 

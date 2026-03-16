@@ -37,9 +37,6 @@ import com.hbm.util.Compat;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.material.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -604,6 +601,7 @@ public class ModBlocks {
 	public static Block vinyl_planks;
 	public static Block pvc_planks;
 
+	public static Block astroturf;
 
 	public static Block fallout;
 	public static Block salted_fallout;
@@ -1228,6 +1226,8 @@ public class ModBlocks {
 	public static Block rbmk_console;
 	public static Block rbmk_crane_console;
 	public static Block rbmk_display;
+	public static Block rbmk_key_pad;
+	public static Block rbmk_gauge;
 	public static Block rbmk_autoloader;
 	public static Block rbmk_loader;
 	public static Block rbmk_steam_inlet;
@@ -2406,6 +2406,8 @@ public class ModBlocks {
 		rbmk_console = new RBMKConsole().setBlockName("rbmk_console").setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":rbmk/rbmk_console");
 		rbmk_crane_console = new RBMKCraneConsole().setBlockName("rbmk_crane_console").setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":rbmk/rbmk_crane_console");
 		rbmk_display = new RBMKDisplay().setBlockName("rbmk_display").setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":rbmk/rbmk_display");
+		rbmk_key_pad = new RBMKKeyPad().setBlockName("rbmk_key_pad").setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":rbmk/rbmk_display");
+		rbmk_gauge = new RBMKGauge().setBlockName("rbmk_gauge").setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":rbmk/rbmk_display");
 		rbmk_autoloader = new RBMKAutoloader().setBlockName("rbmk_autoloader").setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F).setBlockTextureName(RefStrings.MODID + ":rbmk_autoloader");
 		rbmk_loader = new RBMKLoader(Material.iron).setBlockName("rbmk_loader").setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F).setBlockTextureName(RefStrings.MODID + ":rbmk_loader");
 		rbmk_steam_inlet = new RBMKInlet(Material.iron).setBlockName("rbmk_steam_inlet").setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F).setBlockTextureName(RefStrings.MODID + ":rbmk_steam_inlet");
@@ -2691,6 +2693,8 @@ public class ModBlocks {
 		pet_leaves = new BlockRubberLeaves().setBlockName("pet_leaves").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F).setBlockTextureName(RefStrings.MODID + ":pet_leaves");
 		vinyl_planks = new BlockGeneric(Material.wood).setBlockName("vinyl_planks").setStepSound(Block.soundTypeWood).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(1.0F).setBlockTextureName(RefStrings.MODID + ":vinyl_planks");
 		pvc_planks = new BlockGeneric(Material.wood).setBlockName("pvc_planks").setStepSound(Block.soundTypeWood).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(1.0F).setBlockTextureName(RefStrings.MODID + ":pvc_planks");
+
+		astroturf = new BlockAstroturf(Material.grass).setBlockName("astroturf").setStepSound(Block.soundTypeGrass).setCreativeTab(MainRegistry.blockTab).setHardness(0.6F);
 
 		// stop self flagellating and do something about it
 		lattice_log = new BlockLogNT(RefStrings.MODID + ":rad_log_side", RefStrings.MODID + ":rad_log_top").setBlockName("lattice_log").setStepSound(Block.soundTypeWood).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.5F);
@@ -3283,8 +3287,6 @@ public class ModBlocks {
 		GameRegistry.registerBlock(tumor, tumor.getUnlocalizedName());
 
 
-		//todo: get rid of this
-		//oops
 		GameRegistry.registerBlock(primed_log, primed_log.getUnlocalizedName());
 		GameRegistry.registerBlock(eu_log, eu_log.getUnlocalizedName());
 		GameRegistry.registerBlock(bf_log, bf_log.getUnlocalizedName());
@@ -3300,6 +3302,8 @@ public class ModBlocks {
 		GameRegistry.registerBlock(vinyl_vines, vinyl_vines.getUnlocalizedName());
 		GameRegistry.registerBlock(vinyl_log, vinyl_log.getUnlocalizedName());
 		GameRegistry.registerBlock(pet_leaves, pet_leaves.getUnlocalizedName());
+
+		GameRegistry.registerBlock(astroturf, astroturf.getUnlocalizedName());
 
 		//RAD
 		register(sellafield_slaked);
@@ -3589,6 +3593,8 @@ public class ModBlocks {
 		GameRegistry.registerBlock(rbmk_console, rbmk_console.getUnlocalizedName());
 		GameRegistry.registerBlock(rbmk_crane_console, rbmk_crane_console.getUnlocalizedName());
 		register(rbmk_display);
+		register(rbmk_key_pad);
+		register(rbmk_gauge);
 		register(rbmk_autoloader);
 		register(rbmk_loader);
 		register(rbmk_steam_inlet);
