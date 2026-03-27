@@ -1,26 +1,28 @@
 package com.hbm.dim.trait;
 
+import com.hbm.dim.CelestialBody;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class CBT_Destroyed extends CelestialBodyTrait {
 
-	public float interp;
+	public float destProgress;
 
 	public CBT_Destroyed() {}
 
-	public CBT_Destroyed(float interp) {
-		this.interp = interp;
+	public CBT_Destroyed(float destProgress) {
+		this.destProgress = destProgress;
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setFloat("interp", interp);
+		nbt.setFloat("destProgress", destProgress);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		interp = nbt.getFloat("interp");
+		destProgress = nbt.getFloat("destProgress");
 	}
 
 	@Override
@@ -34,11 +36,11 @@ public class CBT_Destroyed extends CelestialBodyTrait {
 	}
 
 	@Override
-	public void update(boolean isRemote) {
+	public void update(boolean isRemote, CelestialBody body) {
 		if(isRemote) {
-			interp = Math.min(201.0f, interp + 0.0025f * (201.0f - interp) * 0.15f);
-			if (interp >= 200) {
-				interp = 0;
+			destProgress = Math.min(201.0f, destProgress + 0.0025f * (201.0f - destProgress) * 0.15f);
+			if (destProgress >= 200) {
+				destProgress = 0;
 			}
 		}
 	}

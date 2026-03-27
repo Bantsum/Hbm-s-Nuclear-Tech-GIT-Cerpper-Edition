@@ -64,7 +64,7 @@ public class CBT_War extends CelestialBodyTrait {
 	}
 
 	@Override
-	public void update(boolean isremote) {
+	public void update(boolean isremote, CelestialBody body) {
 		if(!isremote) {
 			if(this != null) {
 				for(int i = 0; i < this.getProjectiles().size(); i++) {
@@ -80,7 +80,7 @@ public class CBT_War extends CelestialBodyTrait {
 						this.destroyProjectile(projectile);
 						World targetWorld = MinecraftServer.getServer().worldServerForDimension(projectile.getTarget());
 						i--;
-						System.out.println("damaged: " + targetWorld + " health left: " + this.health);
+						//System.out.println("damaged: " + targetWorld + " health left: " + this.health);
 
 						if(this.health > 0) {
 							CelestialBody.damage(projectile.getDamage(), targetWorld);

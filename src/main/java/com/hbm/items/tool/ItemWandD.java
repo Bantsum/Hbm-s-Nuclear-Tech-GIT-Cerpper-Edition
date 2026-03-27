@@ -1,6 +1,7 @@
 package com.hbm.items.tool;
 
 import java.util.List;
+import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.SpaceConfig;
@@ -10,9 +11,14 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
+import com.hbm.entity.missile.EntityBobmazon;
+import com.hbm.entity.missile.EntityCombatDropPod;
+import com.hbm.entity.mob.glyphid.EntityGlyphid;
 import com.hbm.dim.trait.CBT_Destroyed;
 import com.hbm.lib.Library;
 
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -53,6 +59,8 @@ public class ItemWandD extends Item {
 				}
 
 			} else {
+
+				
 				int targetId = stack.stackTagCompound.getInteger("dim");
 				targetId++;
 

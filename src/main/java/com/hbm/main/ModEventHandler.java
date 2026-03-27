@@ -40,7 +40,9 @@ import com.hbm.entity.missile.EntityRideableRocket;
 import com.hbm.entity.missile.EntityRideableRocket.RocketState;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.mob.EntityCyberCrab;
+import com.hbm.entity.mob.EntityUFO;
 import com.hbm.entity.mob.siege.EntitySiegeCraft;
+import com.hbm.entity.mob.siege.EntitySiegeUFO;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
 import com.hbm.entity.train.EntityRailCarBase;
@@ -125,6 +127,7 @@ import net.minecraft.command.CommandGameRule;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -386,17 +389,44 @@ public class ModEventHandler {
 				player.triggerAchievement(MainRegistry.bobHidden);
 			}
 		}
+		CelestialBody body = CelestialBody.getBody(event.entity.worldObj);
 
-		if(event.entity instanceof EntitySiegeCraft) {
+		CBT_Invasion alien = body.getTrait(CBT_Invasion.class);
+		if(alien != null) {
+			if(event.entity instanceof EntitySiegeUFO) {
 
-			CelestialBody body = CelestialBody.getBody(event.entity.worldObj);
-			CBT_Invasion alien = body.getTrait(CBT_Invasion.class);
+				alien.kills++;
 
-			if(alien == null) return;
-			alien.Increment();
+				body.modifyTraits(alien);
+			}else if (event.entity instanceof EntitySiegeCraft) {
+				alien.kills += 3;
+				
+				body.modifyTraits(alien);
+			}
+			
+			if(alien.wave >= 4 && event.entity instanceof EntityUFO) {
+				HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> currentTraits = body.getTraits(event.entity.worldObj);
 
-			body.modifyTraits(alien);
+				currentTraits.remove(CBT_Invasion.class);
+
+			        for (Object obj : event.entity.worldObj.playerEntities) {
+			            if (obj instanceof EntityPlayer) {
+			                EntityPlayer player = (EntityPlayer) obj;
+			                player.addChatComponentMessage(
+			                    new ChatComponentText("The Invasion Is Over!")
+			                        .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))
+			                );
+			            }
+			        }
+			   
+				
+				body.setTraits(event.entity.worldObj, currentTraits);
+
+
+			}
 		}
+
+
 		if(!event.entityLiving.worldObj.isRemote) {
 
 			if(event.source==ModDamageSource.eve)
@@ -714,6 +744,9 @@ public class ModEventHandler {
 		boolean isFlying = event.entity instanceof EntityPlayer ? ((EntityPlayer) event.entity).capabilities.isFlying : false;
 
 		if(!isFlying) {
+			if(event.entity instanceof EntityFlying) {
+				return;
+			}
 			float gravity = CelestialBody.getGravity(event.entityLiving);
 
 			if(gravity == 0) {
@@ -924,15 +957,15 @@ public class ModEventHandler {
 				}
 			}
 		}
-		if(event.phase == Phase.END) {
-			CelestialBody body = CelestialBody.getBody(event.world);
-			CBT_Invasion alien = body.getTrait(CBT_Invasion.class);
+		//if(event.phase == Phase.END) {
+			//CelestialBody body = CelestialBody.getBody(event.world);
+			//CBT_Invasion alien = body.getTrait(CBT_Invasion.class);
 
-			if(alien == null) return;
-			alien.SpawnAttempt(event.world);
+			//if(alien == null) return;
+			//alien.SpawnAttempt(event.world);
 
-			body.modifyTraits(alien);
-		}
+			//body.modifyTraits(alien);
+		//}
 
 	}
 
@@ -1121,6 +1154,7 @@ public class ModEventHandler {
 		EntityLivingBase e = event.entityLiving;
 
 		float gravity = CelestialBody.getGravity(e);
+		
 
 		// Reduce fall damage on low gravity bodies
 		if(gravity < 0.3F) {
@@ -1518,7 +1552,8 @@ public class ModEventHandler {
 				for(CelestialBody body : CelestialBody.getAllBodies()) {
 					List<CelestialBodyTrait> traits = new ArrayList<>(body.getTraits().values());
 					for (CelestialBodyTrait trait : traits) {
-						trait.update(false);
+						trait.update(false, body);
+					
 					}
 				}
 
@@ -1952,4 +1987,6 @@ public class ModEventHandler {
 			}
 		}
 	}
+
+	
 }

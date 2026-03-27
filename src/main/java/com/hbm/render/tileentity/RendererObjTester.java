@@ -20,6 +20,14 @@ public class RendererObjTester extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.2, z + 0.5);
 		GL11.glDisable(GL11.GL_CULL_FACE);
+		bindTexture(ResourceManager.combat_pod_skin_yellow);
+		
+		ResourceManager.combat_pod.renderAllExcept("hatch1");
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+		
+		GL11.glPopMatrix();
+		
+		/*
 		long time = tileEntity.getWorldObj().getTotalWorldTime();
 		double sine = Math.sin(time * 0.05) * 15;
 		double sin3 = Math.sin(time * 0.05 + Math.PI * 0.5) * 15;

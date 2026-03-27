@@ -7,11 +7,16 @@ import com.hbm.dim.CelestialBody;
 import com.hbm.dim.trait.CBT_Impact;
 import com.hbm.dim.trait.CBT_Invasion;
 import com.hbm.dim.trait.CelestialBodyTrait;
+import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBaseNT;
+import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.explosion.ExplosionNukeSmall;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
+import com.hbm.items.weapon.sedna.factory.XFactory762mm;
+import com.hbm.items.weapon.sedna.factory.XFactoryEnergy;
+import com.hbm.items.weapon.sedna.factory.XFactoryFlamer;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -55,7 +60,23 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 	public int beamTimer;
 	private Entity target;
 	private List<Entity> secondaries = new ArrayList();
-
+	
+	private double lockedX;
+	private double lockedY;
+	private double lockedZ;
+	
+	private int aoeCooldown = 0;
+	private int aoeStage = 0;
+	private int aoeTimer = 0;
+	private Vec3[] strikepositions = new Vec3[3];
+	private int[] strikeTimers = new int[3];
+	private boolean[] strikeArmed = new boolean[3];
+	
+	public int gatlingCharge;
+	public boolean isChargingGatling;
+	
+	
+	
 	public EntityBFAngel(World p_i1587_1_) {
 		super(p_i1587_1_);
 		this.setSize(5F, 4F);
@@ -87,7 +108,7 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20000.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10000.0D);
 	}
 
 	@Override
@@ -180,16 +201,16 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 
 			if(this.target != null) {
 				double dist = Math.abs(this.target.posX - this.posX) + Math.abs(this.target.posZ - this.posZ);
-				if(dist < 25)
-					this.beamTimer = 30;
+				//if(dist < 25)
+					//this.beamTimer = 30;
 			}
 
 			if(beamTimer > 0) {
 				this.beamTimer--;
 
 				if(!this.getBeam()) {
-					worldObj.playSoundAtEntity(this, "hbm:entity.ufoBeam", 10.0F, 1.0F);
-					this.setBeam(true);
+					//worldObj.playSoundAtEntity(this, "hbm:entity.ufoBeam", 10.0F, 1.0F);
+					//this.setBeam(true);
 				}
 
 				int ix = (int)Math.floor(this.posX);
@@ -198,10 +219,10 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 
 				for(int i = (int)Math.ceil(this.posY); i >= 0; i--) {
 
-					if(this.worldObj.getBlock(ix, i, iz) != Blocks.air) {
-						iy = i;
-						break;
-					}
+					//if(this.worldObj.getBlock(ix, i, iz) != Blocks.air) {
+						//iy = i;
+						//break;
+					//}
 				}
 
 				if(iy < this.posY) {
@@ -224,75 +245,181 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 				}
 			}
 
-			if(this.ticksExisted % 300 < 200) {
 
-				if(this.ticksExisted % 4 == 0) {
+			if (this.ticksExisted % 300 < 200) {
 
-					if(!this.secondaries.isEmpty()){
-						Entity e = this.secondaries.get(rand.nextInt(this.secondaries.size()));
+				if (!this.secondaries.isEmpty()) {
+					Entity e = this.secondaries.get(rand.nextInt(this.secondaries.size()));
 
-						if(!e.isEntityAlive())
-							this.secondaries.remove(e);
-						else
-							laserAttack(e);
-
-					} else if(this.target != null) {
-						laserAttack(this.target);
-					}
-
-				} else if(this.ticksExisted % 4 == 2) {
-					if(this.target != null) {
-						laserAttack(this.target);
+					if (!e.isEntityAlive()) {
+						this.secondaries.remove(e);
+						e = null;
 					}
 				}
+
+				if (this.target != null) {
+
+					if (!isChargingGatling) {
+						isChargingGatling = true;
+						gatlingCharge = 70;
+					} else {
+
+						if (gatlingCharge > 10) {
+							lockedX = this.target.posX;
+							lockedY = this.target.posY;
+							lockedZ = this.target.posZ;
+						}
+
+						gatlingCharge--;
+
+						if (gatlingCharge == 30) {
+							worldObj.playSoundAtEntity(this, "hbm:entity.bfatalk", 10.0F, 1.0F);
+						}
+
+						if (gatlingCharge <= 0) {
+							fireBeamAt(lockedX, lockedY, lockedZ);
+
+							isChargingGatling = false;
+							gatlingCharge = 0;
+						}
+					}
+				}
+
 			} else {
 
-				if(this.ticksExisted % 20 == 0) {
+				if (this.ticksExisted % 20 == 0) {
 
-					if(!this.secondaries.isEmpty()){
+					if (!this.secondaries.isEmpty()) {
 						Entity e = this.secondaries.get(rand.nextInt(this.secondaries.size()));
 
-						if(!e.isEntityAlive())
-							this.secondaries.remove(e);
-						else
+						if (e.isEntityAlive()) {
 							rocketAttack(e);
+						} else {
+							this.secondaries.remove(e);
+						}
 
-					} else if(this.target != null) {
+					} else if (this.target != null) {
 						rocketAttack(this.target);
 					}
 
-				} else if(this.ticksExisted % 20 == 10) {
-					if(this.target != null) {
+				} else if (this.ticksExisted % 4 == 2) {
+
+					if (this.target != null) {
 						rocketAttack(this.target);
 					}
 				}
 			}
-
 		}
+		if(this.target != null) {
 
+			    if(aoeCooldown <= 0 && aoeStage == 0) {
+			        aoeStage = 1;
+
+			        for(int i = 0; i < 3; i++) {
+
+			            double offsetX = (rand.nextDouble() - 0.5) * 12;
+			            double offsetZ = (rand.nextDouble() - 0.5) * 12;
+
+			            strikepositions[i] = Vec3.createVectorHelper(
+			                target.posX + offsetX,
+			                target.posY,
+			                target.posZ + offsetZ
+			            );
+
+			            strikeTimers[i] = -i * 4; 
+			            strikeArmed[i] = true;
+			        }
+
+			        aoeCooldown = 200;
+			    }
+
+			    for(int i = 0; i < 3; i++) {
+
+			        if(strikeArmed[i]) {
+
+			            strikeTimers[i]++;
+
+			            if(strikeTimers[i] < 0) continue;
+
+			            Vec3 pos = strikepositions[i];
+
+			            if(strikeTimers[i] < 60 && strikeTimers[i] % 5 == 0) {
+			                NBTTagCompound fx = new NBTTagCompound();
+			                fx.setString("type", "vanillaburst");
+			                fx.setString("mode", "reddust");
+			                fx.setDouble("motion", 0.2D);
+			                fx.setInteger("count", 35);
+					  worldObj.playSoundEffect(pos.xCoord, pos.yCoord, pos.zCoord, "hbm:weapon.stingerLockOn", 1.0F, 1F);
+
+			                PacketThreading.createAllAroundThreadedPacket(
+			                    new AuxParticlePacketNT(fx, pos.xCoord, pos.yCoord, pos.zCoord),
+			                    new TargetPoint(this.dimension, pos.xCoord, pos.yCoord, pos.zCoord, 100)
+			                );
+			            }
+
+			            if(strikeTimers[i] >= 60) {
+			       	  fireDownwardBeamAt(pos.xCoord, pos.yCoord, pos.zCoord);
+			                strikeArmed[i] = false;
+			            }
+			        }
+			    }
+
+			    boolean allDone = true;
+			    for(int i = 0; i < 3; i++) {
+			        if(strikeArmed[i]) {
+			            allDone = false;
+			            break;
+			        }
+			    }
+
+			    if(allDone) {
+			        aoeStage = 0;
+			    }
+
+			    if(aoeCooldown > 0) {
+			        aoeCooldown--;
+			    }
+			}
 		this.motionX = 0;
 		this.motionY = 0;
 		this.motionZ = 0;
 
-		if(this.courseChangeCooldown > 0) {
+		if (this.target != null) {
 
-			double deltaX = this.getX() - this.posX;
-			double deltaY = this.getY() - this.posY;
-			double deltaZ = this.getZ() - this.posZ;
-			Vec3 delta = Vec3.createVectorHelper(deltaX, deltaY, deltaZ);
-			double len = delta.lengthVector();
-			double speed = this.target instanceof EntityPlayer ? 0.5D : 0.5D;
+		    if (this.courseChangeCooldown <= 0) {
 
-			if(len > 5) {
-				if(isCourseTraversable(this.getX(), this.getY(), this.getZ(), len)) {
-					this.motionX = delta.xCoord * speed / len;
-					this.motionY = delta.yCoord * speed / len;
-					this.motionZ = delta.zCoord * speed / len;
-				} else {
-					this.courseChangeCooldown = 0;
-				}
-			}
+		        double angle = rand.nextDouble() * Math.PI * 2;
+		        double radius = 15 + rand.nextInt(10);
+
+		        
+		        int targetX = (int)(this.target.posX + Math.cos(angle) * radius);
+		        int targetZ = (int)(this.target.posZ + Math.sin(angle) * radius);
+		        int targetY = (int)(this.target.posY + 5 + rand.nextInt(5));
+
+		        this.setWaypoint(targetX, targetY, targetZ);
+
+		        this.courseChangeCooldown = 85;
+		    }
+
+		    if (this.courseChangeCooldown <= 10) {
+
+		        double dx = this.getX() - this.posX;
+		        double dy = this.getY() - this.posY;
+		        double dz = this.getZ() - this.posZ;
+
+		        Vec3 dir = Vec3.createVectorHelper(dx, dy, dz).normalize();
+
+		        double t = this.courseChangeCooldown / 15.0; 
+		        double dashSpeed = 2.0D * t;
+
+		        this.motionX = dir.xCoord * dashSpeed;
+		        this.motionY = dir.yCoord * dashSpeed;
+		        this.motionZ = dir.zCoord * dashSpeed;
+		    }
+
+		    this.courseChangeCooldown--;
 		}
+	
 		if (this.target != null) {
 			    double dx = this.target.posX - this.posX;
 			    double dy = this.target.posY + this.target.height * 0.5 - (this.posY + 1);
@@ -321,60 +448,110 @@ public class EntityBFAngel extends EntityFlying implements IMob, IBossDisplayDat
 		}
 
 		if(this.deathTime == 19 && !worldObj.isRemote) {
-			worldObj.newExplosion(this, posX, posY, posZ, 10F, true, true);
-			ExplosionNukeSmall.explode(worldObj, posX, posY, posZ, ExplosionNukeSmall.PARAMS_MEDIUM);
+			NBTTagCompound data = new NBTTagCompound();
+			data.setString("type", "tinytot");
+			PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY + 0.5, posZ), new TargetPoint(this.dimension, posX, posY, posZ, 250));
+			worldObj.playSoundEffect(posX, posY, posZ, "hbm:weapon.mukeExplosion", 15.0F, 1.0F);
+			
+			this.entityDropItem(new ItemStack(ModItems.core_angel, 1, 0), 1);
 
 			List<EntityPlayer> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(200, 200, 200));
 
 			
 			for(EntityPlayer player : players) {
 				player.addChatComponentMessage(new ChatComponentText("Stars are starting to flicker...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-				player.triggerAchievement(MainRegistry.bossUFO);
-				player.inventory.addItemStackToInventory(new ItemStack(ModItems.coin_ufo));
 			}
-			if(!worldObj.isRemote) {
-				CelestialBody body = CelestialBody.getBody(worldObj);
-				body.modifyTraits(new CBT_Invasion(0, 1500, false));
+			
+			CelestialBody body = CelestialBody.getBody(worldObj);
+
+			CBT_Invasion invasion = body.getTrait(CBT_Invasion.class);
+
+			if (invasion == null) {
+				body.modifyTraits(new CBT_Invasion(0, 122, false));
+
 			}
+
+			
 		}
 
 		super.onDeathUpdate();
 	}
 
-	private void laserAttack(Entity e) {
+	private void fireBeamAt(double x, double y, double z) {
 
-		Vec3 vec = Vec3.createVectorHelper(this.posX - e.posX, 0, this.posZ - e.posZ);
-		vec.rotateAroundY((float) Math.toRadians(-80 + rand.nextInt(160)));
-		vec = vec.normalize();
+		    double spawnX = this.posX - 1;
+		    double spawnY = this.posY + 4;
+		    double spawnZ = this.posZ;
 
-		double pivotX = this.posX - vec.xCoord * 10;
-		double pivotY = this.posY + 0.5;
-		double pivotZ = this.posZ - vec.zCoord * 10;
+		    EntityBulletBeamBase bullet = new EntityBulletBeamBase(this,XFactoryEnergy.energy_tesla_overcharge.setKnockback(0),8F);
 
-		Vec3 heading = Vec3.createVectorHelper(e.posX - pivotX, e.posY + e.height / 2 - pivotY, e.posZ - pivotZ);
-		heading = heading.normalize();
+		    bullet.setPosition(spawnX, spawnY, spawnZ);
 
-		EntityBulletBaseNT bullet = new EntityBulletBaseNT(this.worldObj, BulletConfigSyncingUtil.WORM_LASER);
-		bullet.setThrower(this);
-		bullet.setPosition(pivotX, pivotY, pivotZ);
-		bullet.setThrowableHeading(heading.xCoord, heading.yCoord, heading.zCoord, 2F, 0.02F);
-		this.worldObj.spawnEntityInWorld(bullet);
-		this.playSound("hbm:weapon.ballsLaser", 5.0F, 1.0F);
-	}
+		    Vec3 delta = Vec3.createVectorHelper(
+		        x - spawnX,
+		        y - spawnY,
+		        z - spawnZ
+		    );
+
+		    bullet.setRotationsFromVector(delta);
+
+		    bullet.performHitscanExternal(250D);
+
+		    this.worldObj.spawnEntityInWorld(bullet);
+		    this.playSound("hbm:entity.bfashoot", 5.0F, 1.0F);
+		}
+	
+	private void fireDownwardBeamAt(double x, double y, double z) {
+
+		    double spawnX = x;
+		    double spawnY = y + 40;
+		    double spawnZ = z;
+
+		    EntityBulletBeamBase bullet = new EntityBulletBeamBase(
+		        this,
+		        XFactoryEnergy.energy_tesla_overcharge.setKnockback(0),
+		        6F
+		    );
+
+		    bullet.setPosition(spawnX, spawnY, spawnZ);
+
+		    Vec3 delta = Vec3.createVectorHelper( 0,-1,0);
+
+		    bullet.setRotationsFromVector(delta);
+
+		    bullet.performHitscanExternal(250D);
+
+		    this.worldObj.spawnEntityInWorld(bullet);
+
+		    this.playSound("hbm:entity.bfashoot", 5.0F, 1.0F);
+		}
 
 	private void rocketAttack(Entity e) {
 
-		Vec3 heading = Vec3.createVectorHelper(e.posX - this.posX, e.posY + e.height / 2 - posY - 0.5D, e.posZ - this.posZ);
-		heading = heading.normalize();
+		    Vec3 heading = Vec3.createVectorHelper(
+		        e.posX - this.posX,
+		        e.posY + e.height / 2.0 - this.posY - 0.5D,
+		        e.posZ - this.posZ
+		    );
 
-		EntityBulletBaseNT bullet = new EntityBulletBaseNT(this.worldObj, BulletConfigSyncingUtil.UFO_ROCKET);
-		bullet.setThrower(this);
-		bullet.setPosition(this.posX, this.posY - 0.5D, this.posZ);
-		bullet.setThrowableHeading(heading.xCoord, heading.yCoord, heading.zCoord, 2F, 0.02F);
-		bullet.getEntityData().setInteger("homingTarget", e.getEntityId());
-		this.worldObj.spawnEntityInWorld(bullet);
-		this.playSound("hbm:turret.richard_fire", 5.0F, 1.0F);
-	}
+		    heading = heading.normalize();
+
+		    EntityBulletBaseMK4 bullet = new EntityBulletBaseMK4(
+		        this,
+		        XFactoryFlamer.flame_balefire.setKnockback(0),
+		        0.5F, 1, 0, 0, 0
+		    );
+
+		    bullet.setThrower(this);
+
+		    double speed = 1.0; 
+		    bullet.motionX = heading.xCoord * speed;
+		    bullet.motionY = heading.yCoord * speed;
+		    bullet.motionZ = heading.zCoord * speed;
+
+		    this.worldObj.spawnEntityInWorld(bullet);
+		    this.playSound("hbm:turret.richard_fire", 5.0F, 1.0F);
+		}
 
 	@Override
 	public boolean canAttackClass(Class clazz) {
