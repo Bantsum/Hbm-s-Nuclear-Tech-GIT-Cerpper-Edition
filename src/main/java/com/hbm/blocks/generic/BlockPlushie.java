@@ -167,6 +167,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy"),
 		COPPER(		"Copper",			"One hard shell taco...", "hbm:block.copper"),
 		CREPER(		"Mr. Creper",			"When the", "hbm:block.squeakyToy");
+		//GOLD_COPPER(	"Golden Copper",	"I love to beat up children", "hbm:block.copper");
 
 		public String label;
 		public String inscription;

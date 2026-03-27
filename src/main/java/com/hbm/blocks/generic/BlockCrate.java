@@ -60,6 +60,8 @@ public class BlockCrate extends BlockFalling {
 		BlockCrate.addToListWithWeight(crateList, ModItems.grenade_mk2, 4);
 		BlockCrate.addToListWithWeight(crateList, ModItems.grenade_flare, 4);
 		BlockCrate.addToListWithWeight(crateList, ModItems.ammo_container, 2);
+		//BlockCrate.addToListWithWeight(crateList, ModItems.can_red, 2);
+		//BlockCrate.addToListWithWeight(crateList, ModItems.can_blue, 3);
 
 		// Weapon Crate
 		BlockCrate.addToListWithWeight(weaponList, ModItems.gun_light_revolver, 10);
@@ -69,6 +71,7 @@ public class BlockCrate extends BlockFalling {
 		BlockCrate.addToListWithWeight(weaponList, ModItems.gun_liberator, 2);
 		BlockCrate.addToListWithWeight(weaponList, ModItems.gun_flaregun, 8);
 		BlockCrate.addToListWithWeight(weaponList, ModItems.gun_panzerschreck, 1);
+		//BlockCrate.addToListWithWeight(weaponList, ModItems.can_cabo, 4);
 
 		// Lead Crate
 		BlockCrate.addToListWithWeight(leadList, ModItems.ingot_uranium, 10);
@@ -94,6 +97,7 @@ public class BlockCrate extends BlockFalling {
 		BlockCrate.addToListWithWeight(leadList, ModItems.pellet_rtg, 6);
 		BlockCrate.addToListWithWeight(leadList, ModItems.pellet_rtg_weak, 7);
 		BlockCrate.addToListWithWeight(leadList, ModItems.powder_yellowcake, 10);
+		//BlockCrate.addToListWithWeight(leadList, ModItems.can_baja, 6);
 
 		// Metal Crate
 		BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_press), 10);
@@ -114,6 +118,8 @@ public class BlockCrate extends BlockFalling {
 		BlockCrate.addToListWithWeight(metalList, ModItems.coil_copper, 10);
 		BlockCrate.addToListWithWeight(metalList, ModItems.blade_titanium, 3);
 		BlockCrate.addToListWithWeight(metalList, ModItems.piston_selenium, 6);
+		//BlockCrate.addToListWithWeight(metalList, ModItems.can_flash, 8);
+		//BlockCrate.addToListWithWeight(metalList, ModItems.can_splash, 9);
 
 		// Red Crate
 		BlockCrate.addToListWithWeight(redList, ModItems.mysteryshovel, 1);
@@ -130,6 +136,7 @@ public class BlockCrate extends BlockFalling {
 		BlockCrate.addToListWithWeight(redList, ModItems.flame_pony, 1);
 		BlockCrate.addToListWithWeight(redList, Item.getItemFromBlock(ModBlocks.ntm_dirt), 1);
 		BlockCrate.addToListWithWeight(redList, Item.getItemFromBlock(ModBlocks.broadcaster_pc), 1);
+		BlockCrate.addToListWithWeight(redList, ModItems.can_mid, 1);
 	}
 
 	public void dropItems(World world, int x, int y, int z) {

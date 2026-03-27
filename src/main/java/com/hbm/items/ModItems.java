@@ -1026,6 +1026,7 @@ public class ModItems {
 	public static Item animan;
 
 	public static Item can_empty;
+	public static Item can_gold;
 	public static Item can_smart;
 	public static Item can_creature;
 	public static Item can_redbomb;
@@ -1035,6 +1036,15 @@ public class ModItems {
 	public static Item can_bepis;
 	public static Item can_breen;
 	public static Item can_mug;
+	public static Item can_dew;
+	public static Item can_red;
+	public static Item can_blue;
+	public static Item can_baja;
+	public static Item can_cabo;
+	public static Item can_splash;
+	public static Item can_flash;
+	public static Item can_mid;
+	public static Item can_shiny;
 	public static Item mucho_mango;
 	public static Item bottle_empty;
 	public static Item bottle_nuka;
@@ -3369,6 +3379,8 @@ public class ModItems {
 		hard_drive = new Item().setUnlocalizedName("hard_drive").setMaxStackSize(64).setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":votv_e");
 
 		can_empty = new Item().setUnlocalizedName("can_empty").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":can_empty");
+		can_shiny = new Item().setUnlocalizedName("can_shiny").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":can_shiny");
+		can_gold = new ItemModCan(100F).setUnlocalizedName("can_gold").setTextureName(RefStrings.MODID + ":can_gold");
 		can_smart = new ItemEnergy().makeCan().setUnlocalizedName("can_smart").setTextureName(RefStrings.MODID + ":can_smart");
 		can_creature = new ItemEnergy().makeCan().setUnlocalizedName("can_creature").setTextureName(RefStrings.MODID + ":can_creature");
 		can_redbomb = new ItemEnergy().makeCan().setUnlocalizedName("can_redbomb").setTextureName(RefStrings.MODID + ":can_redbomb");
@@ -3378,6 +3390,14 @@ public class ModItems {
 		can_bepis = new ItemEnergy().makeCan().setUnlocalizedName("can_bepis").setTextureName(RefStrings.MODID + ":can_bepis");
 		can_breen = new ItemEnergy().makeCan().setUnlocalizedName("can_breen").setTextureName(RefStrings.MODID + ":can_breen");
 		can_mug = new ItemEnergy().makeCan().setUnlocalizedName("can_mug").setTextureName(RefStrings.MODID + ":can_mug");
+		can_dew = new ItemEnergy().makeCan().setUnlocalizedName("can_dew").setTextureName(RefStrings.MODID + ":can_dew");
+		can_red = new ItemEnergy().makeCan().setUnlocalizedName("can_red").setTextureName(RefStrings.MODID + ":can_red");
+		can_blue = new ItemEnergy().makeCan().setUnlocalizedName("can_blue").setTextureName(RefStrings.MODID + ":can_blue");
+		can_baja = new ItemEnergy().makeCan().setUnlocalizedName("can_baja").setTextureName(RefStrings.MODID + ":can_baja");
+		can_cabo = new ItemEnergy().makeCan().setUnlocalizedName("can_cabo").setTextureName(RefStrings.MODID + ":can_cabo");
+		can_splash = new ItemEnergy().makeCan().setUnlocalizedName("can_splash").setTextureName(RefStrings.MODID + ":can_splash");
+		can_flash = new ItemEnergy().makeCan().setUnlocalizedName("can_flash").setTextureName(RefStrings.MODID + ":can_flash");
+		can_mid = new ItemEnergy().makeCan().setUnlocalizedName("can_mid").setTextureName(RefStrings.MODID + ":can_mid");
 		bottle_empty = new Item().setUnlocalizedName("bottle_empty").setTextureName(RefStrings.MODID + ":bottle_empty");
 		bottle_nuka = new ItemEnergy().makeBottle(bottle_empty, cap_nuka).setUnlocalizedName("bottle_nuka").setTextureName(RefStrings.MODID + ":bottle_nuka");
 		bottle_cherry = new ItemEnergy().makeBottle(bottle_empty, cap_nuka).setUnlocalizedName("bottle_cherry").setContainerItem(ModItems.bottle_empty).setTextureName(RefStrings.MODID + ":bottle_cherry");
@@ -3541,7 +3561,7 @@ public class ModItems {
 		int tintFlashlead = 0x7B7B87;
 		int tintBalefire = 0xB2FF1B;
 		int tintDRX = 0xD77276;
-		
+
 		rbmk_fuel_empty = new Item().setUnlocalizedName("rbmk_fuel_empty").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":rbmk_fuel_empty");
 		rbmk_fuel_ueu = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_ueu)
 				.setYield(100_000_000D)
@@ -3647,7 +3667,7 @@ public class ModItems {
 				.setFunction(EnumBurnFunc.LINEAR)
 				.setHeat(2D)
 				.setMeltingPoint(2386)
-				.setTint(tintAmericium).setUnlocalizedName("rbmk_fuel_hea242").setTextureName(RefStrings.MODID + ":rbmk_fuel_hea242");				
+				.setTint(tintAmericium).setUnlocalizedName("rbmk_fuel_hea242").setTextureName(RefStrings.MODID + ":rbmk_fuel_hea242");
 		rbmk_fuel_bk247 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_bk247)
 				.setYield(100000000D)
 				.setStats(50)
@@ -4509,7 +4529,7 @@ public class ModItems {
 	}
 
 	public static void initializeItem2() {
-		
+
 		ModItemsArmor.init();
 
 		chainsaw = new ItemChainsaw(25, -0.05, MainRegistry.tMatChainsaw, EnumToolType.AXE, 5000, 1, 250,
@@ -6897,6 +6917,8 @@ public class ModItems {
 
 		//Energy Drinks
 		GameRegistry.registerItem(can_empty, can_empty.getUnlocalizedName());
+		GameRegistry.registerItem(can_gold, can_gold.getUnlocalizedName());
+		GameRegistry.registerItem(can_shiny, can_shiny.getUnlocalizedName());
 		GameRegistry.registerItem(can_smart, can_smart.getUnlocalizedName());
 		GameRegistry.registerItem(can_creature, can_creature.getUnlocalizedName());
 		GameRegistry.registerItem(can_redbomb, can_redbomb.getUnlocalizedName());
@@ -6906,6 +6928,14 @@ public class ModItems {
 		GameRegistry.registerItem(can_bepis, can_bepis.getUnlocalizedName());
 		GameRegistry.registerItem(can_breen, can_breen.getUnlocalizedName());
 		GameRegistry.registerItem(can_mug, can_mug.getUnlocalizedName());
+		GameRegistry.registerItem(can_dew, can_dew.getUnlocalizedName());
+		GameRegistry.registerItem(can_red, can_red.getUnlocalizedName());
+		GameRegistry.registerItem(can_blue, can_blue.getUnlocalizedName());
+		GameRegistry.registerItem(can_baja, can_baja.getUnlocalizedName());
+		GameRegistry.registerItem(can_cabo, can_cabo.getUnlocalizedName());
+		GameRegistry.registerItem(can_splash, can_splash.getUnlocalizedName());
+		GameRegistry.registerItem(can_flash, can_flash.getUnlocalizedName());
+		GameRegistry.registerItem(can_mid, can_mid.getUnlocalizedName());
 
 		//Coffee
 		GameRegistry.registerItem(coffee, coffee.getUnlocalizedName());

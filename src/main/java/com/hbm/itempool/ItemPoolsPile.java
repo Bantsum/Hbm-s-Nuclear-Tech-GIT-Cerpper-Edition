@@ -55,6 +55,7 @@ public class ItemPoolsPile {
 					weighted(ModItems.syringe_metal_stimpak, 0, 1, 1, 5),
 					weighted(ModItems.iv_blood, 0, 1, 1, 10),
 					weighted(Items.experience_bottle, 0, 1, 3, 5),
+					weighted(ModItems.can_dew, 0, 1, 1, 10),
 			};
 		}};
 
@@ -133,6 +134,7 @@ public class ItemPoolsPile {
 				weighted(ModItems.pipe_lead, 0, 0, 1, 5),
 				weighted(ModItems.motor, 0, 0, 1, 5),
 				weighted(ModItems.canned_conserve, 2, 0, 1, 5),
+				weighted(ModItems.can_dew, 0, 1, 1, 10),
 			};
 		}};
 	}

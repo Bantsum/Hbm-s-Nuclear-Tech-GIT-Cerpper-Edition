@@ -8,6 +8,7 @@ import com.hbm.extprop.HbmLivingProps;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
+import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
@@ -26,16 +27,16 @@ import net.minecraftforge.common.util.FakePlayer;
 
 @Spaghetti("wtf is this shit")
 public class ItemEnergy extends Item {
-	
+
 	private Item container = null;
 	private Item cap = null;
 	private boolean requiresOpener = false;
-	
+
 	public ItemEnergy() {
 		this.setCreativeTab(MainRegistry.consumableTab);
 	}
-	
-	
+
+
 	public ItemEnergy makeCan() {
 		this.container = ModItems.can_empty;
 		this.cap = ModItems.ring_pull;
@@ -43,7 +44,7 @@ public class ItemEnergy extends Item {
 		this.setContainerItem(this.container);
 		return this;
 	}
-	 
+
 	public ItemEnergy makeBottle(Item bottle, Item cap) {
 		this.container = bottle;
 		this.cap = cap;
@@ -52,7 +53,7 @@ public class ItemEnergy extends Item {
 		this.setCreativeTab(MainRegistry.consumableTab);
 		return this;
 	}
-	
+
 	public ItemEnergy makeGlass() {
 		this.requiresOpener = false;
 		return this;
@@ -71,7 +72,7 @@ public class ItemEnergy extends Item {
 				world.newExplosion(player, player.posX, player.posY, player.posZ, 5F, true, true);
 				return super.onEaten(stack, world, player);
 			}
-			
+
 			VersatileConfig.applyPotionSickness(player, 5);
 
 			if(this == ModItems.can_smart) {
@@ -118,6 +119,47 @@ public class ItemEnergy extends Item {
 				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 3 * 60 * 20, 2));
 				player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60 * 20, 2));
 			}
+			if(this == ModItems.can_dew) {
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
+			}
+			if(this == ModItems.can_red) {
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
+				player.addPotionEffect(new PotionEffect(Potion.jump.id, 30 * 20, 2));
+			}
+			if(this == ModItems.can_blue) {
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
+				player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60 * 20, 2));
+			}
+			if(this == ModItems.can_baja) {
+				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 3 * 60 * 20, 2));
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
+				player.addPotionEffect(new PotionEffect(Potion.jump.id, 30 * 20, 2));
+			}
+			if(this == ModItems.can_cabo) {
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
+				player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60 * 20, 2));
+				player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 30 * 20, 1));
+			}
+			if(this == ModItems.can_splash) {
+				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 3 * 60 * 20, 2));
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
+				player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60 * 20, 2));
+				player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 30 * 20, 1));
+			}
+			if(this == ModItems.can_flash) {
+				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 3 * 60 * 20, 2));
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
+				player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60 * 20, 2));
+				player.addPotionEffect(new PotionEffect(HbmPotion.flashbang.id, 5 * 20));
+			}
+			if(this == ModItems.can_mid) {
+				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 3 * 60 * 20, 2));
+				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
+				player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60 * 20, 2));
+				player.addPotionEffect(new PotionEffect(HbmPotion.flashbang.id, 5 * 20));
+				player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 30 * 20, 1));
+				player.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 30 * 20, 2));
+			}
 			if(this == ModItems.chocolate_milk) {
 				ExplosionLarge.explode(world, player.posX, player.posY, player.posZ, 50, true, false, false);
 			}
@@ -140,7 +182,7 @@ public class ItemEnergy extends Item {
 				//System.out.println(this.container);
 			}
 			if(this == ModItems.teacup) {
-				player.heal(3F); 				
+				player.heal(3F);
 				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 30 * 20, 4));
 
 				this.setContainerItem(ModItems.teacup_empty);
@@ -150,7 +192,7 @@ public class ItemEnergy extends Item {
 				player.heal(9F);  //sweet sorrow
 				float digamma = HbmLivingProps.getDigamma(player);
 				HbmLivingProps.setDigamma(player, Math.max(digamma - 0.3F, 0F));
-				
+
 				this.setContainerItem(Items.glass_bottle);
 				this.container = Items.glass_bottle;
 			}
@@ -216,7 +258,7 @@ public class ItemEnergy extends Item {
 					player.inventory.addItemStackToInventory(new ItemStack(this.container));
 				}
 			}
-			
+
 			player.inventoryContainer.detectAndSendChanges();
 		}
 
@@ -272,6 +314,34 @@ public class ItemEnergy extends Item {
 			list.add("Don't drink the water. They put something in it, to make you forget.");
 			list.add("I don't even know how I got here.");
 		}
+		if(this == ModItems.can_dew) {
+			list.add("The OG.");
+			list.add("Smell the dew of the mountains.");
+		}
+		if(this == ModItems.can_red) {
+			list.add("Now with 90% more caffeine!");
+		}
+		if(this == ModItems.can_blue) {
+			list.add("Feel the pulse of the 1000V entering your body.");
+		}
+		if(this == ModItems.can_baja) {
+			list.add("Taste the BAJA no seriously.");
+		}
+		if(this == ModItems.can_cabo) {
+			list.add("This's just straight up a fanta can.");
+			list.add("Tastes like copper wires");
+		}
+		if(this == ModItems.can_splash) {
+			list.add("A splash of BAJA acid in your stomach.");
+			list.add("You can even feel your internal organs melting!");
+		}
+		if(this == ModItems.can_flash) {
+			list.add("It's so good that it feels like your close to the sun!");
+		}
+		if(this == ModItems.can_mid) {
+			list.add("A mix of galaxy's contained in one can.");
+			list.add("Side effects include: IMPLODING.");
+		}
 		if(this == ModItems.chocolate_milk) {
 			list.add("Regular chocolate milk. Safe to drink.");
 			list.add("Totally not made from nitroglycerine.");
@@ -303,7 +373,7 @@ public class ItemEnergy extends Item {
 			else
 				list.add("Tastes like radish and radiation.");
 		}
-		
+
 		if(this.requiresOpener) list.add("[Requires bottle opener]");
 	}
 }

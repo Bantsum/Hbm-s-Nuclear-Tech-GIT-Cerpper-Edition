@@ -253,6 +253,9 @@ public class Fluids {
 	public static FluidType DHC;
 	public static FluidType LITHYDRO;
 	public static FluidType LITHCARBONATE;
+	public static FluidType BAJA;
+	public static FluidType BAJA_HOT;
+	public static FluidType DEW;
 
 	/* Lagacy names for compatibility purposes */
 	@Deprecated public static FluidType ACID;	//JAOPCA uses this, apparently
@@ -534,6 +537,9 @@ public class Fluids {
 		AIR =					new FluidType("AIR",				0xE7EAEB, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
 		LITHYDRO =				new FluidType("LITHYDRO",			0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
 		LITHCARBONATE =		       new FluidType("LITHCARBONATE",	       0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
+		BAJA = 					new FluidType("BAJA", 			0x86C9C3, 0, 0,0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
+		BAJA_HOT =				new FluidType("BAJA_HOT",			0xACF1D2, 0, 0, 0, EnumSymbol.NONE).setTemp(600).addTraits(DELICIOUS, LIQUID);
+		DEW = 					new FluidType("DEW", 			0x94C93D, 0, 0,0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
 
 		// ^ ^ ^ ^ ^ ^ ^ ^
 		//ADD NEW FLUIDS HERE
@@ -578,6 +584,9 @@ public class Fluids {
 		metaOrder.add(GASEOUS_PLUTONIUM_BROMIDE);
 		metaOrder.add(GASEOUS_SCHRABIDIUM_BROMIDE);
 		metaOrder.add(GASEOUS_THORIUM_BROMIDE);
+		metaOrder.add(BAJA);
+		metaOrder.add(BAJA_HOT);
+		metaOrder.add(DEW);
 		//blood
 		metaOrder.add(BLOOD);
 		metaOrder.add(BLOODGAS);
@@ -879,6 +888,9 @@ public class Fluids {
 		THORIUM_SALT.addTraits(new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(400, 1, THORIUM_SALT_HOT, 1), new FT_PWRModerator(2.5D));
 		THORIUM_SALT_HOT.addTraits(new FT_Coolable(THORIUM_SALT_DEPLETED, 1, 1, 400).setEff(CoolingType.HEATEXCHANGER, 1.0D));
 
+		BAJA.addTraits(new FT_Heatable().setEff(HeatingType.HEATEXCHANGER, 1.0D).setEff(HeatingType.PWR, 1.30D).setEff(HeatingType.ICF, 1.50D).addStep(600, 1, BAJA_HOT, 1), new FT_PWRModerator(1.25D));
+		BAJA_HOT.addTraits(new FT_Coolable(BAJA, 1, 1, 600).setEff(CoolingType.HEATEXCHANGER, 1.0D));
+
 		if(idMapping.size() != metaOrder.size()) {
 			throw new IllegalStateException("A severe error has occoured during NTM's fluid registering process! The MetaOrder and Mappings are inconsistent! Mapping size: " + idMapping.size()+ " / MetaOrder size: " + metaOrder.size());
 		}
@@ -1100,7 +1112,7 @@ public class Fluids {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public static HashMap<String, FluidType> fluidMigration = new HashMap(); // since reloading would create new fluid instances, and those break existing machines
 
 	public static void reloadFluids(){

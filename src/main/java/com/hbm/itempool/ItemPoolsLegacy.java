@@ -31,7 +31,7 @@ public class ItemPoolsLegacy {
 	public static final String POOL_NUKE_MISC = "POOL_NUKE_MISC";
 	public static final String POOL_VERTIBIRD = "POOL_VERTIBIRD";
 	public static final String POOL_SPACESHIP = "POOL_SPACESHIP";
-	
+
 	public static void init() {
 
 		//"generic" set, found commonly in chests in many structures
@@ -65,7 +65,8 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.canister_full, Fluids.BIOFUEL.getID(), 1, 2, 3),
 					weighted(ModItems.gas_mask_m65, 60, 1, 1, 2),
 					weighted(ModItems.gas_mask_filter, 0, 1, 1, 3),
-					weighted(ModItems.blueprint_folder, 0, 1, 1, 1)
+					weighted(ModItems.blueprint_folder, 0, 1, 1, 1),
+					weighted(ModItems.can_dew, 0, 1, 1, 2)
 			};
 		}};
 
@@ -94,10 +95,13 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.stealth_boy, 0, 1, 1, 1),
 					weighted(ModItems.cap_nuka, 0, 1, 15, 7),
 					weighted(ModItems.bomb_caller, 0, 1, 1, 1),
-					weighted(ModItems.gas_mask_filter, 0, 1, 1, 2)
+					weighted(ModItems.gas_mask_filter, 0, 1, 1, 2),
+					weighted(ModItems.can_dew, 0, 1, 1, 2),
+					weighted(ModItems.can_red, 0, 1, 1, 2),
+					weighted(ModItems.can_blue, 0, 1, 1, 2)
 			};
 		}};
-		
+
 		//"hidden" loot
 		new ItemPool(POOL_EXPENSIVE) {{
 			this.pool = new WeightedRandomChestContent[] {
@@ -130,10 +134,12 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.gas_mask_filter, 0, 1, 1, 4),
 					weighted(ModItems.launch_code_piece, 0, 1, 1, 1),
 					weighted(ModItems.gun_double_barrel, 0, 1, 1, 1),
-					weighted(ModItems.blueprint_folder, 1, 1, 1, 1)
+					weighted(ModItems.blueprint_folder, 1, 1, 1, 1),
+					weighted(ModItems.can_splash, 0, 1, 1, 1),
+					weighted(ModItems.can_flash, 0, 1, 1, 1)
 			};
 		}};
-		
+
 		//nuclear waste products found in powerplants
 		new ItemPool(POOL_NUKE_TRASH) {{
 			this.pool = new WeightedRandomChestContent[] {
@@ -147,10 +153,13 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.gas_mask_m65, 60, 1, 1, 5),
 					weighted(ModItems.hazmat_kit, 0, 1, 1, 1),
 					weighted(ModItems.gas_mask_filter, 0, 1, 1, 5),
-					weighted(ModBlocks.yellow_barrel, 0, 1, 1, 2)
+					weighted(ModBlocks.yellow_barrel, 0, 1, 1, 2),
+					weighted(ModItems.can_cabo, 0, 1, 1, 2),
+					weighted(ModItems.can_splash, 0, 1, 1, 1),
+					weighted(ModItems.can_flash, 0, 1, 1, 1)
 			};
 		}};
-		
+
 		//all sorts of nuclear related items, mostly fissile isotopes found in nuclear powerplants
 		new ItemPool(POOL_NUKE_MISC) {{
 			this.pool = new WeightedRandomChestContent[] {
@@ -177,10 +186,14 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.gas_mask_m65, 60, 1, 1, 5),
 					weighted(ModItems.hazmat_kit, 0, 1, 1, 2),
 					weighted(ModItems.gas_mask_filter, 0, 1, 1, 5),
-					weighted(ModBlocks.yellow_barrel, 0, 1, 3, 3)
+					weighted(ModBlocks.yellow_barrel, 0, 1, 3, 3),
+					weighted(ModItems.can_splash, 0, 1, 1, 1),
+					weighted(ModItems.can_flash, 0, 1, 1, 1),
+					weighted(ModItems.can_red, 0, 1, 1, 1),
+					weighted(ModItems.can_blue, 0, 1, 1, 1)
 			};
 		}};
-		
+
 		//loot found in vertibirds
 		new ItemPool(POOL_VERTIBIRD) {{
 			this.pool = new WeightedRandomChestContent[] {
@@ -205,10 +218,12 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.grenade_nuclear, 0, 1, 2, 2),
 					weighted(ModItems.bomb_caller, 0, 1, 1, 1),
 					weighted(ModItems.bomb_caller, 1, 1, 1, 1),
-					weighted(ModItems.bomb_caller, 2, 1, 1, 2)
+					weighted(ModItems.bomb_caller, 2, 1, 1, 2),
+					weighted(ModItems.can_baja, 0, 1, 1, 1),
+					weighted(ModItems.can_cabo, 0, 1, 1, 1)
 			};
 		}};
-		
+
 		//spaceship double chests
 		new ItemPool(POOL_SPACESHIP) {{
 			this.pool = new WeightedRandomChestContent[] {

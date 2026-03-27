@@ -14,9 +14,9 @@ public class ItemPoolsRedRoom {
 	public static final String POOL_RED_PEDESTAL = "POOL_RED_PEDESTAL";
 	public static final String POOL_BLACK_SLAB = "POOL_BLACK_SLAB";
 	public static final String POOL_BLACK_PART = "POOL_BLACK_PART";
-	
+
 	public static void init() {
-		
+
 		//pedestal items
 		new ItemPool(POOL_RED_PEDESTAL) {{
 			this.pool = new WeightedRandomChestContent[] {
@@ -31,7 +31,8 @@ public class ItemPoolsRedRoom {
 					weighted(ModItems.heart_container, 0, 1, 1, 10),
 					weighted(ModItems.black_diamond, 0, 1, 1, 10),
 					weighted(ModItems.scrumpy, 0, 1, 1, 10),
-					
+
+					weighted(ModItems.can_shiny, 0, 1, 1,5),
 					weighted(ModItems.wild_p, 0, 1, 1, 5),
 					weighted(ModItems.card_aos, 0, 1, 1, 5),
 					weighted(ModItems.card_qos, 0, 1, 1, 5),
@@ -41,7 +42,7 @@ public class ItemPoolsRedRoom {
 					weighted(ModItems.flask_infusion, 0, 1, 1, 5),
 					weighted(ModBlocks.boxcar, 0, 1, 1, 5),
 					weighted(ModItems.book_of_, 0, 1, 1, 5),
-					
+
 					weighted(ModItems.gun_hangman, 0, 1, 1, 1),
 					weighted(ModItems.gun_mas36, 0, 1, 1, 1),
 					weighted(ModItems.item_secret, EnumSecretType.FOLLY.ordinal(), 1, 1, 1),
@@ -49,14 +50,14 @@ public class ItemPoolsRedRoom {
 					weighted(ModItems.weapon_mod_special, EnumModSpecial.DOUBLOONS.ordinal(), 1, 1, 1),
 			};
 		}};
-		
+
 		//pedestal weapons
 		new ItemPool(POOL_BLACK_SLAB) {{
 			this.pool = new WeightedRandomChestContent[] {
 					weighted(ModItems.clay_tablet, 0, 1, 1, 10)
 			};
 		}};
-		
+
 		//pedestal weapons
 		new ItemPool(POOL_BLACK_PART) {{
 			this.pool = new WeightedRandomChestContent[] {
