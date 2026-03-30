@@ -274,7 +274,6 @@ public class MainRegistry {
 				polaroidID = rand.nextInt(18) + 1;
 		}
 
-		ShadyUtil.test();
 		loadConfig(PreEvent);
 		HbmPotion.init();
 

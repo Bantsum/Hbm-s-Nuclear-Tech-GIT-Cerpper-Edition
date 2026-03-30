@@ -20,10 +20,12 @@ import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.inventory.fluid.trait.FT_Coolable.CoolingType;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.NTMSounds;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.IRepairable;
+import com.hbm.tileentity.IRepairable.EnumExtinguishType;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.CompatEnergyControl;
@@ -178,9 +180,8 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 							-dir.offsetX * 0.2, 0, -dir.offsetZ * 0.2);
 				}
 
-
 				if(audio == null) {
-					audio = MainRegistry.proxy.getLoopedSound("hbm:block.chungusTurbineRunning", xCoord, yCoord, zCoord, 1.0F, 20F, 1.0F);
+					audio = MainRegistry.proxy.getLoopedSound(NTMSounds.TURBINE_LEVI_LOOP, xCoord, yCoord, zCoord, 1.0F, 20F, 1.0F, 20);
 					audio.startSound();
 				}
 

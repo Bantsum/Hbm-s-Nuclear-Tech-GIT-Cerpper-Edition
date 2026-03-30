@@ -5,12 +5,15 @@ import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.armor.ItemModShield;
 import com.hbm.main.MainRegistry;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.tileentity.IGUIProvider;
 
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -92,9 +95,9 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 					this.enableBackpack = !this.enableBackpack;
 
 					if(this.enableBackpack)
-						MainRegistry.proxy.displayTooltip(EnumChatFormatting.GREEN + "Jetpack ON", MainRegistry.proxy.ID_JETPACK);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.GREEN + "Jetpack ON", MainRegistry.proxy.ID_JETPACK, 1000), (EntityPlayerMP) player);
 					else
-						MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + "Jetpack OFF", MainRegistry.proxy.ID_JETPACK);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.RED + "Jetpack OFF", MainRegistry.proxy.ID_JETPACK, 1000), (EntityPlayerMP) player);
 				}
 			}
 			if (key == EnumKeybind.TOGGLE_MAGNET){
@@ -102,9 +105,9 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 					this.enableMagnet = !this.enableMagnet;
 
 					if(this.enableMagnet)
-						MainRegistry.proxy.displayTooltip(EnumChatFormatting.GREEN + "Magnet ON", MainRegistry.proxy.ID_MAGNET);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.GREEN + "Magnet ON", MainRegistry.proxy.ID_MAGNET, 1000), (EntityPlayerMP) player);
 					else
-						MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + "Magnet OFF", MainRegistry.proxy.ID_MAGNET);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.GREEN + "Magnet ON", MainRegistry.proxy.ID_MAGNET, 1000), (EntityPlayerMP) player);
 				}
 			}
 			if(key == EnumKeybind.TOGGLE_HEAD) {
@@ -113,9 +116,9 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 					this.enableHUD = !this.enableHUD;
 
 					if(this.enableHUD)
-						MainRegistry.proxy.displayTooltip(EnumChatFormatting.GREEN + "HUD ON", MainRegistry.proxy.ID_HUD);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.GREEN + "HUD ON", MainRegistry.proxy.ID_HUD, 1000), (EntityPlayerMP) player);
 					else
-						MainRegistry.proxy.displayTooltip(EnumChatFormatting.RED + "HUD OFF", MainRegistry.proxy.ID_HUD);
+						PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(EnumChatFormatting.GREEN + "HUD ON", MainRegistry.proxy.ID_HUD, 1000), (EntityPlayerMP) player);
 				}
 			}
 

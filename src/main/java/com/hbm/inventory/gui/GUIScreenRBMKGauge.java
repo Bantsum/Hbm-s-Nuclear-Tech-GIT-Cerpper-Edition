@@ -35,9 +35,6 @@ public class GUIScreenRBMKGauge extends GuiScreen {
 	
 	public GUIScreenRBMKGauge(TileEntityRBMKGauge keypad) {
 		this.keypad = keypad;
-
-		this.xSize = 256;
-		this.ySize = 204;
 	}
 
 	@Override
