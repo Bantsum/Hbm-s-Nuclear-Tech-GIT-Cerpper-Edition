@@ -199,7 +199,7 @@ public class ModEventHandler {
 		if(!event.player.worldObj.isRemote) {
 
 			if(GeneralConfig.enableMOTD) {
-				event.player.addChatMessage(new ChatComponentText("Loaded world with JamesH2 & Mellow's NTM: Space " + RefStrings.VERSION + " for Minecraft 1.7.10!"));
+				event.player.addChatMessage(new ChatComponentText("Loaded world with Bantsum's NTM: Space Cerpper Edition " + RefStrings.VERSION + " for Minecraft 1.7.10!"));
 
 				if(HTTPHandler.newVersion) {
 					event.player.addChatMessage(
@@ -207,7 +207,7 @@ public class ModEventHandler {
 							.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))
 							.appendSibling(new ChatComponentText("[here]")
 									.setChatStyle(new ChatStyle()
-										.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/JameH2/Hbm-s-Nuclear-Tech-GIT/releases"))
+										.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Bantsum/Hbm-s-Nuclear-Tech-GIT-Test/releases"))
 										.setUnderlined(true)
 										.setColor(EnumChatFormatting.RED)
 									)
@@ -400,10 +400,10 @@ public class ModEventHandler {
 				body.modifyTraits(alien);
 			}else if (event.entity instanceof EntitySiegeCraft) {
 				alien.kills += 3;
-				
+
 				body.modifyTraits(alien);
 			}
-			
+
 			if(alien.wave >= 4 && event.entity instanceof EntityUFO) {
 				HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> currentTraits = body.getTraits(event.entity.worldObj);
 
@@ -418,8 +418,8 @@ public class ModEventHandler {
 			                );
 			            }
 			        }
-			   
-				
+
+
 				body.setTraits(event.entity.worldObj, currentTraits);
 
 
@@ -785,7 +785,7 @@ public class ModEventHandler {
 		if(event.entityLiving instanceof EntityPlayerMP && prevArmor != null && event.entityLiving.getHeldItem() != null
 				&& (prevArmor[0] == null || prevArmor[0].getItem() != event.entityLiving.getHeldItem().getItem())
 				&& event.entityLiving.getHeldItem().getItem() instanceof IEquipReceiver) {
-			
+
 			((IEquipReceiver)event.entityLiving.getHeldItem().getItem()).onEquip((EntityPlayer) event.entityLiving, event.entityLiving.getHeldItem());
 		}
 
@@ -1154,7 +1154,7 @@ public class ModEventHandler {
 		EntityLivingBase e = event.entityLiving;
 
 		float gravity = CelestialBody.getGravity(e);
-		
+
 
 		// Reduce fall damage on low gravity bodies
 		if(gravity < 0.3F) {
@@ -1553,7 +1553,7 @@ public class ModEventHandler {
 					List<CelestialBodyTrait> traits = new ArrayList<>(body.getTraits().values());
 					for (CelestialBodyTrait trait : traits) {
 						trait.update(false, body);
-					
+
 					}
 				}
 
@@ -1771,7 +1771,7 @@ public class ModEventHandler {
 		int y = event.y;
 		int z = event.z;
 		World world = event.world;
-		
+
 		if(GeneralConfig.enable528ExplosiveEnergistics && !world.isRemote && event.action == Action.RIGHT_CLICK_BLOCK) {
 			Block b = world.getBlock(x, y, z);
 			String name = Block.blockRegistry.getNameForObject(b);
@@ -1988,5 +1988,5 @@ public class ModEventHandler {
 		}
 	}
 
-	
+
 }

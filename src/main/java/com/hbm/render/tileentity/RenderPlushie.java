@@ -34,12 +34,12 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 	public static final IModelCustom hundunModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/hundun.obj"), false).asVBO();
 	public static final IModelCustom dergModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/derg.obj"), false).asVBO();
 	public static final IModelCustom copperModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/copper.obj"), false).asVBO();
-	public static final IModelCustom creperModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/creper.obj"), false).asVBO();
+	//public static final IModelCustom creperModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/creper.obj"), false).asVBO();
 	public static final ResourceLocation yomiTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/yomi.png");
 	public static final ResourceLocation numbernineTex = new ResourceLocation(RefStrings.MODID, "textures/models/horse/numbernine.png");
 	public static final ResourceLocation hundunTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/hundun.png");
 	public static final ResourceLocation copperTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/copper.png");
-	public static final ResourceLocation creperTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/creper.png");
+	//public static final ResourceLocation creperTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/creper.png");
 
 	//VOCALOIDS//
 	public static final IModelCustom tetoModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/teto.obj")).asVBO();
@@ -82,7 +82,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 		case HUNDUN: GL11.glScaled(1, 1, 1); break;
 		case DERG: break;
 		case COPPER: GL11.glScaled(0.5, 0.5, 0.5); break;
-		case CREPER: GL11.glScaled(0.5, 0.5, 0.5); break;
+		//case CREPER: GL11.glScaled(0.5, 0.5, 0.5); break;
 		}
 		renderPlushie(te.type, te.squishTimer);
 
@@ -164,10 +164,10 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 			Minecraft.getMinecraft().getTextureManager().bindTexture(copperTex);
 			copperModel.renderAll();
 			break;
-		case CREPER:
+		/*case CREPER:
 			Minecraft.getMinecraft().getTextureManager().bindTexture(creperTex);
 			creperModel.renderAll();
-			break;
+			break;*/
 		}
 	}
 
@@ -198,7 +198,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 				case NERU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case DERG: GL11.glScaled(1.5, 1.5, 1.5); break;
 				case COPPER: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
-				case CREPER: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
+				//case CREPER: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				}
 				renderPlushie(type, 0);
 			}};

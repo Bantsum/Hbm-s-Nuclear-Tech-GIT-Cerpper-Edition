@@ -1026,7 +1026,6 @@ public class ModItems {
 	public static Item animan;
 
 	public static Item can_empty;
-	public static Item can_gold;
 	public static Item can_smart;
 	public static Item can_creature;
 	public static Item can_redbomb;
@@ -1045,6 +1044,7 @@ public class ModItems {
 	public static Item can_flash;
 	public static Item can_mid;
 	public static Item can_shiny;
+	public static Item can_gold;
 	public static Item mucho_mango;
 	public static Item bottle_empty;
 	public static Item bottle_nuka;
@@ -3379,8 +3379,6 @@ public class ModItems {
 		hard_drive = new Item().setUnlocalizedName("hard_drive").setMaxStackSize(64).setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":votv_e");
 
 		can_empty = new Item().setUnlocalizedName("can_empty").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":can_empty");
-		can_shiny = new Item().setUnlocalizedName("can_shiny").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":can_shiny");
-		can_gold = new ItemModCan(100F).setUnlocalizedName("can_gold").setTextureName(RefStrings.MODID + ":can_gold");
 		can_smart = new ItemEnergy().makeCan().setUnlocalizedName("can_smart").setTextureName(RefStrings.MODID + ":can_smart");
 		can_creature = new ItemEnergy().makeCan().setUnlocalizedName("can_creature").setTextureName(RefStrings.MODID + ":can_creature");
 		can_redbomb = new ItemEnergy().makeCan().setUnlocalizedName("can_redbomb").setTextureName(RefStrings.MODID + ":can_redbomb");
@@ -3398,6 +3396,8 @@ public class ModItems {
 		can_splash = new ItemEnergy().makeCan().setUnlocalizedName("can_splash").setTextureName(RefStrings.MODID + ":can_splash");
 		can_flash = new ItemEnergy().makeCan().setUnlocalizedName("can_flash").setTextureName(RefStrings.MODID + ":can_flash");
 		can_mid = new ItemEnergy().makeCan().setUnlocalizedName("can_mid").setTextureName(RefStrings.MODID + ":can_mid");
+		can_shiny = new Item().setUnlocalizedName("can_shiny").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":can_shiny");
+		can_gold = new ItemModCan(100F).setUnlocalizedName("can_gold").setTextureName(RefStrings.MODID + ":can_gold");
 		bottle_empty = new Item().setUnlocalizedName("bottle_empty").setTextureName(RefStrings.MODID + ":bottle_empty");
 		bottle_nuka = new ItemEnergy().makeBottle(bottle_empty, cap_nuka).setUnlocalizedName("bottle_nuka").setTextureName(RefStrings.MODID + ":bottle_nuka");
 		bottle_cherry = new ItemEnergy().makeBottle(bottle_empty, cap_nuka).setUnlocalizedName("bottle_cherry").setContainerItem(ModItems.bottle_empty).setTextureName(RefStrings.MODID + ":bottle_cherry");
@@ -6917,8 +6917,6 @@ public class ModItems {
 
 		//Energy Drinks
 		GameRegistry.registerItem(can_empty, can_empty.getUnlocalizedName());
-		GameRegistry.registerItem(can_gold, can_gold.getUnlocalizedName());
-		GameRegistry.registerItem(can_shiny, can_shiny.getUnlocalizedName());
 		GameRegistry.registerItem(can_smart, can_smart.getUnlocalizedName());
 		GameRegistry.registerItem(can_creature, can_creature.getUnlocalizedName());
 		GameRegistry.registerItem(can_redbomb, can_redbomb.getUnlocalizedName());
@@ -6936,6 +6934,8 @@ public class ModItems {
 		GameRegistry.registerItem(can_splash, can_splash.getUnlocalizedName());
 		GameRegistry.registerItem(can_flash, can_flash.getUnlocalizedName());
 		GameRegistry.registerItem(can_mid, can_mid.getUnlocalizedName());
+		GameRegistry.registerItem(can_gold, can_gold.getUnlocalizedName());
+		GameRegistry.registerItem(can_shiny, can_shiny.getUnlocalizedName());
 
 		//Coffee
 		GameRegistry.registerItem(coffee, coffee.getUnlocalizedName());

@@ -28,6 +28,7 @@ public class HTTPHandler {
 					loadSoyuz();
 					loadTips();
 					loadSpaceTips();
+					loadCerpperTips();
 				} catch(IOException e) {
 					MainRegistry.logger.warn("Version checker failed!");
 				}
@@ -89,6 +90,15 @@ public class HTTPHandler {
 	private static void loadSpaceTips() throws IOException {
 
 		URL github = new URL("https://gist.githubusercontent.com/MellowArpeggiation/f9424a8773ed8530000437dfcef50d3e/raw/tip_of_the_space");
+		BufferedReader in = new BufferedReader(new InputStreamReader(github.openStream()));
+
+		String line;
+		while((line = in.readLine()) != null) tipOfTheDay.add(line);
+		in.close();
+	}
+	private static void loadCerpperTips() throws IOException {
+
+		URL github = new URL("https://gist.githubusercontent.com/Bantsum/cd692f9789ac5a168c4da275c0137938/raw/0d6a5159766e67bea6e2c90c6234bb512ab97a87/tip_of_the_cerpper");
 		BufferedReader in = new BufferedReader(new InputStreamReader(github.openStream()));
 
 		String line;
