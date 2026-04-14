@@ -38,7 +38,7 @@ public class WorldProviderEve extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderEve(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderEve(this.worldObj, this.getSeed());
 	}
 
 

@@ -713,6 +713,10 @@ public class MainRegistry {
 		MinecraftForge.EVENT_BUS.register(neutronHandler);
 		FMLCommonHandler.instance().bus().register(neutronHandler);
 
+		BlockMigrations migrations = new BlockMigrations();
+		MinecraftForge.EVENT_BUS.register(migrations);
+		FMLCommonHandler.instance().bus().register(migrations);
+
 		if(event.getSide() == Side.CLIENT) {
 			HbmKeybinds.register();
 			HbmKeybinds keyHandler = new HbmKeybinds();
@@ -1595,7 +1599,56 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.euphemium_capacitor");
 		ignoreMappings.add("hbm:item.toolbox_legacy");
 		ignoreMappings.add("hbm:tile.rbmk_burner");
-
+		ignoreMappings.add("hbm:item.crucible_template");
+		ignoreMappings.add("hbm:tile.absorber");
+		ignoreMappings.add("hbm:tile.absorber_red");
+		ignoreMappings.add("hbm:tile.absorber_green");
+		ignoreMappings.add("hbm:tile.absorber_pink");
+		ignoreMappings.add("hbm:item.grenade_generic");
+		ignoreMappings.add("hbm:item.grenade_strong");
+		ignoreMappings.add("hbm:item.grenade_frag");
+		ignoreMappings.add("hbm:item.grenade_fire");
+		ignoreMappings.add("hbm:item.grenade_shrapnel");
+		ignoreMappings.add("hbm:item.grenade_cluster");
+		ignoreMappings.add("hbm:item.grenade_flare");
+		ignoreMappings.add("hbm:item.grenade_electric");
+		ignoreMappings.add("hbm:item.grenade_poison");
+		ignoreMappings.add("hbm:item.grenade_gas");
+		ignoreMappings.add("hbm:item.grenade_cloud");
+		ignoreMappings.add("hbm:item.grenade_pink_cloud");
+		ignoreMappings.add("hbm:item.grenade_smart");
+		ignoreMappings.add("hbm:item.grenade_mirv");
+		ignoreMappings.add("hbm:item.grenade_breach");
+		ignoreMappings.add("hbm:item.grenade_burst");
+		ignoreMappings.add("hbm:item.grenade_pulse");
+		ignoreMappings.add("hbm:item.grenade_plasma");
+		ignoreMappings.add("hbm:item.grenade_tau");
+		ignoreMappings.add("hbm:item.grenade_schrabidium");
+		ignoreMappings.add("hbm:item.grenade_nuke");
+		ignoreMappings.add("hbm:item.grenade_lemon");
+		ignoreMappings.add("hbm:item.grenade_gascan");
+		ignoreMappings.add("hbm:item.grenade_kyiv");
+		ignoreMappings.add("hbm:item.grenade_mk2");
+		ignoreMappings.add("hbm:item.grenade_aschrab");
+		ignoreMappings.add("hbm:item.grenade_nuclear");
+		ignoreMappings.add("hbm:item.grenade_zomg");
+		ignoreMappings.add("hbm:item.grenade_black_hole");
+		ignoreMappings.add("hbm:item.grenade_if_generic");
+		ignoreMappings.add("hbm:item.grenade_if_he");
+		ignoreMappings.add("hbm:item.grenade_if_bouncy");
+		ignoreMappings.add("hbm:item.grenade_if_sticky");
+		ignoreMappings.add("hbm:item.grenade_if_impact");
+		ignoreMappings.add("hbm:item.grenade_if_incendiary");
+		ignoreMappings.add("hbm:item.grenade_if_toxic");
+		ignoreMappings.add("hbm:item.grenade_if_concussion");
+		ignoreMappings.add("hbm:item.grenade_if_brimstone");
+		ignoreMappings.add("hbm:item.grenade_if_mystery");
+		ignoreMappings.add("hbm:item.grenade_if_spark");
+		ignoreMappings.add("hbm:item.grenade_if_hopwire");
+		ignoreMappings.add("hbm:item.grenade_if_null");
+		ignoreMappings.add("hbm:item.grenade_kit");
+		ignoreMappings.add("hbm:item.nuclear_waste_pearl");
+		
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);
 		remapItems.put("hbm:item.man_explosive8", ModItems.explosive_lenses);

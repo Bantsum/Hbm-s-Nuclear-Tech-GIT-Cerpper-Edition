@@ -197,7 +197,7 @@ public class WorldProviderThatmo extends WorldProviderCelestial {
 
 	@Override
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderThatmo(this.worldObj, this.getSeed(), false);
+		return new ChunkProviderThatmo(this.worldObj, this.getSeed());
 	}
 
 	@Override

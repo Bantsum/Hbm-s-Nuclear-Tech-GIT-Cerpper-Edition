@@ -199,7 +199,7 @@ public class ModEventHandler {
 		if(!event.player.worldObj.isRemote) {
 
 			if(GeneralConfig.enableMOTD) {
-				event.player.addChatMessage(new ChatComponentText("Loaded world with Bantsum's NTM: Space Cerpper Edition " + RefStrings.VERSION + " for Minecraft 1.7.10!"));
+				event.player.addChatMessage(new ChatComponentText("Loaded world with JamesH2 & Mellow's NTM: Space " + RefStrings.VERSION + " for Minecraft 1.7.10!"));
 
 				if(HTTPHandler.newVersion) {
 					event.player.addChatMessage(
@@ -207,7 +207,7 @@ public class ModEventHandler {
 							.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))
 							.appendSibling(new ChatComponentText("[here]")
 									.setChatStyle(new ChatStyle()
-										.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Bantsum/Hbm-s-Nuclear-Tech-GIT-Test/releases"))
+										.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/JameH2/Hbm-s-Nuclear-Tech-GIT/releases"))
 										.setUnderlined(true)
 										.setColor(EnumChatFormatting.RED)
 									)
@@ -393,87 +393,63 @@ public class ModEventHandler {
 
 		CBT_Invasion alien = body.getTrait(CBT_Invasion.class);
 		if(alien != null) {
-			if(event.entity instanceof EntitySiegeUFO) {
-
-				alien.kills++;
-
-				body.modifyTraits(alien);
-			}else if (event.entity instanceof EntitySiegeCraft) {
-				alien.kills += 3;
-
-				body.modifyTraits(alien);
-			}
-
-			if(alien.wave >= 4 && event.entity instanceof EntityUFO) {
-				HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> currentTraits = body.getTraits(event.entity.worldObj);
-
-				currentTraits.remove(CBT_Invasion.class);
-
-			        for (Object obj : event.entity.worldObj.playerEntities) {
-			            if (obj instanceof EntityPlayer) {
-			                EntityPlayer player = (EntityPlayer) obj;
-			                player.addChatComponentMessage(
-			                    new ChatComponentText("The Invasion Is Over!")
-			                        .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))
-			                );
-			            }
-			        }
-
-
-				body.setTraits(event.entity.worldObj, currentTraits);
-
-
-			}
+			alien.onKill(event.entityLiving, body);
 		}
 
 
-		if(!event.entityLiving.worldObj.isRemote) {
-
-			if(event.source==ModDamageSource.eve)
-			{
-				for(int i = -1; i < 2; i++) {
-					for(int j = -1; j < 2; j++) {
-						for(int k = -1; k < 2; k++) {
-							if(event.entityLiving.worldObj.getBlock((int)event.entityLiving.posX+i, (int)event.entityLiving.posY+j, (int)event.entityLiving.posZ+k)==Blocks.air)
-							{
-								if(ModBlocks.flesh_block.canPlaceBlockAt(event.entityLiving.worldObj, (int)event.entityLiving.posX+i, (int)event.entityLiving.posY+j, (int)event.entityLiving.posZ+k))
-								{
-									event.entityLiving.worldObj.setBlock((int)event.entityLiving.posX+i, (int)event.entityLiving.posY+j, (int)event.entityLiving.posZ+k, ModBlocks.flesh_block);
-								}
+		if(!event.entityLiving.worldObj.isRemote && event.source == ModDamageSource.eve) {
+			for(int i = -1; i < 2; i++) {
+				for(int j = -1; j < 2; j++) {
+					for(int k = -1; k < 2; k++) {
+						if(event.entityLiving.worldObj.getBlock((int)event.entityLiving.posX + i, (int)event.entityLiving.posY + j, (int)event.entityLiving.posZ + k) == Blocks.air) {
+							if(ModBlocks.flesh_block.canPlaceBlockAt(event.entityLiving.worldObj, (int)event.entityLiving.posX + i, (int)event.entityLiving.posY + j, (int)event.entityLiving.posZ + k)) {
+								event.entityLiving.worldObj.setBlock((int)event.entityLiving.posX + i, (int)event.entityLiving.posY + j, (int)event.entityLiving.posZ + k, ModBlocks.flesh_block);
 							}
 						}
 					}
 				}
 			}
+		}
+
+
+		if(!event.entityLiving.worldObj.isRemote && event.entityLiving.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot")) {
 
 			if(event.source instanceof EntityDamageSource && ((EntityDamageSource)event.source).getEntity() instanceof EntityPlayer
 					 && !(((EntityDamageSource)event.source).getEntity() instanceof FakePlayer)) {
 
-				if(event.entityLiving instanceof EntitySpider && event.entityLiving.getRNG().nextInt(500) == 0) {
+				Random rng = event.entityLiving.getRNG();
+
+				if(event.entityLiving instanceof EntitySpider && rng.nextInt(500) == 0) {
 					event.entityLiving.dropItem(ModItems.spider_milk, 1);
 				}
 
-				if(event.entityLiving instanceof EntityCaveSpider && event.entityLiving.getRNG().nextInt(100) == 0) {
+				if(event.entityLiving instanceof EntityCaveSpider && rng.nextInt(100) == 0) {
 					event.entityLiving.dropItem(ModItems.serum, 1);
 				}
 
-				if(event.entityLiving instanceof EntityAnimal && event.entityLiving.getRNG().nextInt(500) == 0) {
+				if(event.entityLiving instanceof EntityAnimal && rng.nextInt(500) == 0) {
 					event.entityLiving.dropItem(ModItems.bandaid, 1);
 				}
 
 				if(event.entityLiving instanceof IMob) {
-					if(event.entityLiving.getRNG().nextInt(1000) == 0) event.entityLiving.dropItem(ModItems.heart_piece, 1);
-					if(event.entityLiving.getRNG().nextInt(250) == 0) event.entityLiving.dropItem(ModItems.key_red_cracked, 1);
-					if(event.entityLiving.getRNG().nextInt(250) == 0) event.entityLiving.dropItem(ModItems.launch_code_piece, 1);
+					if(rng.nextInt(1000) == 0) event.entityLiving.dropItem(ModItems.heart_piece, 1);
+					if(rng.nextInt(250) == 0) event.entityLiving.dropItem(ModItems.key_red_cracked, 1);
+					if(rng.nextInt(250) == 0) event.entityLiving.dropItem(ModItems.launch_code_piece, 1);
 				}
 
-				if(event.entityLiving instanceof EntityCyberCrab && event.entityLiving.getRNG().nextInt(500) == 0) {
+				if(event.entityLiving instanceof EntityCyberCrab && rng.nextInt(500) == 0) {
 					event.entityLiving.dropItem(ModItems.wd40, 1);
 				}
 
-				if(event.entityLiving instanceof EntityVillager&& event.entityLiving.getRNG().nextInt(1) == 0) {
+				if(event.entityLiving instanceof EntityVillager && event.entityLiving.getRNG().nextInt(1) == 0) {
 					event.entityLiving.dropItem(ModItems.flesh, 5);
-			}
+				}
+
+				if(event.entityLiving instanceof EntityZombie) {
+					if(rng.nextInt(200) == 0) event.entityLiving.dropItem(ModItems.ingot_copper, 1);
+					if(rng.nextInt(200) == 0) event.entityLiving.dropItem(ModItems.ingot_aluminium, 1);
+					if(rng.nextInt(200) == 0) event.entityLiving.dropItem(ModItems.ingot_titanium, 1);
+				}
 		}
 	}
 }
@@ -1623,21 +1599,6 @@ public class ModEventHandler {
 				event.getChunk().func_150807_a(x, y, z, Blocks.air, 0);
 			}
 		}*/
-
-		for(int x = 0; x < 16; x++) for(int y = 0; y < 255; y++) for(int z = 0; z < 16; z++) {
-			if(event.getChunk().getBlock(x, y, z) == ModBlocks.absorber) {
-				event.getChunk().func_150807_a(x, y, z, ModBlocks.rad_absorber, 0);
-			}
-			else if(event.getChunk().getBlock(x, y, z) == ModBlocks.absorber_red) {
-				event.getChunk().func_150807_a(x, y, z, ModBlocks.rad_absorber, 1);
-			}
-			else if(event.getChunk().getBlock(x, y, z) == ModBlocks.absorber_green) {
-				event.getChunk().func_150807_a(x, y, z, ModBlocks.rad_absorber, 2);
-			}
-			else if(event.getChunk().getBlock(x, y, z) == ModBlocks.absorber_pink) {
-				event.getChunk().func_150807_a(x, y, z, ModBlocks.rad_absorber, 3);
-			}
-		}
 	}
 
 	@SubscribeEvent

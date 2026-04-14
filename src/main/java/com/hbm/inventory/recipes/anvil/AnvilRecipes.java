@@ -101,6 +101,7 @@ public class AnvilRecipes extends SerializableRecipe {
 		smithingRecipes.add(new AnvilSmithingMold(2, new OreDictStack(IRON.ingot()),  new OreDictStack("ingot")));
 		smithingRecipes.add(new AnvilSmithingMold(3, new OreDictStack(IRON.plate()),  new OreDictStack("plate")));
 		smithingRecipes.add(new AnvilSmithingMold(19, new OreDictStack(IRON.plateCast()),  new OreDictStack("plateTriple")));
+		smithingRecipes.add(new AnvilSmithingMold(13, new OreDictStack(IRON.plateCast(), 3), new OreDictStack("plateTriple", 3)));
 		smithingRecipes.add(new AnvilSmithingMold(4, new OreDictStack(CU.wireFine()),  new OreDictStack("wireFine")));
 		smithingRecipes.add(new AnvilSmithingMold(5, new ComparableStack(ModItems.blade_titanium), new ItemStack[] {
 				new ItemStack(ModItems.blade_titanium),
@@ -561,12 +562,6 @@ public class AnvilRecipes extends SerializableRecipe {
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {new ComparableStack(ModItems.nugget_bismuth, 2), new OreDictStack(U238.billet(), 2), new OreDictStack(NB.dust(), 1)},
 				new AnvilOutput(new ItemStack(ModItems.plate_bismuth, 1))).setTier(4));
-		constructionRecipes.add(new AnvilConstructionRecipe(
-				new AStack[] {new OreDictStack(EUPH.ingot(), 4), new OreDictStack(AT.dust(), 3), new OreDictStack(BI.dust(), 1), new OreDictStack(VOLCANIC.gem(), 1), new ComparableStack(ModItems.ingot_osmiridium)},
-				new AnvilOutput(new ItemStack(ModItems.plate_euphemium, 4))).setTier(6));
-		constructionRecipes.add(new AnvilConstructionRecipe(
-				new AStack[] {new OreDictStack(DNT.ingot(), 4), new ComparableStack(ModItems.powder_spark_mix, 2), new OreDictStack(DESH.ingot(), 1)},
-				new AnvilOutput(new ItemStack(ModItems.plate_dineutronium, 4))).setTier(7));
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {new OreDictStack(TI.plate(), 2), new OreDictStack(STEEL.ingot(), 1), new OreDictStack(STEEL.bolt(), 4)},

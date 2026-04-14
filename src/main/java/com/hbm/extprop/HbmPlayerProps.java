@@ -54,6 +54,8 @@ public class HbmPlayerProps implements IExtendedEntityProperties {
 	public int reputation;
 
 	public boolean isOnLadder = false;
+	
+	public int grenadeDeployment;
 
 	public boolean hasWarped = false;
 

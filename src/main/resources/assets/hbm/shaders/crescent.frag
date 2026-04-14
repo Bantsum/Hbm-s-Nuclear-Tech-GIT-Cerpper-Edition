@@ -3,9 +3,11 @@
 uniform float phase;
 uniform float offset;
 
+uniform sampler2D bodyTex;
 uniform sampler2D lights;
 uniform sampler2D cityMask;
 uniform int blackouts;
+uniform int useBodyAlphaMask;
 
 #define PI 3.1415926538
 
@@ -17,6 +19,16 @@ float hash(float x){ return fract(cos(x*124.123)*412.0); }
 
 void main() {
 	vec2 movingUV = gl_TexCoord[0].xy + vec2(offset, 0);
+
+	// hello im john planets with transparent pixels, sorry for being here
+	float alphaMask = 1.0;
+	if (useBodyAlphaMask != 0) {
+		alphaMask = texture2D(bodyTex, movingUV).a;
+		if (alphaMask <= 0.001) {
+			gl_FragColor = vec4(0.0);
+			return;
+		}
+	}
 
 	vec2 fragCoord = quantize(movingUV, vec2(0.0625, 0.0625)) - vec2(offset, 0);
 	vec2 uv = (2.25 * fragCoord - 1.1);
@@ -43,8 +55,11 @@ void main() {
 	brightness = max(brightness, 0.05);
 
 	// Apply night lights and mask out cities
+	vec4 city = texture2D(cityMask, movingUV);
 	gl_FragColor = texture2D(lights, movingUV);
-	gl_FragColor = gl_FragColor * texture2D(cityMask, movingUV) * (0.8 - brightness);
+	gl_FragColor = gl_FragColor * city * (0.8 - brightness) * alphaMask;
+	gl_FragColor.rgb *= city.a;
+	// ^ i hate weird black transparent pixels
 
 	for (int i = 0; i < blackouts; i++) {
 		float bx = hash(i * 100.0 + 1.0);
@@ -55,5 +70,5 @@ void main() {
 		}
 	}
 
-	gl_FragColor.a = 1.0 - brightness;
+	gl_FragColor.a = (1.0 - brightness) * alphaMask;
 }

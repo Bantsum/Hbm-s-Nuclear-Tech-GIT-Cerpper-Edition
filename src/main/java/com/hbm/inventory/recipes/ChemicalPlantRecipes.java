@@ -197,9 +197,9 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 
 		this.register(new GenericRecipe("chem.polymer").setup(100, 100)
 				.inputItems(new OreDictStack(COAL.dust(), 2), new OreDictStack(F.dust()))
-				.inputFluids(new FluidStack(Fluids.PETROLEUM, 500, GeneralConfig.enable528PressurizedRecipes ? 1 : 0))
-				.outputItems(new ItemStack(ModItems.ingot_polymer)));
-
+				.inputFluids(new FluidStack(Fluids.PETROLEUM, 1_000, GeneralConfig.enable528PressurizedRecipes ? 1 : 0))
+				.outputItems(new ItemStack(ModItems.ingot_polymer, 4)));
+		
 		this.register(new GenericRecipe("chem.bakelite").setup(100, 100)
 				.inputFluids(new FluidStack(Fluids.AROMATICS, 500, GeneralConfig.enable528PressurizedRecipes ? 1 : 0), new FluidStack(Fluids.PETROLEUM, 500, GeneralConfig.enable528PressurizedRecipes ? 1 : 0))
 				.outputItems(new ItemStack(ModItems.ingot_bakelite)));
@@ -445,12 +445,12 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 
 		this.register(new GenericRecipe("chem.strawberryicecream").setup(150, 100)
 				.inputFluids(new FluidStack(Fluids.CREAM, 1000))
-				.inputItems(new ComparableStack(ModItems.butter, 2), new ComparableStack(Blocks.packed_ice, 1), new ComparableStack(ModItems.strawberry, 4))
+				.inputItems(new OreDictStack(KEY_BUTTER, 2), new ComparableStack(Blocks.packed_ice, 1), new OreDictStack(KEY_STRAWBERRY, 4))
 				.outputItems(new ItemStack(ModItems.s_cream, 4)));
 
 		this.register(new GenericRecipe("chem.minmusicecream").setup(150, 100)
 				.inputFluids(new FluidStack(Fluids.CREAM, 1000))
-				.inputItems(new ComparableStack(ModItems.butter, 4), new ComparableStack(ModBlocks.minmus_smooth, 2), new ComparableStack(ModBlocks.minmus_stone, 2))
+				.inputItems(new OreDictStack(KEY_BUTTER, 4), new ComparableStack(ModBlocks.minmus_smooth, 2), new ComparableStack(ModBlocks.minmus_stone, 2))
 				.outputItems(new ItemStack(ModItems.min_cream, 4)));
 
 		this.register(new GenericRecipe("chem.minmussmoothstone").setup(200, 1_000)

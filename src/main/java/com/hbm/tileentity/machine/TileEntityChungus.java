@@ -25,7 +25,6 @@ import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.IRepairable;
-import com.hbm.tileentity.IRepairable.EnumExtinguishType;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.CompatEnergyControl;
@@ -34,6 +33,7 @@ import com.hbm.world.gen.nbt.INBTTileEntityTransformable;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
 import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import api.hbm.tile.IInfoProviderEC;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -51,7 +51,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyProviderMK2, IFluidStandardTransceiverMK2, SimpleComponent, IInfoProviderEC, CompatHandler.OCComponent, IConfigurableMachine, IFluidCopiable, IRepairable, INBTTileEntityTransformable, IPersistentNBT {
+public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyProviderMK2, IFluidStandardTransceiverMK2, SimpleComponent, IInfoProviderEC, CompatHandler.OCComponent, IConfigurableMachine, IFluidCopiable, IRepairable, INBTTileEntityTransformable, IPersistentNBT, IRORValueProvider {
 
 	public long powerBuffer;
 	private int turnTimer;
@@ -442,4 +442,17 @@ public class TileEntityChungus extends TileEntityLoadedBase implements IEnergyPr
 		damaged = nbt.getBoolean("damaged");
 	}
 
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_VALUE + "output"
+		};
+	}
+	
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "output").equals(name)) return "" + (int) this.powerBuffer;
+		return null;
+	}
 }

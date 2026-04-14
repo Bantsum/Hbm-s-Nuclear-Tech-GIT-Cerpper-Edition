@@ -1292,10 +1292,6 @@ public class ModBlocks {
 	public static Block gas_explosive;
 	public static Block vacuum;
 
-	@Deprecated public static Block absorber;
-	@Deprecated public static Block absorber_red;
-	@Deprecated public static Block absorber_green;
-	@Deprecated public static Block absorber_pink;
 	public static Block rad_absorber;
 	public static Block decon;
 
@@ -2369,7 +2365,7 @@ public class ModBlocks {
 		soyuz_capsule = new SoyuzCapsule(Material.iron).setBlockName("soyuz_capsule").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab).setBlockTextureName(RefStrings.MODID + ":soyuz_capsule");
 		gas_dock = new MachineGasDock(Material.iron).setBlockName("gas_dock").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab).setBlockTextureName(RefStrings.MODID + ":sat_dock");
 		crate_supply = new BlockSupplyCrate(Material.wood).setBlockName("crate_supply").setStepSound(Block.soundTypeWood).setHardness(1.0F).setResistance(2.5F).setCreativeTab(MainRegistry.missileTab).setBlockTextureName(RefStrings.MODID + ":crate_can");
-		combat_drop = new CombatDropPod(Material.iron).setBlockName("combat_drop").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab).setBlockTextureName(RefStrings.MODID + ":crate_can");
+		combat_drop = new CombatDropPod(Material.iron).setBlockName("combat_drop").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 
 		turret_chekhov = new TurretChekhov(Material.iron).setBlockName("turret_chekhov").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.weaponTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		turret_friendly = new TurretFriendly(Material.iron).setBlockName("turret_friendly").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.weaponTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
@@ -2599,11 +2595,6 @@ public class ModBlocks {
 		gas_flammable = new BlockGasFlammable().setBlockName("gas_flammable").setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":gas_flammable");
 		gas_explosive = new BlockGasExplosive().setBlockName("gas_explosive").setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":gas_explosive");
 		vacuum = new BlockVacuum().setBlockName("vacuum").setResistance(1000000F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":vacuum");
-
-		absorber = new BlockGeneric(Material.iron).setBlockName("absorber").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_deprecated");
-		absorber_red = new BlockGeneric(Material.iron).setBlockName("absorber_red").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_deprecated");
-		absorber_green = new BlockGeneric(Material.iron).setBlockName("absorber_green").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_deprecated");
-		absorber_pink = new BlockGeneric(Material.iron).setBlockName("absorber_pink").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":block_deprecated");
 
 		rad_absorber = new BlockAbsorber(Material.iron).setBlockName("rad_absorber").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 		decon = new BlockDecon(Material.iron).setBlockName("decon").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":decon_side");
@@ -3810,10 +3801,6 @@ public class ModBlocks {
 		GameRegistry.registerBlock(struct_icf_core, struct_icf_core.getUnlocalizedName());
 
 		//Absorbers
-		GameRegistry.registerBlock(absorber, absorber.getUnlocalizedName());
-		GameRegistry.registerBlock(absorber_red, absorber_red.getUnlocalizedName());
-		GameRegistry.registerBlock(absorber_green, absorber_green.getUnlocalizedName());
-		GameRegistry.registerBlock(absorber_pink, absorber_pink.getUnlocalizedName());
 		GameRegistry.registerBlock(rad_absorber, ItemBlockBase.class, rad_absorber.getUnlocalizedName());
 		GameRegistry.registerBlock(decon, decon.getUnlocalizedName());
 
