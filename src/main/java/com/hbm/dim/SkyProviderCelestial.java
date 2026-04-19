@@ -132,7 +132,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 		}
 
 		float fogIntensity = ModEventHandlerRenderer.lastFogDensity * 30;
-		currentFov = mc.entityRenderer.getFOVModifier(partialTicks, true);
+		//currentFov = mc.entityRenderer.getFOVModifier(partialTicks, true);
 
 		CelestialBody body = CelestialBody.getBody(world);
 		CelestialBody sun = body.getStar();
@@ -1239,7 +1239,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 		tessellator.addVertex(-middleSize, 100.0D, middleSize);
 		tessellator.setColorRGBA_F(r, g, b, leadingGlow / 2);
 		tessellator.addVertex(middleSize, 100.0D, middleSize);
-		
+
 		tessellator.addVertex(middleSize, 100.0D, middleSize);
 		tessellator.setColorRGBA_F(r, g, b, trailingGlow / 2);
 		tessellator.addVertex(-middleSize, 100.0D, middleSize);
@@ -1255,7 +1255,7 @@ public class SkyProviderCelestial extends IRenderHandler {
 		tessellator.setColorRGBA_F(r, g, b, trailingGlow / 2);
 		tessellator.addVertex(-middleSize, 100.0D, -middleSize);
 		tessellator.addVertex(-middleSize, 100.0D, middleSize);
-		
+
 		tessellator.addVertex(-middleSize, 100.0D, middleSize);
 		tessellator.addVertex(-middleSize, 100.0D, -middleSize);
 		tessellator.setColorRGBA_F(r, g, b, trailingGlow);
