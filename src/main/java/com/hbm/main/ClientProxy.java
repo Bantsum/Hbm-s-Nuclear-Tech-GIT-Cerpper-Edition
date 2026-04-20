@@ -69,13 +69,7 @@ import com.hbm.render.item.block.ItemRenderDecoBlock;
 import com.hbm.render.item.weapon.*;
 import com.hbm.render.loader.HFRModelReloader;
 import com.hbm.render.loader.HmfModelLoader;
-import com.hbm.render.model.ModelDepthSquid;
-import com.hbm.render.model.ModelMoonCow;
-import com.hbm.render.model.ModelPigeon;
-import com.hbm.render.model.ModelScrapFish;
-import com.hbm.render.model.ModelScutter;
-import com.hbm.render.model.ModelScuttlecrab;
-import com.hbm.render.model.ModelSifterEel;
+import com.hbm.render.model.*;
 import com.hbm.render.tileentity.*;
 import com.hbm.render.util.MissilePart;
 import com.hbm.render.util.RenderInfoSystem;
@@ -798,6 +792,7 @@ public class ClientProxy extends ServerProxy {
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityMoonCow.class, new RenderMoonCow(new ModelMoonCow(), 0.7F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityScutterfish.class, new RenderScutter(new ModelScutter(), 0.3F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityLaythewhale.class, new RenderLaythewhale(new ModelLaytheWhale(), 0.2F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTankbot.class, new RenderTankbot());
 		RenderingRegistry.registerEntityRenderingHandler(EntityWarBehemoth.class, new RenderBehemoth());
 
