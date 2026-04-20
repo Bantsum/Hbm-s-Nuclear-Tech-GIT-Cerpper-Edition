@@ -1648,6 +1648,7 @@ public class MainRegistry {
 		ignoreMappings.add("hbm:item.grenade_if_null");
 		ignoreMappings.add("hbm:item.grenade_kit");
 		ignoreMappings.add("hbm:item.nuclear_waste_pearl");
+		ignoreMappings.add("hbm:tile.plasma");
 		
 		/// REMAP ///
 		remapItems.put("hbm:item.gadget_explosive8", ModItems.early_explosive_lenses);

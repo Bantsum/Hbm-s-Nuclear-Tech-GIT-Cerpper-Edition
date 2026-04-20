@@ -1,4 +1,4 @@
-package com.hbm.render.model;
+/*package com.hbm.render.model;
 
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.model.ModelBase;
@@ -89,3 +89,4 @@ public class ModelLaytheWhale extends ModelBase {
 	}
 
 }
+*/

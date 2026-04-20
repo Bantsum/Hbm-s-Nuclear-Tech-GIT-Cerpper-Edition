@@ -1,16 +1,11 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5663 - 2013 TF2 YTP about Merasmus sticking a grenade in his ass](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5663)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5670 - are you ready for garlic bready](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5670)
 
 ## Added
-* Atmospheres are now visible from other planets/orbit
-* All planets/moons now generate flat in superflat worlds
+* Satellite orbit and cosmetic modification
+    * Satellites can now be modified via a GUI that is accessed via crouch + right click
+    * They now store additional info that defines how they move in the sky
+    * Holding a satellite will show you a preview of what their final trajectory in the sky will be
+    * You can configure them to blink too
 
-## Changed
-* Redesigned StarDar GUI
-* Improved StarDar OC compat
-* Planet icons tweaked for better tiling when rotating
-    * Urlum and moons added, can't be visited yet though
-    * Same with Plock & Karen
-* Invasion waves now use the boss health bar
-* Distant planets are now (more) visible through scopes/zooming
-* Flour, butter, cheese, strawberries, and icecreams are now oredicted
-* More Laythe generation tweaks (ancient roots found deep underground)
+## Fixed
+* Crash on Tekto with Angelica installed

@@ -371,7 +371,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 			if(entry instanceof SatelliteWar) {
 				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.getInterp();
+				float flame = war.interp;
 				float alpd = 1.0F - Math.min(1.0F, flame / 100);
 
 				color.xCoord += alpd * 1.5;
@@ -433,7 +433,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 			if(entry instanceof SatelliteWar) {
 				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.getInterp();
+				float flame = war.interp;
 				float alpd = 1.0F - Math.min(1.0F, flame / 100);
 
 				color.xCoord += alpd * 1.5;
@@ -582,7 +582,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
 			if(entry instanceof SatelliteWar) {
 				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.getInterp();
+				float flame = war.interp;
 				float alpd = 1.0F - Math.min(1.0F, flame / 100);
 				insideBrightness += alpd;
 			}

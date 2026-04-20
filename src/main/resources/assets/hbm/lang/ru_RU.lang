@@ -4605,6 +4605,11 @@ item.sat_resonator.name=Спутник с Зен-Резонатором
 item.sat_scanner.name=Спутник с модулем глубинно-ресурсного сканирования
 
 item.sat.desc.frequency=Частота спутника
+item.sat.desc.owner=Владелец спутника
+item.sat.desc.phase=Орбитальная фаза
+item.sat.desc.inclination=Наклонение спутника
+item.sat.desc.altitude=Высота орбиты спутника
+item.sat.desc.speed=Скорость спутника
 item.sat.desc.foeq=Даёт тебе достижение. Это всё.
 item.sat.desc.gerald.single_use=Одноразовое.
 item.sat.desc.gerald.orbital_module=Требует орбитальный модуль.
@@ -4620,6 +4625,17 @@ item.sat.desc.war=Однозарядный рельсотрон, предназ�
 item.sat.desc.dyson_relay=Позволяет приемнику Дайсона работать ночью
 item.sat.desc.launch_by_hand=Возможен ручной запуск с орбитальной станции
 item.sat.desc.deploy_orbit=ПКМ для вывода на орбиту
+gui.sat.settings.tooltip.owner_assign=Нажмите, чтобы назначить себя владельцем спутника
+gui.sat.settings.tooltip.switch_settings_list=Переключить список настроек
+gui.sat.settings.label.orbital_phase=Орбитальная фаза
+gui.sat.settings.unit.km=км
+gui.sat.settings.unit.km_per_second=км/с
+gui.sat.settings.unit.seconds=с
+gui.sat.settings.tooltip.scroll_speed=Прокрутите колесо мыши, чтобы изменить скорость
+gui.sat.settings.tooltip.scroll_altitude=Прокрутите колесо мыши, чтобы изменить высоту
+gui.sat.settings.tooltip.scroll_inclination=Прокрутите колесо мыши, чтобы изменить наклонение
+gui.sat.settings.tooltip.scroll_phase=Прокрутите колесо мыши, чтобы изменить орбитальную фазу
+gui.sat.settings.tooltip.scroll_blink=Прокрутите колесо мыши, чтобы изменить период мигания
 
 
 item.sawblade.name=Лезвие пилорамы
@@ -6352,7 +6368,7 @@ tile.rbmk_display_blank.name=Редстоун-по-радио пустая па�
 tile.rbmk_heater.name=Жидкостный нагреватель РБМК
 tile.rbmk_key_pad.name=Редстоун-по-радио клавиатура
 tile.rbmk_gauge.name=Редстоун-по-радио измеритель
-tile.rbmk_graph.name=Редстоун-по-радио график 
+tile.rbmk_graph.name=Редстоун-по-радио график
 tile.rbmk_loader.name=Паровой проводник РБМК
 tile.rbmk_loader.desc=Позволяет РБМК иметь внизу соединения для воды и пара$Поместите одну водную трубу под колонной РБМК, затем проводник,$потом подключите паропровод к проводнику.
 tile.rbmk_moderator.name=Графитовый замедлитель РБМК
@@ -6775,6 +6791,7 @@ tile.oc_cable_paintable.name=Окрашиваемый сетевой кабел�
 // NTM Space //
 
 // Celestial Bodies //
+body.kerbol=Кербол
 body.moho=Мохо
 body.eve=Ева
 body.kerbin=Земля
@@ -6786,6 +6803,26 @@ body.dres=Дрес
 body.laythe=Лейт
 body.tekto=Текто
 body.thatmo=Татмо
+body.gilly=Гилли
+body.jool=Джул
+body.vall=Валл
+body.tylo=Тайло
+body.bop=Боп
+body.pol=Пол
+body.sarnus=Сарнус
+body.hale=Хейл
+body.ovok=Овок
+body.eeloo=Илу
+body.slate=Слейт
+body.urlum=Урлум
+body.polta=Полта
+body.priax=Приакс
+body.wal=Вал
+body.tal=Тал
+body.neidon=Нейдон
+body.nissee=Нисси
+body.plock=Плок
+body.karen=Карен
 
 // Moho //
 tile.moho_regolith.name=Реголит Мохо
@@ -7306,6 +7343,25 @@ hbmmat.iridium=Иридий
 container.cryoDistillator=Криогенный дистиллятор
 container.hydrobay=Теплица
 container.machine_discharger=Устройство разрядки материи
+gui.stardar.tooltip.focus_current_body=Сфокусироваться на текущей планете
+gui.stardar.tooltip.program_new_station=Записать новую орбитальную станцию на диск
+gui.stardar.tooltip.program_current_body=Записать текущую планету на диск
+gui.stardar.label.focus_satellite=Фокус: спутник
+gui.stardar.label.unfocus_hint=ПКМ, чтобы снять фокус
+gui.stardar.label.drag_map=Перетаскивайте для перемещения карты
+gui.stardar.label.click_body_focus=Нажмите на тело, чтобы сфокусироваться
+gui.stardar.label.focus_body=Фокус: %s
+gui.stardar.label.cant_land=Здесь нельзя приземлиться!
+gui.stardar.label.insert_drive=Вставьте диск
+gui.stardar.label.click_again_land=Нажмите еще раз для посадки
+gui.stardar.label.loading_surface_map=Загрузка карты поверхности...
+gui.stardar.label.select_landing_zone=Выберите зону посадки
+gui.stardar.label.valid_location=Подходящее место
+gui.stardar.label.target_altitude=Целевая высота: %s
+gui.stardar.landing.no_heightmap=Нет карты высот
+gui.stardar.landing.outside_bounds=Вне границ
+gui.stardar.landing.area_not_flat=Участок неровный
+gui.stardar.body.unknown=Неизвестно
 
 // Entities //
 entity.hbm.entity_depthsquid.name=Глубинный кальмар
@@ -7318,7 +7374,7 @@ entity.hbm.entity_scutterfish.name=Скаттер
 entity.hbm.entity_scuttlecrab.name=Краб-бегун
 entity.hbm.entity_siftereel.name=Угорь-просейщик
 entity.hbm.entity_tankbot.name=Танкбот
-entity.hbm.entity_war_behemoth.name=Машина войны
+entity.hbm.entity_war_behemoth.name=Колосс войны
 entity.hbm.entity_ntm_bfa.name=Жар-Ангел
 entity.hbm.entity_micro_ufo.name=Макро-НЛО
 entity.hbm.entity_meme_ufo.name=Мини-НЛО
@@ -7422,4 +7478,4 @@ desc.util.fin_inaccuracy=Неточность стабилизатора
 
 // Vitya Note: Здесь небольшой беспорядок в файле.
 // В следующем обновлении это исправлю...
-// last updated marth 27th, 2026 by KimiKimi //
+// last updated March 27th, 2026 by Vitya2127, approved by KimiKimi //
