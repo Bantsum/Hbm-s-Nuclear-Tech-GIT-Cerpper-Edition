@@ -95,9 +95,9 @@ public class ItemPoolsComponent {
 					weighted(ModItems.bomb_caller, 0, 1, 1, 1),
 					weighted(ModItems.bomb_caller, 3, 1, 1, 1),
 					weighted(ModItems.bottle_nuka, 0, 1, 3, 10),
-					weighted(ModItems.can_cabo, 0, 1, 1, 1),
+					/*weighted(ModItems.can_cabo, 0, 1, 1, 1),
 					weighted(ModItems.can_splash, 0, 1, 1, 1),
-					weighted(ModItems.can_flash, 0, 1, 1, 1)
+					weighted(ModItems.can_flash, 0, 1, 1, 1)*/
 			};
 		}};
 
@@ -141,7 +141,7 @@ public class ItemPoolsComponent {
 					weighted(ModItems.screwdriver, 0, 1, 1, 10),
 					weighted(ModItems.blueprint_folder, 0, 1, 1, 5),
 					weighted(ModItems.can_dew, 0, 1, 1, 1),
-					weighted(ModItems.can_cabo, 0, 1, 1, 1)
+					//weighted(ModItems.can_cabo, 0, 1, 1, 1)
 			};
 		}};
 

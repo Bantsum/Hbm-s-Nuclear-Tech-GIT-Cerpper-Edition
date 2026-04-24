@@ -124,7 +124,7 @@ public class PedestalRecipes extends SerializableRecipe {
 				null,	null,																	null,
 				null,	new ComparableStack(ModItems.item_secret, 3, EnumSecretType.ABERRATOR),	null,
 				null,	null,																	null).set(1));
-		register(new PedestalRecipe(new ItemStack(ModItems.can_gold),
+		/*register(new PedestalRecipe(new ItemStack(ModItems.can_gold),
 			new ComparableStack(ModItems.can_flash,1),		new ComparableStack(ModItems.can_dew,1),	new ComparableStack(ModItems.can_splash,1),
 			new ComparableStack(ModItems.can_red,1),		new ComparableStack(ModItems.can_shiny,1),	new ComparableStack(ModItems.can_blue,1),
 			new ComparableStack(ModItems.can_cabo,1),		new ComparableStack(ModItems.can_baja,1),	new ComparableStack(ModItems.can_mid,1)));
@@ -132,7 +132,7 @@ public class PedestalRecipes extends SerializableRecipe {
 			new ComparableStack(ModItems.powder_magic,1),		new OreDictStack(GOLD.plate(),1),	new ComparableStack(ModItems.powder_magic,1),
 			new OreDictStack(GOLD.plate(),1),		new ComparableStack(ModItems.can_empty,1),		new OreDictStack(GOLD.plate(),1),
 			new ComparableStack(ModItems.powder_magic,1),		new OreDictStack(GOLD.plate(),1),	new ComparableStack(ModItems.powder_magic,1)));
-		/*register(new PedestalRecipe(new ItemStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.COPPER.ordinal()),
+		register(new PedestalRecipe(new ItemStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.COPPER.ordinal()),
 			new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.NERU.ordinal()),		new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.MIKU.ordinal()),	new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.TETO.ordinal()),
 			new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.DERG.ordinal()),		new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.COPPER.ordinal()),		new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.YOMI.ordinal()),
 			new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.CREPER.ordinal()),		new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.NUMBERNINE.ordinal()),	new ComparableStack(ModBlocks.plushie, 1, BlockPlushie.PlushieType.HUNDUN.ordinal())));*/

@@ -1038,12 +1038,12 @@ public class ModItems {
 	public static Item can_red;
 	public static Item can_blue;
 	public static Item can_baja;
-	public static Item can_cabo;
+	/*public static Item can_cabo;
 	public static Item can_splash;
 	public static Item can_flash;
 	public static Item can_mid;
 	public static Item can_shiny;
-	public static Item can_gold;
+	public static Item can_gold;*/
 	public static Item mucho_mango;
 	public static Item bottle_empty;
 	public static Item bottle_nuka;
@@ -6805,13 +6805,13 @@ public class ModItems {
 		GameRegistry.registerItem(can_dew, can_dew.getUnlocalizedName());
 		GameRegistry.registerItem(can_red, can_red.getUnlocalizedName());
 		GameRegistry.registerItem(can_blue, can_blue.getUnlocalizedName());
-		GameRegistry.registerItem(can_baja, can_baja.getUnlocalizedName());
+		/*GameRegistry.registerItem(can_baja, can_baja.getUnlocalizedName());
 		GameRegistry.registerItem(can_cabo, can_cabo.getUnlocalizedName());
 		GameRegistry.registerItem(can_splash, can_splash.getUnlocalizedName());
 		GameRegistry.registerItem(can_flash, can_flash.getUnlocalizedName());
 		GameRegistry.registerItem(can_mid, can_mid.getUnlocalizedName());
 		GameRegistry.registerItem(can_gold, can_gold.getUnlocalizedName());
-		GameRegistry.registerItem(can_shiny, can_shiny.getUnlocalizedName());
+		GameRegistry.registerItem(can_shiny, can_shiny.getUnlocalizedName());*/
 
 		//Coffee
 		GameRegistry.registerItem(coffee, coffee.getUnlocalizedName());

@@ -135,7 +135,7 @@ public class ItemEnergy extends Item {
 				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
 				player.addPotionEffect(new PotionEffect(Potion.jump.id, 30 * 20, 2));
 			}
-			if(this == ModItems.can_cabo) {
+			/*if(this == ModItems.can_cabo) {
 				player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30 * 20, 3));
 				player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60 * 20, 2));
 				player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 30 * 20, 1));
@@ -159,7 +159,7 @@ public class ItemEnergy extends Item {
 				player.addPotionEffect(new PotionEffect(HbmPotion.flashbang.id, 5 * 20));
 				player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 30 * 20, 1));
 				player.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 30 * 20, 2));
-			}
+			}*/
 			if(this == ModItems.chocolate_milk) {
 				ExplosionLarge.explode(world, player.posX, player.posY, player.posZ, 50, true, false, false);
 			}
@@ -327,7 +327,7 @@ public class ItemEnergy extends Item {
 		if(this == ModItems.can_baja) {
 			list.add("Taste the BAJA no seriously.");
 		}
-		if(this == ModItems.can_cabo) {
+		/*if(this == ModItems.can_cabo) {
 			list.add("This's just straight up a fanta can.");
 			list.add("Tastes like copper wires");
 		}
@@ -341,7 +341,7 @@ public class ItemEnergy extends Item {
 		if(this == ModItems.can_mid) {
 			list.add("A mix of galaxy's contained in one can.");
 			list.add("Side effects include: IMPLODING.");
-		}
+		}*/
 		if(this == ModItems.chocolate_milk) {
 			list.add("Regular chocolate milk. Safe to drink.");
 			list.add("Totally not made from nitroglycerine.");
