@@ -1,11 +1,1 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5670 - are you ready for garlic bready](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5670)
-
-## Added
-* Satellite orbit and cosmetic modification
-    * Satellites can now be modified via a GUI that is accessed via crouch + right click
-    * They now store additional info that defines how they move in the sky
-    * Holding a satellite will show you a preview of what their final trajectory in the sky will be
-    * You can configure them to blink too
-
-## Fixed
-* Crash on Tekto with Angelica installed
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5671 - let the machine scream at you](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5671)
