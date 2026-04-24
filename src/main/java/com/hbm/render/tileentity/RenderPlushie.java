@@ -163,6 +163,32 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 		case COPPER:
 			Minecraft.getMinecraft().getTextureManager().bindTexture(copperTex);
 			copperModel.renderAll();
+			GL11.glPushMatrix();
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			GL11.glShadeModel(GL11.GL_SMOOTH);
+			GL11.glRotated(90, 0, 1, 0);
+			GL11.glTranslated(0, 0.64, -0.10);
+			double helmetScale = 1.380D;
+			GL11.glScaled(0.0625D * helmetScale, 0.0625D * helmetScale, 0.0625D * helmetScale);
+			GL11.glRotated(180, 1, 0, 0);
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.no9);
+			ResourceManager.armor_no9.renderPart("Helmet");
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.no9_insignia);
+			ResourceManager.armor_no9.renderPart("Insignia");
+			GL11.glShadeModel(GL11.GL_FLAT);
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glPopMatrix();
+			GL11.glPushMatrix();
+			ItemStack stacker = new ItemStack(ModItems.cigarette);
+			GL11.glTranslated(0.10, 0.63, -0.08);
+			double cigScale = 0.37D;
+			GL11.glScaled(cigScale, cigScale, cigScale);
+			GL11.glRotated(-360, 0, -1, 0);
+			GL11.glRotated(60, 0, 0, -1);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+			IIcon iconer = stacker.getIconIndex();
+			ItemRenderer.renderItemIn2D(Tessellator.instance, iconer.getMaxU(), iconer.getMinV(), iconer.getMinU(), iconer.getMaxV(), iconer.getIconWidth(), iconer.getIconHeight(), 0.0625F);
+			GL11.glPopMatrix();
 			break;
 		/*case CREPER:
 			Minecraft.getMinecraft().getTextureManager().bindTexture(creperTex);

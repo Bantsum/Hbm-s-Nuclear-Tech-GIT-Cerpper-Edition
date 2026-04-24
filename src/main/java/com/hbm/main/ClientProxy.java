@@ -794,7 +794,7 @@ public class ClientProxy extends ServerProxy {
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityMoonCow.class, new RenderMoonCow(new ModelMoonCow(), 0.7F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityScutterfish.class, new RenderScutter(new ModelScutter(), 0.3F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLaythewhale.class, new RenderLaythewhale(new ModelLaytheWhale(), 0.2F));
+		//RenderingRegistry.registerEntityRenderingHandler(EntityLaythewhale.class, new RenderLaythewhale(new ModelLaytheWhale(), 0.2F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTankbot.class, new RenderTankbot());
 		RenderingRegistry.registerEntityRenderingHandler(EntityWarBehemoth.class, new RenderBehemoth());
 

@@ -1,4 +1,4 @@
-package com.hbm.items.armor;
+/*package com.hbm.items.armor;
 
 import java.util.List;
 
@@ -57,3 +57,4 @@ public class ItemModCan extends ItemArmorMod {
 	}
 
 }
+*/

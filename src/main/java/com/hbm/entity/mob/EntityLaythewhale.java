@@ -1,4 +1,4 @@
-package com.hbm.entity.mob;
+/*package com.hbm.entity.mob;
 
 import com.hbm.items.ModItems;
 
@@ -16,3 +16,4 @@ public class EntityLaythewhale extends EntityFish {
 		return ModItems.can_baja;
 	}
 }
+*/

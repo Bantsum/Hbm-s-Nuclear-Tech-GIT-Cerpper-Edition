@@ -1327,7 +1327,6 @@ public class ModItems {
 	public static Item radar_linker;
 	public static Item settings_tool;
 	public static Item atmosphere_scanner;
-	public static Item rtty_pager;
 
 	public static Item blueprints;
 	public static Item blueprint_folder;
@@ -1661,7 +1660,7 @@ public class ModItems {
 	public static Item grenade_fuze;
 	public static Item grenade_extra;
 	public static Item grenade_universal;
-	
+
 	public static Item ullapool_caber;
 
 	public static Item weaponized_starblaster_cell;
@@ -3350,12 +3349,12 @@ public class ModItems {
 		can_red = new ItemEnergy().makeCan().setUnlocalizedName("can_red").setTextureName(RefStrings.MODID + ":can_red");
 		can_blue = new ItemEnergy().makeCan().setUnlocalizedName("can_blue").setTextureName(RefStrings.MODID + ":can_blue");
 		can_baja = new ItemEnergy().makeCan().setUnlocalizedName("can_baja").setTextureName(RefStrings.MODID + ":can_baja");
-		can_cabo = new ItemEnergy().makeCan().setUnlocalizedName("can_cabo").setTextureName(RefStrings.MODID + ":can_cabo");
+		/*can_cabo = new ItemEnergy().makeCan().setUnlocalizedName("can_cabo").setTextureName(RefStrings.MODID + ":can_cabo");
 		can_splash = new ItemEnergy().makeCan().setUnlocalizedName("can_splash").setTextureName(RefStrings.MODID + ":can_splash");
 		can_flash = new ItemEnergy().makeCan().setUnlocalizedName("can_flash").setTextureName(RefStrings.MODID + ":can_flash");
 		can_mid = new ItemEnergy().makeCan().setUnlocalizedName("can_mid").setTextureName(RefStrings.MODID + ":can_mid");
 		can_shiny = new Item().setUnlocalizedName("can_shiny").setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":can_shiny");
-		can_gold = new ItemModCan(100F).setUnlocalizedName("can_gold").setTextureName(RefStrings.MODID + ":can_gold");
+		can_gold = new ItemModCan(100F).setUnlocalizedName("can_gold").setTextureName(RefStrings.MODID + ":can_gold");*/
 		bottle_empty = new Item().setUnlocalizedName("bottle_empty").setTextureName(RefStrings.MODID + ":bottle_empty");
 		bottle_nuka = new ItemEnergy().makeBottle(bottle_empty, cap_nuka).setUnlocalizedName("bottle_nuka").setTextureName(RefStrings.MODID + ":bottle_nuka");
 		bottle_cherry = new ItemEnergy().makeBottle(bottle_empty, cap_nuka).setUnlocalizedName("bottle_cherry").setContainerItem(ModItems.bottle_empty).setTextureName(RefStrings.MODID + ":bottle_cherry");
@@ -4389,7 +4388,6 @@ public class ModItems {
 		radar_linker = new ItemRadarLinker().setUnlocalizedName("radar_linker").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":radar_linker");
 		settings_tool = new ItemSettingsTool().setUnlocalizedName("settings_tool").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":settings_tool");
 		atmosphere_scanner = new ItemAtmosphereScanner().setUnlocalizedName("atmosphere_scanner").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":atmosphere_scanner");
-		rtty_pager = new ItemRTTYPager().setUnlocalizedName("rtty_pager").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":rtty_pager");
 
 		key = new ItemKey().setUnlocalizedName("key").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab).setTextureName(RefStrings.MODID + ":key");
 		key_red = new ItemCustomLore().setUnlocalizedName("key_red").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":key_red");
@@ -6257,7 +6255,6 @@ public class ModItems {
 		GameRegistry.registerItem(analysis_tool, analysis_tool.getUnlocalizedName());
 		GameRegistry.registerItem(coupling_tool, coupling_tool.getUnlocalizedName());
 		GameRegistry.registerItem(settings_tool, settings_tool.getUnlocalizedName());
-		GameRegistry.registerItem(rtty_pager, rtty_pager.getUnlocalizedName());
 		GameRegistry.registerItem(dosimeter, dosimeter.getUnlocalizedName());
 		GameRegistry.registerItem(geiger_counter, geiger_counter.getUnlocalizedName());
 		GameRegistry.registerItem(digamma_diagnostic, digamma_diagnostic.getUnlocalizedName());

@@ -1,4 +1,4 @@
-package com.hbm.render.entity.mob;
+/*package com.hbm.render.entity.mob;
 
 import com.hbm.lib.RefStrings;
 
@@ -20,3 +20,4 @@ public class RenderLaythewhale extends RenderLiving {
 	}
 
 }
+*/

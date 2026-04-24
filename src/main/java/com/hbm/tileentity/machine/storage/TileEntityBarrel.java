@@ -304,10 +304,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements SimpleCom
 		tank.writeToNBT(nbt, "tank");
 	}
 
-	@Override
-	public boolean canConnect(FluidType fluid, ForgeDirection dir) {
-		return fluid == tank.getTankType();
-	}
+	@Override public boolean canConnect(FluidType fluid, ForgeDirection dir) { return true; }
 
 	@Override
 	public FluidTank[] getSendingTanks() {

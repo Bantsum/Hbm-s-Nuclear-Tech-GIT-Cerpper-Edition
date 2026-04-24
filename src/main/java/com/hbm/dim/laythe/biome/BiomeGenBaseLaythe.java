@@ -15,7 +15,7 @@ import com.hbm.dim.BiomeDecoratorCelestial;
 import com.hbm.dim.BiomeGenBaseCelestial;
 import com.hbm.entity.mob.EntityScutterfish;
 import com.hbm.entity.mob.EntitySifterEel;
-import com.hbm.entity.mob.EntityLaythewhale;
+//import com.hbm.entity.mob.EntityLaythewhale;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -37,7 +37,7 @@ public abstract class BiomeGenBaseLaythe extends BiomeGenBaseCelestial {
 
 		this.waterCreatures.add(new BiomeGenBase.SpawnListEntry(EntityScutterfish.class, 10, 4, 4));
 		this.waterCreatures.add(new BiomeGenBase.SpawnListEntry(EntitySifterEel.class, 10, 1, 3));
-		this.waterCreatures.add(new BiomeGenBase.SpawnListEntry(EntityLaythewhale.class, 1, 1, 1));
+		//this.waterCreatures.add(new BiomeGenBase.SpawnListEntry(EntityLaythewhale.class, 1, 1, 1));
 
 		BiomeDecoratorCelestial decorator = new BiomeDecoratorCelestial(Blocks.stone);
 		decorator.waterPlantsPerChunk = 32;

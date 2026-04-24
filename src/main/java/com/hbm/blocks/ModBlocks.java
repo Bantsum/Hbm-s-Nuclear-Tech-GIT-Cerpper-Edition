@@ -3605,15 +3605,15 @@ public class ModBlocks {
 		GameRegistry.registerBlock(pribris_radiating, pribris_radiating.getUnlocalizedName());
 		GameRegistry.registerBlock(pribris_digamma, pribris_digamma.getUnlocalizedName());
 
-		register(red_cable);
-		register(red_cable_classic);
-		register(red_cable_paintable);
+		GameRegistry.registerBlock(red_cable, red_cable.getUnlocalizedName());
+		GameRegistry.registerBlock(red_cable_classic, red_cable_classic.getUnlocalizedName());
+		GameRegistry.registerBlock(red_cable_paintable, red_cable_paintable.getUnlocalizedName());
 		register(red_cable_gauge);
 		register(red_cable_box);
-		register(red_wire_coated);
+		GameRegistry.registerBlock(red_wire_coated, red_wire_coated.getUnlocalizedName());
 		register(red_connector);
 		register(red_connector_super);
-		register(red_pylon);
+		GameRegistry.registerBlock(red_pylon, ItemBlockBase.class, red_pylon.getUnlocalizedName());
 		register(red_pylon_medium_wood);
 		register(red_pylon_medium_wood_transformer);
 		register(red_pylon_medium_steel);
