@@ -272,12 +272,13 @@ public class SolarSystem {
 					.withGas(Fluids.NGAS)
 					.withSatellites(
 
-					new CelestialBody("thatmo")
+					new CelestialBody("thatmo", SpaceConfig.thatmoDimension, Body.THATMO)
 						.withMassRadius(2.788e21F, 286)
 						.withOrbitalParameters(32_301, 0.0534F, 0.0F, 4.02F, 284.0F)
 						.withRotationalPeriod(306_443)
 						.withColor(0.757F, 0.765F, 0.773F)
 						.withTraits(new CBT_Atmosphere(Fluids.NITROGEN, 0.005F), new CBT_BATTLEFIELD())
+						.withBlockTextures(RefStrings.MODID + ":textures/blocks/sellafield_slaked_3.png", RefStrings.MODID + ":textures/blocks/sellafield_slaked.png")
 						.withIce(true),
 
 					new CelestialBody("nissee") // words cannot express how much i actually fear this moon whenever im passing by it when playing opm. theres more that meets the eye and no one is brave enough to admit that
@@ -317,8 +318,8 @@ public class SolarSystem {
 		EVE("eve"),
 		IKE("ike"),
 		LAYTHE("laythe"),
-		TEKTO("tekto");
-		//THATMO("thatmo"); sit this one out buddy :)
+		TEKTO("tekto"),
+		THATMO("thatmo"); //sit this one out buddy :)
 
 		public String name;
 
