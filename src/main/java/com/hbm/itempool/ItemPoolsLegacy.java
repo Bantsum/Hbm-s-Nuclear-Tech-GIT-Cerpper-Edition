@@ -140,8 +140,8 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.launch_code_piece, 0, 1, 1, 1),
 					weighted(ModItems.gun_double_barrel, 0, 1, 1, 1),
 					weighted(ModItems.blueprint_folder, 1, 1, 1, 1),
-					//weighted(ModItems.can_splash, 0, 1, 1, 1),
-					//weighted(ModItems.can_flash, 0, 1, 1, 1)
+					weighted(ModItems.can_splash, 0, 1, 1, 1),
+					weighted(ModItems.can_flash, 0, 1, 1, 1)
 			};
 		}};
 
@@ -159,9 +159,9 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.hazmat_kit, 0, 1, 1, 1),
 					weighted(ModItems.gas_mask_filter, 0, 1, 1, 5),
 					weighted(ModBlocks.yellow_barrel, 0, 1, 1, 2),
-					//weighted(ModItems.can_cabo, 0, 1, 1, 2),
-					//weighted(ModItems.can_splash, 0, 1, 1, 1),
-					//weighted(ModItems.can_flash, 0, 1, 1, 1)
+					weighted(ModItems.can_cabo, 0, 1, 1, 2),
+					weighted(ModItems.can_splash, 0, 1, 1, 1),
+					weighted(ModItems.can_flash, 0, 1, 1, 1)
 			};
 		}};
 
@@ -192,8 +192,8 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.hazmat_kit, 0, 1, 1, 2),
 					weighted(ModItems.gas_mask_filter, 0, 1, 1, 5),
 					weighted(ModBlocks.yellow_barrel, 0, 1, 3, 3),
-					//weighted(ModItems.can_splash, 0, 1, 1, 1),
-					//weighted(ModItems.can_flash, 0, 1, 1, 1),
+					weighted(ModItems.can_splash, 0, 1, 1, 1),
+					weighted(ModItems.can_flash, 0, 1, 1, 1),
 					weighted(ModItems.can_red, 0, 1, 1, 1),
 					weighted(ModItems.can_blue, 0, 1, 1, 1)
 			};
@@ -225,7 +225,7 @@ public class ItemPoolsLegacy {
 					weighted(ModItems.bomb_caller, 1, 1, 1, 1),
 					weighted(ModItems.bomb_caller, 2, 1, 1, 2),
 					weighted(ModItems.can_baja, 0, 1, 1, 1),
-					//weighted(ModItems.can_cabo, 0, 1, 1, 1)
+					weighted(ModItems.can_cabo, 0, 1, 1, 1)
 			};
 		}};
 
