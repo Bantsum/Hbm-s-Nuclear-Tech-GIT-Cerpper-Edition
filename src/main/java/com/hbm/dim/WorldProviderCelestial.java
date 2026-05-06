@@ -8,6 +8,7 @@ import java.util.ListIterator;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.dim.SolarSystem.AstroMetric;
+import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CBT_War;
@@ -40,6 +41,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.WeightedRandomFishable;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.IRenderHandler;
@@ -97,6 +99,9 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 				if(meteor.isDead) iterator.remove();
 				if(fragment != null) iterator.add(fragment);
 			}
+		} else {
+			// Reset eclipse amount for this tick to uncache
+			eclipseAmount = -1;
 		}
 
 		if(pressure > 0.5F) {
@@ -781,18 +786,42 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return phase;
 	}
 
-	public boolean isEclipse() {
+	// Because I'm a big dumb idiot, the providers don't inherit a single base (and, well, can't, because `WorldProviderSurface` vs `WorldProvider` :c)
+	// I have to make this thing to help you get sun power without having to do a shit ton of silly casting. yayyy!
+	public static float getSunPower(WorldProvider provider, int x, int z) {
+		if(provider instanceof WorldProviderCelestial) return ((WorldProviderCelestial) provider).getSunPower();
+		if(provider instanceof WorldProviderOrbit) return ((WorldProviderOrbit) provider).getSunPower(x, z);
+
+		return CelestialBody.getBody(provider.worldObj).getSunPower();
+	}
+
+	// Specifically for the server, and caches per tick
+	public double getEclipseAmount() {
+		if(eclipseAmount > -1) return eclipseAmount;
+
 		CelestialBody body = CelestialBody.getBody(worldObj);
 
 		// First fetch the suns true size
 		double sunSize = SolarSystem.calculateSunSize(body);
 		float solarAngle = worldObj.getCelestialAngle(0);
 
-		// Get our orrery of bodies, this is cached for reuse in sky rendering
+		// Get our orrery of bodies
 		metrics = SolarSystem.calculateMetricsFromBody(worldObj, 0, body, solarAngle);
 
+		eclipseAmount = getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE);
+
 		// Get our eclipse amount
-		return getEclipseFactor(metrics, sunSize, SolarSystem.MAX_APPARENT_SIZE_SURFACE) > 0.0;
+		return eclipseAmount;
+	}
+
+	public boolean isEclipse() {
+		return getEclipseAmount() > 0.0;
+	}
+
+	public float getSunPower() {
+		CelestialBody body = CelestialBody.getBody(worldObj);
+
+		return body.getSunPower() * (1 - (float)getEclipseAmount());
 	}
 
 	@Override

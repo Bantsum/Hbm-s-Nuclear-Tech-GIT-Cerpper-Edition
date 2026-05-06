@@ -1,8 +1,11 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5671 - let the machine scream at you](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5671)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5685 - fetch me some pasta you singularitan oaf](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5685)
 
 ## Changed
 * Refueling Station now shows the currently assigned fluid
 * Earth heavy bedrock solvent fraction is now zinc
+* Bedrock ore density scanner will show planet specific ore extraction fluid requirements
+* Certain planet acid requirements will override regular bedrock ore extraction requirements
+* Gas, brine, and Tekto oil blocks now drop empty versions of themselves when mined
 
 ## Fixed
 * HUD and Magnet notifications always showing ON even when turning OFF
