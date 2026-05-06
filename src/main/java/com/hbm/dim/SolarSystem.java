@@ -300,7 +300,15 @@ public class SolarSystem {
 							.withOrbitalParameters(2_458, 0.0F, 50.0F, 0.0F, 260.0F)
 							.withRotationalPeriod(106_327)
 							.withColor(0.483F, 0.392F, 0.341F)
-					)
+					),
+
+				new CelestialBody("breeja")
+					.withMassRadius(7.768e20F, 385)
+					.withOrbitalParameters(800_900_250, 0.0F, 50.0F, 0.0F, 260.0F)
+					.withRotationalPeriod(810_900)
+					.withColor(0.294F, 0.722F, 0.722F)
+					.withBlockTextures(RefStrings.MODID + ":textures/blocks/basalt.png", RefStrings.MODID + ":textures/blocks/basalt.png")
+					.withMinProcessingLevel(4)
 			);
 
 		runTests();
@@ -319,7 +327,8 @@ public class SolarSystem {
 		IKE("ike"),
 		LAYTHE("laythe"),
 		TEKTO("tekto"),
-		THATMO("thatmo"); //sit this one out buddy :)
+		THATMO("thatmo"), //sit this one out buddy :)
+		BREEJA("breeja"); //bajer dast :))))))
 
 		public String name;
 

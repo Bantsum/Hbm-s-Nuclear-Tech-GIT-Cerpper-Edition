@@ -180,7 +180,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 			GL11.glPopMatrix();
 			GL11.glPushMatrix();
 			ItemStack stacker = new ItemStack(ModItems.cigarette);
-			GL11.glTranslated(0.10, 0.63, -0.08);
+			GL11.glTranslated(0.10, 0.65, -0.08);
 			double cigScale = 0.37D;
 			GL11.glScaled(cigScale, cigScale, cigScale);
 			GL11.glRotated(-360, 0, -1, 0);
@@ -223,7 +223,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 				case MIKU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case NERU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case DERG: GL11.glScaled(1.5, 1.5, 1.5); break;
-				case COPPER: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
+				case COPPER: GL11.glTranslated(0, 0, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				//case CREPER: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				}
 				renderPlushie(type, 0);

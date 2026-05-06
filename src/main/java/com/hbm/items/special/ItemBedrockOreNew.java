@@ -277,6 +277,10 @@ public class ItemBedrockOreNew extends Item {
 				T("scrap",		o(MAT_STEEL, 18),			o(MAT_MINGRADE, 9),			o(MAT_WEAPONSTEEL, 6),		o(MAT_SATURN, 3)),
 				T("hazard",		o(MAT_PU238, 18),			o(MAT_CO60, 9),				o(MAT_GAAS, 6),				o(MAT_AU198, 3))
 			);
+
+			/*register(
+				SolarSystem.Body.BREEJA,
+			);*/
 		}
 
 		public CelestialBedrockOreType[] types;
