@@ -149,6 +149,7 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
 		case PROCESST1: return 1;
 		case PROCESST2: return 2;
 		case PROCESST3: return 3;
+		case PROCESST4: return 4;
 		default: return 0;
 		}
 	}

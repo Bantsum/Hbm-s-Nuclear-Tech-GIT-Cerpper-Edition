@@ -148,6 +148,7 @@ public class ModItems {
 	public static Item ingot_copper;
 	public static Item ingot_red_copper;
 	public static Item ingot_tungsten;
+	public static Item ingot_tungsten_carbide;
 	public static Item ingot_aluminium;
 	public static Item fluorite;
 	public static Item ingot_beryllium;
@@ -1744,45 +1745,13 @@ public class ModItems {
 	public static Item custom_dirty;
 	public static Item custom_schrab;
 	public static Item custom_fall;
-
-	@Deprecated public static Item battery_generic;
-	@Deprecated public static Item battery_advanced;
-	@Deprecated public static Item battery_lithium;
-	@Deprecated public static Item battery_schrabidium;
-	@Deprecated public static Item battery_red_cell;
-	@Deprecated public static Item battery_red_cell_6;
-	@Deprecated public static Item battery_red_cell_24;
-	@Deprecated public static Item battery_advanced_cell;
-	@Deprecated public static Item battery_advanced_cell_4;
-	@Deprecated public static Item battery_advanced_cell_12;
-	@Deprecated public static Item battery_lithium_cell;
-	@Deprecated public static Item battery_lithium_cell_3;
-	@Deprecated public static Item battery_lithium_cell_6;
-	@Deprecated public static Item battery_schrabidium_cell;
-	@Deprecated public static Item battery_schrabidium_cell_2;
-	@Deprecated public static Item battery_schrabidium_cell_4;
-	@Deprecated public static Item battery_spark_cell_6;
-	@Deprecated public static Item battery_spark_cell_25;
-	@Deprecated public static Item battery_spark_cell_100;
-	@Deprecated public static Item battery_spark_cell_1000;
-	@Deprecated public static Item battery_spark_cell_2500;
-	@Deprecated public static Item battery_spark_cell_10000;
-	@Deprecated public static Item battery_spark_cell_power;
-
+	
 	public static Item battery_pack;
 	public static Item battery_creative;
 	public static Item cube_power;
 	public static Item battery_spark;
 	public static Item battery_trixite;
 	public static Item core_angel;
-
-	@Deprecated public static Item battery_sc_uranium;
-	@Deprecated public static Item battery_sc_technetium;
-	@Deprecated public static Item battery_sc_plutonium;
-	@Deprecated public static Item battery_sc_polonium;
-	@Deprecated public static Item battery_sc_gold;
-	@Deprecated public static Item battery_sc_lead;
-	@Deprecated public static Item battery_sc_americium;
 
 	public static Item battery_sc;
 
@@ -1804,7 +1773,6 @@ public class ModItems {
 	public static Item blowtorch;
 	public static Item acetylene_torch;
 	public static Item boltgun;
-	public static Item overfuse;
 	public static Item arc_electrode;
 	public static Item arc_electrode_burnt;
 
@@ -2448,6 +2416,7 @@ public class ModItems {
 		ingot_red_copper = new Item().setUnlocalizedName("ingot_red_copper").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_red_copper");
 		billet_red_copper = new Item().setUnlocalizedName("billet_red_copper").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":billet_red_copper");
 		ingot_tungsten = new Item().setUnlocalizedName("ingot_tungsten").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_tungsten");
+		ingot_tungsten_carbide = new Item().setUnlocalizedName("ingot_tungsten_carbide").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_tungsten_carbide");
 		ingot_aluminium = new Item().setUnlocalizedName("ingot_aluminium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_aluminium");
 		fluorite = new Item().setUnlocalizedName("fluorite").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":fluorite");
 		ingot_beryllium = new Item().setUnlocalizedName("ingot_beryllium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_beryllium");
@@ -4201,44 +4170,14 @@ public class ModItems {
 		custom_schrab = new ItemCustomLore().setUnlocalizedName("custom_schrab").setMaxStackSize(1).setCreativeTab(MainRegistry.nukeTab).setTextureName(RefStrings.MODID + ":custom_schrab");
 		custom_fall = new ItemCustomLore().setUnlocalizedName("custom_fall").setMaxStackSize(1).setCreativeTab(MainRegistry.nukeTab).setTextureName(RefStrings.MODID + ":custom_fall");
 
-		battery_generic = new ItemBattery(5000, 100, 100).setUnlocalizedName("battery_generic").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_generic_new");
-		battery_advanced = new ItemBattery(20000, 500, 500).setUnlocalizedName("battery_advanced").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_advanced_new");
-		battery_lithium = new ItemBattery(250000, 1000, 1000).setUnlocalizedName("battery_lithium").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_lithium");
-		battery_schrabidium = new ItemBattery(1000000, 5000, 5000).setUnlocalizedName("battery_schrabidium").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_schrabidium_new");
 		battery_spark = new Item().setUnlocalizedName("battery_spark").setMaxStackSize(1).setCreativeTab(MainRegistry.nukeTab).setTextureName(RefStrings.MODID + ":battery_spark");
 		battery_trixite = new Item().setUnlocalizedName("battery_trixite").setMaxStackSize(1).setCreativeTab(MainRegistry.nukeTab).setTextureName(RefStrings.MODID + ":battery_trixite");
-		battery_red_cell = new ItemBattery(15000, 100, 100).setUnlocalizedName("battery_red_cell").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_red_cell");
-		battery_red_cell_6 = new ItemBattery(15000 * 6, 100, 100).setUnlocalizedName("battery_red_cell_6").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_red_cell_6");
-		battery_red_cell_24 = new ItemBattery(15000 * 24, 100, 100).setUnlocalizedName("battery_red_cell_24").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_red_cell_24");
-		battery_advanced_cell = new ItemBattery(60000, 500, 500).setUnlocalizedName("battery_advanced_cell").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_advanced_cell");
-		battery_advanced_cell_4 = new ItemBattery(60000 * 4, 500, 500).setUnlocalizedName("battery_advanced_cell_4").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_advanced_cell_4");
-		battery_advanced_cell_12 = new ItemBattery(60000 * 12, 500, 500).setUnlocalizedName("battery_advanced_cell_12").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_advanced_cell_12");
-		battery_lithium_cell = new ItemBattery(750000, 1000, 1000).setUnlocalizedName("battery_lithium_cell").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_lithium_cell");
-		battery_lithium_cell_3 = new ItemBattery(750000 * 3, 1000, 1000).setUnlocalizedName("battery_lithium_cell_3").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_lithium_cell_3");
-		battery_lithium_cell_6 = new ItemBattery(750000 * 6, 1000, 1000).setUnlocalizedName("battery_lithium_cell_6").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_lithium_cell_6");
-		battery_schrabidium_cell = new ItemBattery(3000000, 5000, 5000).setUnlocalizedName("battery_schrabidium_cell").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_schrabidium_cell");
-		battery_schrabidium_cell_2 = new ItemBattery(3000000 * 2, 5000, 5000).setUnlocalizedName("battery_schrabidium_cell_2").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_schrabidium_cell_2");
-		battery_schrabidium_cell_4 = new ItemBattery(3000000 * 4, 5000, 5000).setUnlocalizedName("battery_schrabidium_cell_4").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_schrabidium_cell_4");
-		battery_spark_cell_6 = new ItemBattery(100000000L * 6L, 2000000, 2000000).setUnlocalizedName("battery_spark_cell_6").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_spark_cell_6");
-		battery_spark_cell_25 = new ItemBattery(100000000L * 25L, 2000000, 2000000).setUnlocalizedName("battery_spark_cell_25").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_spark_cell_25");
-		battery_spark_cell_100 = new ItemBattery(100000000L * 100L, 2000000, 2000000).setUnlocalizedName("battery_spark_cell_100").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_spark_cell_100");
-		battery_spark_cell_1000 = new ItemBattery(100000000L * 1000L, 20000000, 20000000).setUnlocalizedName("battery_spark_cell_1000").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_spark_cell_1000");
-		battery_spark_cell_2500 = new ItemBattery(100000000L * 2500L, 20000000, 20000000).setUnlocalizedName("battery_spark_cell_2500").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_spark_cell_2500");
-		battery_spark_cell_10000 = new ItemBattery(100000000L * 10000L, 200000000, 200000000).setUnlocalizedName("battery_spark_cell_10000").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_spark_cell_10000");
-		battery_spark_cell_power = new ItemBattery(100000000L * 1000000L, 200000000, 200000000).setUnlocalizedName("battery_spark_cell_power").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_spark_cell_power");
-
+		
 		battery_pack = new ItemBatteryPack().setUnlocalizedName("battery_pack").setTextureName(RefStrings.MODID + ":battery_generic_new");
 		battery_creative = new ItemBatteryCreative().setUnlocalizedName("battery_creative").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":battery_creative_new");
 		cube_power = new ItemBattery(1000000000000000000L, 1000000000000000L, 1000000000000000L).setUnlocalizedName("cube_power").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":cube_power");
 		core_angel = new ItemBattery(16_000_000L, 16_000_000L, 800_000L).setUnlocalizedName("core_angel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":battery_generic_new");
 
-		battery_sc_uranium = new ItemSelfcharger(5).setUnlocalizedName("battery_sc_uranium").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_sc_uranium");
-		battery_sc_technetium = new ItemSelfcharger(25).setUnlocalizedName("battery_sc_technetium").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_sc_technetium");
-		battery_sc_plutonium = new ItemSelfcharger(100).setUnlocalizedName("battery_sc_plutonium").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_sc_plutonium");
-		battery_sc_polonium = new ItemSelfcharger(500).setUnlocalizedName("battery_sc_polonium").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_sc_polonium");
-		battery_sc_gold = new ItemSelfcharger(2500).setUnlocalizedName("battery_sc_gold").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_sc_gold");
-		battery_sc_lead = new ItemSelfcharger(5000).setUnlocalizedName("battery_sc_lead").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_sc_lead");
-		battery_sc_americium = new ItemSelfcharger(10000).setUnlocalizedName("battery_sc_americium").setMaxStackSize(1).setCreativeTab(null).setTextureName(RefStrings.MODID + ":battery_sc_americium");
 		battery_sc = new ItemBatterySC().setUnlocalizedName("battery_sc").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":battery_sc");
 
 		battery_potato = new ItemBattery(1000, 0, 100).setUnlocalizedName("battery_potato").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":battery_potato");
@@ -4257,7 +4196,6 @@ public class ModItems {
 		blowtorch = new ItemBlowtorch().setUnlocalizedName("blowtorch");
 		acetylene_torch = new ItemBlowtorch().setUnlocalizedName("acetylene_torch");
 		boltgun = new ItemBoltgun().setUnlocalizedName("boltgun");
-		overfuse = new ItemCustomLore().setUnlocalizedName("overfuse").setMaxStackSize(1).setFull3D().setTextureName(RefStrings.MODID + ":overfuse");
 		arc_electrode = new ItemArcElectrode().setUnlocalizedName("arc_electrode").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":arc_electrode");
 		arc_electrode_burnt = new ItemArcElectrodeBurnt().setUnlocalizedName("arc_electrode_burnt").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":arc_electrode_burnt");
 
@@ -5059,6 +4997,7 @@ public class ModItems {
 		GameRegistry.registerItem(ingot_ttas, ingot_ttas.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_iridium, ingot_iridium.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_palladium, ingot_palladium.getUnlocalizedName());
+		GameRegistry.registerItem(ingot_tungsten_carbide, ingot_tungsten_carbide.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_aluminium, ingot_aluminium.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_steel, ingot_steel.getUnlocalizedName());
 		GameRegistry.registerItem(ingot_stainless, ingot_stainless.getUnlocalizedName());
@@ -5837,32 +5776,9 @@ public class ModItems {
 		GameRegistry.registerItem(siphon, siphon.getUnlocalizedName());
 
 		//Batteries
-		GameRegistry.registerItem(battery_generic, battery_generic.getUnlocalizedName());
-		GameRegistry.registerItem(battery_red_cell, battery_red_cell.getUnlocalizedName());
-		GameRegistry.registerItem(battery_red_cell_6, battery_red_cell_6.getUnlocalizedName());
-		GameRegistry.registerItem(battery_red_cell_24, battery_red_cell_24.getUnlocalizedName());
-		GameRegistry.registerItem(battery_advanced, battery_advanced.getUnlocalizedName());
-		GameRegistry.registerItem(battery_advanced_cell, battery_advanced_cell.getUnlocalizedName());
-		GameRegistry.registerItem(battery_advanced_cell_4, battery_advanced_cell_4.getUnlocalizedName());
-		GameRegistry.registerItem(battery_advanced_cell_12, battery_advanced_cell_12.getUnlocalizedName());
-		GameRegistry.registerItem(battery_lithium, battery_lithium.getUnlocalizedName());
-		GameRegistry.registerItem(battery_lithium_cell, battery_lithium_cell.getUnlocalizedName());
-		GameRegistry.registerItem(battery_lithium_cell_3, battery_lithium_cell_3.getUnlocalizedName());
-		GameRegistry.registerItem(battery_lithium_cell_6, battery_lithium_cell_6.getUnlocalizedName());
-		GameRegistry.registerItem(battery_schrabidium, battery_schrabidium.getUnlocalizedName());
-		GameRegistry.registerItem(battery_schrabidium_cell, battery_schrabidium_cell.getUnlocalizedName());
-		GameRegistry.registerItem(battery_schrabidium_cell_2, battery_schrabidium_cell_2.getUnlocalizedName());
-		GameRegistry.registerItem(battery_schrabidium_cell_4, battery_schrabidium_cell_4.getUnlocalizedName());
 		GameRegistry.registerItem(battery_spark, battery_spark.getUnlocalizedName());
 		GameRegistry.registerItem(battery_trixite, battery_trixite.getUnlocalizedName());
-		GameRegistry.registerItem(battery_spark_cell_6, battery_spark_cell_6.getUnlocalizedName());
-		GameRegistry.registerItem(battery_spark_cell_25, battery_spark_cell_25.getUnlocalizedName());
-		GameRegistry.registerItem(battery_spark_cell_100, battery_spark_cell_100.getUnlocalizedName());
-		GameRegistry.registerItem(battery_spark_cell_1000, battery_spark_cell_1000.getUnlocalizedName());
-		GameRegistry.registerItem(battery_spark_cell_2500, battery_spark_cell_2500.getUnlocalizedName());
-		GameRegistry.registerItem(battery_spark_cell_10000, battery_spark_cell_10000.getUnlocalizedName());
-		GameRegistry.registerItem(battery_spark_cell_power, battery_spark_cell_power.getUnlocalizedName());
-
+		
 		GameRegistry.registerItem(battery_pack, battery_pack.getUnlocalizedName());
 		GameRegistry.registerItem(battery_sc, battery_sc.getUnlocalizedName());
 		GameRegistry.registerItem(battery_creative, battery_creative.getUnlocalizedName());
@@ -5871,13 +5787,6 @@ public class ModItems {
 
 		GameRegistry.registerItem(battery_potato, battery_potato.getUnlocalizedName());
 		GameRegistry.registerItem(battery_potatos, battery_potatos.getUnlocalizedName());
-		GameRegistry.registerItem(battery_sc_uranium, battery_sc_uranium.getUnlocalizedName());
-		GameRegistry.registerItem(battery_sc_technetium, battery_sc_technetium.getUnlocalizedName());
-		GameRegistry.registerItem(battery_sc_plutonium, battery_sc_plutonium.getUnlocalizedName());
-		GameRegistry.registerItem(battery_sc_polonium, battery_sc_polonium.getUnlocalizedName());
-		GameRegistry.registerItem(battery_sc_gold, battery_sc_gold.getUnlocalizedName());
-		GameRegistry.registerItem(battery_sc_lead, battery_sc_lead.getUnlocalizedName());
-		GameRegistry.registerItem(battery_sc_americium, battery_sc_americium.getUnlocalizedName());
 		GameRegistry.registerItem(hev_battery, hev_battery.getUnlocalizedName());
 		GameRegistry.registerItem(fusion_core, fusion_core.getUnlocalizedName());
 		GameRegistry.registerItem(energy_core, energy_core.getUnlocalizedName());
@@ -5980,7 +5889,6 @@ public class ModItems {
 		GameRegistry.registerItem(blowtorch, blowtorch.getUnlocalizedName());
 		GameRegistry.registerItem(acetylene_torch, acetylene_torch.getUnlocalizedName());
 		GameRegistry.registerItem(boltgun, boltgun.getUnlocalizedName());
-		GameRegistry.registerItem(overfuse, overfuse.getUnlocalizedName());
 		GameRegistry.registerItem(arc_electrode, arc_electrode.getUnlocalizedName());
 		GameRegistry.registerItem(arc_electrode_burnt, arc_electrode_burnt.getUnlocalizedName());
 

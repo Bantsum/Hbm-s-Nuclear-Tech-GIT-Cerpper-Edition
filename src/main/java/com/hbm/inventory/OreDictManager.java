@@ -15,7 +15,6 @@ import static com.hbm.inventory.material.MaterialShapes.*;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOreBasalt.EnumBasaltOreType;
 import com.hbm.blocks.BlockEnums.EnumStoneType;
-import com.hbm.config.GeneralConfig;
 import com.hbm.crafting.MineralRecipes;
 import com.hbm.hazard.HazardData;
 import com.hbm.hazard.HazardEntry;
@@ -190,6 +189,7 @@ public class OreDictManager {
 	public static final DictFrame NIM = new DictFrame("Nickel"); // Compat with "ferrous metal" so thermal isn't invalidated and neither is our intended progression!
 	/** TUNGSTEN */
 	public static final DictFrame W = new DictFrame("Tungsten");
+	public static final DictFrame WC = new DictFrame("TungstenCarbide");
 	/** ALUMINUM */
 	public static final DictFrame AL = new DictFrame("Aluminum");
 	public static final DictFrame STEEL = new DictFrame("Steel");
@@ -444,6 +444,7 @@ public class OreDictManager {
 		MINGRADE															.ingot(ingot_red_copper)											.dust(powder_red_copper)		.billet(billet_red_copper)		.block(block_red_copper);
 		ALLOY																.ingot(ingot_advanced_alloy)										.dust(powder_advanced_alloy)	.plate(plate_advanced_alloy)	.block(block_advanced_alloy);
 		W																	.ingot(ingot_tungsten)												.dust(powder_tungsten)											.block(block_tungsten)		.ore(ore_nether_tungsten)	.oreNether(ore_nether_tungsten) .oreAll(ore_tungsten);
+		WC																	.ingot(ingot_tungsten_carbide);
 		AL																	.ingot(ingot_aluminium)												.dust(powder_aluminium)			.plate(plate_aluminium)			.block(block_aluminium)		.oreAll(ore_aluminium);
 		STEEL																.ingot(ingot_steel)				.dustSmall(powder_steel_tiny)		.dust(powder_steel)				.plate(plate_steel)				.block(block_steel);
 		STAINLESS															.ingot(ingot_stainless)			 																	.plate(plate_stainless);
@@ -670,8 +671,6 @@ public class OreDictManager {
 		OreDictionary.registerOre("briquetteLignite", fromOne(briquette, EnumBriquetteType.LIGNITE));
 		OreDictionary.registerOre("briquetteWood", fromOne(briquette, EnumBriquetteType.WOOD));
 
-		OreDictionary.registerOre(getReflector(), neutron_reflector);
-
 		OreDictionary.registerOre("logWood", pink_log);
 		OreDictionary.registerOre("logWoodPink", pink_log);
 		OreDictionary.registerOre("plankWood", pink_planks);
@@ -782,10 +781,6 @@ public class OreDictManager {
 
 		MaterialShapes.registerCompatShapes();
 		compensateMojangSpaghettiBullshit();
-	}
-
-	public static String getReflector() {
-		return GeneralConfig.enableReflectorCompat ? "plateDenseLead" : "plateTungCar"; //let's just mangle the name into "tungCar" so that it can't conflict with anything ever
 	}
 
 	public static void registerGroups() {
