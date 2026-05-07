@@ -461,7 +461,8 @@ public class ModBlocks {
 	public static Block minmus_stone;
 	public static Block minmus_smooth;
 
-
+	public static Block breeja_silt;
+	public static Block breeja_cobble;
 
 	public static Block brick_jungle;
 	public static Block brick_jungle_cracked;
@@ -1805,6 +1806,8 @@ public class ModBlocks {
 
 		laythe_silt = new BlockFallingTint(Material.sand).setBlockName("laythe_silt").setStepSound(Block.soundTypeSand).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":laythe_silt");
 
+		breeja_silt = new BlockFallingTint(Material.sand).setBlockName("breeja_silt").setStepSound(Block.soundTypeSnow).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setBlockTextureName(RefStrings.MODID + ":breeja_silt");
+		breeja_cobble = new BlockGeneric(Material.rock).setBlockName("breeja_cobble").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":breeja_cobble");
 
 		ike_regolith = new BlockTint(Material.rock, "ike_regolith2", "ike_regolith3", "ike_regolith4", "ike_regolith5").setBlockName("ike_regolith").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_regolith");
 		ike_stone = new BlockGeneric(Material.rock).setBlockName("ike_stone").setStepSound(Block.soundTypeStone).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ike_stone");
@@ -3252,6 +3255,9 @@ public class ModBlocks {
 
 		GameRegistry.registerBlock(minmus_regolith, minmus_regolith.getUnlocalizedName());
 		GameRegistry.registerBlock(minmus_stone, minmus_stone.getUnlocalizedName());
+
+		GameRegistry.registerBlock(breeja_silt, breeja_silt.getUnlocalizedName());
+		GameRegistry.registerBlock(breeja_cobble, breeja_cobble.getUnlocalizedName());
 		register(minmus_smooth, ItemBlockLore.class);
 
 

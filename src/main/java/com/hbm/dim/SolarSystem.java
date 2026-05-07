@@ -302,13 +302,14 @@ public class SolarSystem {
 							.withColor(0.483F, 0.392F, 0.341F)
 					),
 
-				new CelestialBody("breeja")
+				new CelestialBody("breeja", SpaceConfig.breejaDimension, Body.BREEJA)
 					.withMassRadius(7.768e20F, 385)
 					.withOrbitalParameters(800_900_250, 0.0F, 50.0F, 0.0F, 260.0F)
 					.withRotationalPeriod(810_900)
 					.withColor(0.294F, 0.722F, 0.722F)
 					.withBlockTextures(RefStrings.MODID + ":textures/blocks/basalt.png", RefStrings.MODID + ":textures/blocks/basalt.png")
 					.withMinProcessingLevel(4)
+					.withIce(true)
 			);
 
 		runTests();
