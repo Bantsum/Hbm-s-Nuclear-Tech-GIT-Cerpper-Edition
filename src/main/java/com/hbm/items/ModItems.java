@@ -2053,11 +2053,6 @@ public class ModItems {
 	public static Item wrench_flipped;
 	public static Item memespoon;
 
-	public static Item saw;
-	public static Item bat;
-	public static Item bat_nail;
-	public static Item golf_club;
-	public static Item pipe_rusty;
 	public static Item pipe_lead;
 	public static Item reer_graar;
 	public static Item stopsign;
@@ -2173,17 +2168,10 @@ public class ModItems {
 
 	public static Item rod_of_discord;
 
-	public static Item cape_radiation;
-	public static Item cape_gasmask;
-	public static Item cape_schrabidium;
-	public static Item cape_hidden;
-	/*public static Item cape_hbm;
-	public static Item cape_dafnik;
-	public static Item cape_lpkukin;
-	public static Item cape_vertice;
-	public static Item cape_codered_;
-	public static Item cape_ayy;
-	public static Item cape_nostalgia;*/
+	@Deprecated public static Item cape_radiation;
+	@Deprecated public static Item cape_gasmask;
+	@Deprecated public static Item cape_schrabidium;
+	@Deprecated public static Item cape_hidden;
 
 	public static Item nuke_starter_kit;
 	public static Item nuke_advanced_kit;
@@ -4173,7 +4161,7 @@ public class ModItems {
 		battery_spark = new Item().setUnlocalizedName("battery_spark").setMaxStackSize(1).setCreativeTab(MainRegistry.nukeTab).setTextureName(RefStrings.MODID + ":battery_spark");
 		battery_trixite = new Item().setUnlocalizedName("battery_trixite").setMaxStackSize(1).setCreativeTab(MainRegistry.nukeTab).setTextureName(RefStrings.MODID + ":battery_trixite");
 		
-		battery_pack = new ItemBatteryPack().setUnlocalizedName("battery_pack").setTextureName(RefStrings.MODID + ":battery_generic_new");
+		battery_pack = new ItemBatteryPack().setUnlocalizedName("battery_pack").setTextureName(RefStrings.MODID + ":battery_creative_new");
 		battery_creative = new ItemBatteryCreative().setUnlocalizedName("battery_creative").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":battery_creative_new");
 		cube_power = new ItemBattery(1000000000000000000L, 1000000000000000L, 1000000000000000L).setUnlocalizedName("cube_power").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":cube_power");
 		core_angel = new ItemBattery(16_000_000L, 16_000_000L, 800_000L).setUnlocalizedName("core_angel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":battery_generic_new");
@@ -4790,10 +4778,10 @@ public class ModItems {
 		wings_limp = new WingsMurk().setUnlocalizedName("wings_limp").setCreativeTab(CreativeTabs.tabCombat).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":wings_limp");
 		oxy_plss = new ItemModOxy(16000, 10, 1).setUnlocalizedName("oxy_plss").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":oxy_plss");
 
-		cape_radiation = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_radiation").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_radiation");
-		cape_gasmask = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_gasmask").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_gasmask");
-		cape_schrabidium = new ArmorModel(MainRegistry.aMatSchrab, 1).setUnlocalizedName("cape_schrabidium").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_schrabidium");
-		cape_hidden = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_hidden").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_unknown");
+		cape_radiation = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_radiation").setCreativeTab(null).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_radiation");
+		cape_gasmask = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_gasmask").setCreativeTab(null).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_gasmask");
+		cape_schrabidium = new ArmorModel(MainRegistry.aMatSchrab, 1).setUnlocalizedName("cape_schrabidium").setCreativeTab(null).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_schrabidium");
+		cape_hidden = new ArmorModel(ArmorMaterial.CHAIN, 1).setUnlocalizedName("cape_hidden").setCreativeTab(null).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":cape_unknown");
 
 		schrabidium_hammer = new WeaponSpecial(MainRegistry.tMatHammmer).setUnlocalizedName("schrabidium_hammer").setMaxStackSize(1).setTextureName(RefStrings.MODID + ":schrabidium_hammer");
 		shimmer_sledge = new WeaponSpecial(MainRegistry.enumToolMaterialSledge).setUnlocalizedName("shimmer_sledge").setMaxStackSize(1).setTextureName(RefStrings.MODID + ":shimmer_sledge_original");
@@ -4816,11 +4804,6 @@ public class ModItems {
 				.addAbility(IWeaponAbility.VAMPIRE, 4)
 				.addAbility(IWeaponAbility.BEHEADER, 0).setUnlocalizedName("mese_gavel").setMaxStackSize(1).setTextureName(RefStrings.MODID + ":mese_gavel");
 
-		saw = new ModSword(MainRegistry.enumToolMaterialSaw).setUnlocalizedName("weapon_saw").setCreativeTab(null).setFull3D().setTextureName(RefStrings.MODID + ":saw");
-		bat = new ModSword(MainRegistry.enumToolMaterialBat).setUnlocalizedName("weapon_bat").setCreativeTab(null).setFull3D().setTextureName(RefStrings.MODID + ":bat");
-		bat_nail = new ModSword(MainRegistry.enumToolMaterialBatNail).setUnlocalizedName("weapon_bat_nail").setCreativeTab(null).setFull3D().setTextureName(RefStrings.MODID + ":bat_nail");
-		golf_club = new ModSword(MainRegistry.enumToolMaterialGolfClub).setUnlocalizedName("weapon_golf_club").setCreativeTab(null).setFull3D().setTextureName(RefStrings.MODID + ":golf_club");
-		pipe_rusty = new ModSword(MainRegistry.enumToolMaterialPipeRusty).setUnlocalizedName("weapon_pipe_rusty").setCreativeTab(null).setFull3D().setTextureName(RefStrings.MODID + ":pipe_rusty");
 		pipe_lead = new ModSword(MainRegistry.enumToolMaterialPipeLead).setUnlocalizedName("weapon_pipe_lead").setFull3D().setTextureName(RefStrings.MODID + ":pipe_lead");
 		reer_graar = new ModSword(MainRegistry.tMatTitan).setUnlocalizedName("reer_graar").setFull3D().setTextureName(RefStrings.MODID + ":reer_graar_hd");
 		stopsign = new WeaponSpecial(MainRegistry.tMatAlloy).setUnlocalizedName("stopsign").setTextureName(RefStrings.MODID + ":stopsign");
@@ -5585,7 +5568,6 @@ public class ModItems {
 		GameRegistry.registerItem(leaf_rubber, leaf_rubber.getUnlocalizedName());
 		GameRegistry.registerItem(leaf_pet, leaf_pet.getUnlocalizedName());
 		//Teleporter Parts
-		//GameRegistry.registerItem(telepad, telepad.getUnlocalizedName());
 		GameRegistry.registerItem(entanglement_kit, entanglement_kit.getUnlocalizedName());
 
 		//Bomb Parts
@@ -6595,11 +6577,6 @@ public class ModItems {
 		GameRegistry.registerItem(wrench_archineer, wrench_archineer.getUnlocalizedName());
 		GameRegistry.registerItem(wrench_flipped, wrench_flipped.getUnlocalizedName());
 		GameRegistry.registerItem(memespoon, memespoon.getUnlocalizedName());
-		GameRegistry.registerItem(saw, saw.getUnlocalizedName());
-		GameRegistry.registerItem(bat, bat.getUnlocalizedName());
-		GameRegistry.registerItem(bat_nail, bat_nail.getUnlocalizedName());
-		GameRegistry.registerItem(golf_club, golf_club.getUnlocalizedName());
-		GameRegistry.registerItem(pipe_rusty, pipe_rusty.getUnlocalizedName());
 		GameRegistry.registerItem(pipe_lead, pipe_lead.getUnlocalizedName());
 		GameRegistry.registerItem(reer_graar, reer_graar.getUnlocalizedName());
 		GameRegistry.registerItem(stopsign, stopsign.getUnlocalizedName());
