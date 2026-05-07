@@ -245,8 +245,9 @@ public class TileMappings {
 		put(TileEntityLightningVolcano.class, "tileentity_electric_volcano");
 		put(TileEntityDCM.class, "tileentity_dcm");
 
+		put(TileEntityCargoElevator.class, "tileentity_cargo_elevator");
 		put(TileEntityDoorGeneric.class, "tileentity_ntm_door");
-
+		
 		put(TileEntityCharger.class, "tileentity_ntm_charger");
 		put(TileEntityRefueler.class, "tileentity_ntm_refueler");
 

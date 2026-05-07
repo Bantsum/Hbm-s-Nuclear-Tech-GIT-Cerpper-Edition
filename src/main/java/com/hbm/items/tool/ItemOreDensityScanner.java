@@ -50,12 +50,11 @@ public class ItemOreDensityScanner extends Item {
 			boreFluid = ((WorldProviderCelestial) world.provider).getBedrockAcid();
 		}
 		
-		ChatBuilder builder = ChatBuilder.start("Tier " + tier);
+		ChatBuilder builder = ChatBuilder.start("Tier " + tier).color(EnumChatFormatting.YELLOW);
 		if(boreFluid != null) {
 			builder.next(" - " + boreFluid.fill + "mB ")
 			.nextTranslation(boreFluid.type.getUnlocalizedName());
 		}
-		builder.color(EnumChatFormatting.YELLOW);
 		
 		PacketDispatcher.wrapper.sendTo(new PlayerInformPacket(builder.flush(), 777 + CelestialBedrockOre.get(body.getEnum()).types.length, 4000), player);
 	}
