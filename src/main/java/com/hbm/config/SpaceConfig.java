@@ -42,6 +42,8 @@ public class SpaceConfig {
 
 	// Most mods start at 40 and go up, so easiest way to avoid conflicts is to count backwards!
 
+	public static int breejaBiome = 127;
+
 	public static int orbitBiome = 126;
 
 	public static int moonBiome = 125;
@@ -83,8 +85,6 @@ public class SpaceConfig {
 
 	public static int thatmoBiome = 87;
 
-	public static int breejaBiome = 127;
-
 
 
 	public static boolean allowNetherPortals = false;
@@ -116,7 +116,6 @@ public class SpaceConfig {
 		orbitDimension = CommonConfig.createConfigInt(config, CATEGORY_DIM, "17.09_orbitDimension", "Orbital dimension ID", orbitDimension);
 		tektoDimension = CommonConfig.createConfigInt(config, CATEGORY_DIM, "17.10_tektoDimension", "Tekto dimension ID", tektoDimension);
 		thatmoDimension = CommonConfig.createConfigInt(config, CATEGORY_DIM, "17.11_thatmoDimension", "Thatmo dimension ID", thatmoDimension);
-		breejaDimension = CommonConfig.createConfigInt(config, CATEGORY_DIM, "17.12_breejaDimension", "Breeja dimension ID", breejaDimension);
 
 		final String CATEGORY_GENERAL = CommonConfig.CATEGORY_GENERAL;
 		maxProbeDistance = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.90_maxProbeDistance", "How far from the center of the dimension can probes generate landing coordinates", maxProbeDistance);
@@ -160,7 +159,6 @@ public class SpaceConfig {
 		tektoForestBiome = createConfigBiome(config, CATEGORY_BIOME, "16.30_tektoForestBiome", "Tekto Forest Biome ID", tektoForestBiome + defaultBiomeOffset);
 		tektoVinylIslandBiome = createConfigBiome(config, CATEGORY_BIOME, "16.31_tektoVinylSandsBiome", "Tekto Vinyl Sands Biome ID", tektoVinylIslandBiome + defaultBiomeOffset);
 		thatmoBiome = createConfigBiome(config, CATEGORY_BIOME, "16.32_thatmoBiome", "Thatmo Biome ID", thatmoBiome + defaultBiomeOffset);
-		breejaBiome = createConfigBiome(config, CATEGORY_BIOME, "16.33_breejaBiome", "Breeja Biome ID", breejaBiome + defaultBiomeOffset);
 	}
 
 	private static HashMap<Integer, String> registeredIds = new HashMap<>();

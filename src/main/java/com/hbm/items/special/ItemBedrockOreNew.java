@@ -280,6 +280,8 @@ public class ItemBedrockOreNew extends Item {
 
 			register( // leaving it like this for now lulz
 				SolarSystem.Body.BREEJA,
+				T("heavy",		o(MAT_GOLD, 18),			o(MAT_NIOBIUM, 9),			o(MAT_CADMIUM, 6),			o(MAT_ARSENIC, 3)),
+				T("scrap",		o(MAT_STEEL, 18),			o(MAT_MINGRADE, 9),			o(MAT_WEAPONSTEEL, 6),		o(MAT_SATURN, 3)),
 				T("hazard",		o(MAT_PU238, 18),			o(MAT_CO60, 9),				o(MAT_GAAS, 6),				o(MAT_AU198, 3))
 			);
 		}

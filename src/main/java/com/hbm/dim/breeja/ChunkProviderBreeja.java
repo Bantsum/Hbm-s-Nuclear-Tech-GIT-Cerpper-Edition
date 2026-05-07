@@ -1,13 +1,10 @@
 package com.hbm.dim.breeja;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.config.WorldConfig;
-import com.hbm.dim.CelestialBody;
 import com.hbm.dim.ChunkProviderCelestial;
 import com.hbm.dim.mapgen.MapGenCrater;
 import com.hbm.dim.mapgen.MapGenGreg;
 import com.hbm.dim.mapgen.MapgenRavineButBased;
-import com.hbm.world.gen.terrain.MapGenBubble;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
