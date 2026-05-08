@@ -205,7 +205,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new OreDictStack(COAL.dust(), 2), new OreDictStack(F.dust()))
 				.inputFluids(new FluidStack(Fluids.PETROLEUM, 1_000, GeneralConfig.enable528PressurizedRecipes ? 1 : 0))
 				.outputItems(new ItemStack(ModItems.ingot_polymer, 4)));
-		
+
 		this.register(new GenericRecipe("chem.bakelite").setup(100, 100)
 				.inputFluids(new FluidStack(Fluids.AROMATICS, 500, GeneralConfig.enable528PressurizedRecipes ? 1 : 0), new FluidStack(Fluids.PETROLEUM, 500, GeneralConfig.enable528PressurizedRecipes ? 1 : 0))
 				.outputItems(new ItemStack(ModItems.ingot_bakelite)));
@@ -499,8 +499,13 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 
 		this.register(new GenericRecipe("chem.bajacid").setup(50, 100)
 			.inputItems(new ComparableStack(Items.sugar, 1))
-			.inputFluids(new FluidStack(Fluids.MUG, 1000), new FluidStack(Fluids.SULFURIC_ACID, 1000))
+			.inputFluids(new FluidStack(Fluids.DEW, 1000), new FluidStack(Fluids.SULFURIC_ACID, 1000))
 			.outputFluids(new FluidStack(Fluids.BAJA, 1000)));
+
+		this.register(new GenericRecipe("chem.dew").setup(30, 100)
+			.inputItems(new ComparableStack(Items.sugar, 1))
+			.inputFluids(new FluidStack(Fluids.MUG, 1000))
+			.outputFluids(new FluidStack(Fluids.DEW, 1000)));
 
 		// WARNING: NILERED CHEMISTRY ZONE //
 		this.register(new GenericRecipe("chem.hydrapiss").setupNamed(250, 1_000).setIcon(ModItems.canister_full, Fluids.HYDRAZINE.getID())
