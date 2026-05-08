@@ -307,8 +307,9 @@ public class SolarSystem {
 					.withOrbitalParameters(800_900_250, 0.0F, 50.0F, 0.0F, 260.0F)
 					.withRotationalPeriod(810_900)
 					.withColor(0.294F, 0.722F, 0.722F)
-					.withBlockTextures(RefStrings.MODID + ":textures/blocks/basalt.png", RefStrings.MODID + ":textures/blocks/basalt.png")
+					.withBlockTextures(RefStrings.MODID + ":textures/blocks/breeja_cobble.png", RefStrings.MODID + ":textures/blocks/breeja_cobble.png")
 					.withMinProcessingLevel(4)
+					.withTraits(new CBT_Atmosphere(Fluids.BAJAAIR, 0.5F), new CBT_Water(Fluids.BAJA)) // kookyness
 					.withIce(true)
 			);
 

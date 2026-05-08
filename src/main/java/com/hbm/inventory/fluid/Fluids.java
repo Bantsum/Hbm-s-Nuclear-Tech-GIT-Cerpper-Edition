@@ -182,6 +182,7 @@ public class Fluids {
 	public static FluidType UGAS; //urlum
 	public static FluidType NGAS;//neidon
 	public static FluidType MILK;
+	public static FluidType BAJAAIR;
 	public static FluidType SMILK;
 	public static FluidType XYLENE;				//BTX: benzene, terephthalate and xylene
 	public static FluidType HEATINGOIL_VACUUM;
@@ -540,6 +541,7 @@ public class Fluids {
 		BAJA = 					new FluidType("BAJA", 			0x86C9C3, 0, 0,0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
 		BAJA_HOT =				new FluidType("BAJA_HOT",			0xACF1D2, 0, 0, 0, EnumSymbol.NONE).setTemp(600).addTraits(DELICIOUS, LIQUID);
 		DEW = 					new FluidType("DEW", 			0x94C93D, 0, 0,0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
+		BAJAAIR =				new FluidType("BAJAAIR",			0x4CBABA, 0, 0, 0, EnumSymbol.NONE).addContainers(new CD_Gastank(0x4FC1C1, 0xD6F2F6)).addTraits(GASEOUS);
 
 		// ^ ^ ^ ^ ^ ^ ^ ^
 		//ADD NEW FLUIDS HERE
@@ -714,6 +716,7 @@ public class Fluids {
 		metaOrder.add(UGAS);
 		metaOrder.add(NGAS);
 		metaOrder.add(TEKTOAIR);
+		metaOrder.add(BAJAAIR);
 		//NITRIC_ACID
 		metaOrder.add(NITRIC_ACID);
 		metaOrder.add(HCL);
