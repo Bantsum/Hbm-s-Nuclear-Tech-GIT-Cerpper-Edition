@@ -304,7 +304,7 @@ public class SolarSystem {
 
 				new CelestialBody("breeja", SpaceConfig.breejaDimension, Body.BREEJA)
 					.withMassRadius(7.768e20F, 385)
-					.withOrbitalParameters(800_900_250, 0.0F, 50.0F, 0.0F, 260.0F)
+					.withOrbitalParameters(800_900_250, 0.0F, 0.0F, 0.0F, 260.0F)
 					.withRotationalPeriod(810_900)
 					.withColor(0.294F, 0.722F, 0.722F)
 					.withBlockTextures(RefStrings.MODID + ":textures/blocks/breeja_cobble.png", RefStrings.MODID + ":textures/blocks/breeja_cobble.png")

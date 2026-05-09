@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import com.hbm.items.tool.ItemGuideBook;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
 
@@ -220,15 +221,15 @@ public class ModEventHandler {
 				PacketDispatcher.wrapper.sendTo(new PlayerInformPacket("Press O to Duck!", ServerProxy.ID_DUCK, 30_000), (EntityPlayerMP) event.player);
 
 
-			/*if(GeneralConfig.enableGuideBook) {
+			if(GeneralConfig.enableGuideBook) {
 				HbmPlayerProps props = HbmPlayerProps.getData(event.player);
 
 				if(!props.hasReceivedBook) {
-					event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.book_guide, 1, BookType.STARTER.ordinal()));
+					event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.STARTER.ordinal()));
 					event.player.inventoryContainer.detectAndSendChanges();
 					props.hasReceivedBook = true;
 				}
-			}*/
+			}
 
 			if(event.player.worldObj.getWorldInfo().getTerrainType() instanceof WorldTypeTeleport) {
 				HbmPlayerProps props = HbmPlayerProps.getData(event.player);
@@ -549,7 +550,7 @@ public class ModEventHandler {
 
 	private static ItemStack getSkelegun(float soot, Random rand) {
 		if(!MobConfig.enableMobWeapons) return null;
-		
+
 		soot -= MobConfig.mobWeaponSootReduction;
 		if(rand.nextDouble() > Math.log(soot) * 0.25) return null;
 
