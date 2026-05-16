@@ -67,6 +67,9 @@ import org.lwjgl.opengl.GLContext;
 
 public class ModEventHandlerRenderer {
 
+	private float previousZoom = 4.0F;
+	private boolean previousZoomActive = false;
+
 	private static ModelMan manlyModel;
 	private static boolean[] partsHidden = new boolean[7];
 
@@ -78,9 +81,16 @@ public class ModEventHandlerRenderer {
 		if(event.phase == Phase.START) {
 			// Zoom out third person view when inside a rocket
 			if(player != null && player.ridingEntity != null && player.ridingEntity instanceof EntityRideableRocket) {
+				if(previousZoomActive == false) {
+					previousZoom = mc.entityRenderer.thirdPersonDistance;
+					previousZoomActive = true;
+				}
 				mc.entityRenderer.thirdPersonDistance = 12.0F;
 			} else {
-				mc.entityRenderer.thirdPersonDistance = 4.0F;
+				if(previousZoomActive == true) {
+					previousZoomActive = false;
+					mc.entityRenderer.thirdPersonDistance = previousZoom;
+				}
 			}
 		}
 	}

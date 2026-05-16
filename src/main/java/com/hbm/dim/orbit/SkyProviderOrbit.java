@@ -55,9 +55,6 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 			GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(solarAngle * 360.0F, 1.0F, 0.0F, 0.0F);
 
-			// digma balls
-			renderDigamma(partialTicks, world, mc, solarAngle);
-
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
 
 			double sunSize = SolarSystem.calculateSunSize(station.orbiting) * SolarSystem.SUN_RENDER_SCALE;

@@ -46,8 +46,9 @@ import com.hbm.blocks.network.FluidDuctGauge.TileEntityPipeGauge;
 import com.hbm.blocks.network.FluidDuctPaintable.TileEntityPipePaintable;
 import com.hbm.blocks.network.FluidDuctPaintableBlockExhaust.TileEntityPipeExhaustPaintable;
 import com.hbm.blocks.network.FluidPump.TileEntityFluidPump;
-import com.hbm.blocks.network.PneumoTubePaintableBlock.TileEntityPneumoTubePaintable;
+import com.hbm.blocks.network.pneumatic.PneumoTubePaintableBlock.TileEntityPneumoTubePaintable;
 import com.hbm.blocks.rail.RailStandardSwitch.TileEntityRailSwitch;
+import com.hbm.blocks.test.TestEventTester.TileEntityTestStorage;
 import com.hbm.blocks.network.BlockOpenComputersCablePaintable.TileEntityOpenComputersCablePaintable;
 import com.hbm.tileentity.bomb.*;
 import com.hbm.tileentity.deco.*;
@@ -59,6 +60,9 @@ import com.hbm.tileentity.machine.pile.*;
 import com.hbm.tileentity.machine.rbmk.*;
 import com.hbm.tileentity.machine.storage.*;
 import com.hbm.tileentity.network.*;
+import com.hbm.tileentity.network.pneumatic.TileEntityPneumoStorageAccess;
+import com.hbm.tileentity.network.pneumatic.TileEntityPneumoStorageClutter;
+import com.hbm.tileentity.network.pneumatic.TileEntityPneumoTube;
 import com.hbm.tileentity.turret.*;
 import com.hbm.util.Compat;
 
@@ -72,6 +76,7 @@ public class TileMappings {
 
 	public static void writeMappings() {
 		put(TileEntityDiFurnace.class, "tilentity_diFurnace");
+		put(TileEntityTestStorage.class, "tilentity_test_storage");
 		put(TileEntityObjTester.class, "tilentity_objtester");
 		put(TileEntityMachineCentrifuge.class, "tileentity_centrifuge");
 		put(TileEntityNukeMan.class, "tileentity_nukeman");
@@ -192,12 +197,10 @@ public class TileMappings {
 		put(TileEntityAntimatter.class, "tileentity_nuke_Antimatter");
 		put(TileEntityMicrowave.class, "tileentity_microwave");
 		put(TileEntityMachineMiniRTG.class, "tileentity_mini_rtg");
-		put(TileEntityITER.class, "tileentity_iter");
 		put(TileEntityBlockICF.class, "tileentity_block_icf");
 		put(TileEntityICFPress.class, "tileentity_icf_press");
 		put(TileEntityICFController.class, "tileentity_icf_controller");
 		put(TileEntityICF.class, "tileentity_icf");
-		put(TileEntityMachinePlasmaHeater.class, "tileentity_plasma_heater");
 		put(TileEntityMachineFENSU.class, "tileentity_fensu");
 		put(TileEntityTrappedBrick.class, "tileentity_trapped_brick");
 		put(TileEntityWatzStruct.class, "tileentity_watz_struct");
@@ -242,8 +245,9 @@ public class TileMappings {
 		put(TileEntityLightningVolcano.class, "tileentity_electric_volcano");
 		put(TileEntityDCM.class, "tileentity_dcm");
 
+		put(TileEntityCargoElevator.class, "tileentity_cargo_elevator");
 		put(TileEntityDoorGeneric.class, "tileentity_ntm_door");
-
+		
 		put(TileEntityCharger.class, "tileentity_ntm_charger");
 		put(TileEntityRefueler.class, "tileentity_ntm_refueler");
 
@@ -313,7 +317,6 @@ public class TileMappings {
 		put(TileEntityTurretHowardDamaged.class, "tileentity_turret_howard_damaged");
 		put(TileEntityTurretMaxwell.class, "tileentity_turret_maxwell");
 		put(TileEntityTurretFritz.class, "tileentity_turret_fritz");
-		put(TileEntityTurretBrandon.class, "tileentity_turret_brandon");
 		put(TileEntityTurretArty.class, "tileentity_turret_arty");
 		put(TileEntityTurretHIMARS.class, "tileentity_turret_himars");
 		put(TileEntityTurretSentry.class, "tileentity_turret_sentry");
@@ -519,6 +522,8 @@ public class TileMappings {
 
 		put(TileEntityPneumoTube.class, "tileentity_pneumatic_tube");
 		put(TileEntityPneumoTubePaintable.class, "tileentity_pneumatic_tube_paintable");
+		put(TileEntityPneumoStorageAccess.class, "tileentity_pneumatic_storage_access");
+		put(TileEntityPneumoStorageClutter.class, "tileentity_pneumatic_storage_clutter");
 
 		put(TileEntityRadioTorchSender.class, "tileentity_rtty_sender");
 		put(TileEntityRadioTorchReceiver.class, "tileentity_rtty_rec");
