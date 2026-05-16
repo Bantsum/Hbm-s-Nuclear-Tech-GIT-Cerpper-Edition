@@ -154,6 +154,7 @@
 	"music.recordGodSpeed": {"category": "record", "sounds": [{"name": "music/recordGodSpeed", "stream": true}]},
 	"music.recordGoop": {"category": "record", "sounds": [{"name": "music/recordGoop", "stream": true}]},
 	"music.recordEthereal": {"category": "record", "sounds": [{"name": "music/recordEthereal", "stream": true}]},
+	"music.recordRocket": {"category": "record", "sounds": [{"name": "music/recordRocket", "stream": true}]},
 
 	"music.game.space": {"category": "music", "sounds": [
 		{"name": "music/spaceBreak", "stream": true},
