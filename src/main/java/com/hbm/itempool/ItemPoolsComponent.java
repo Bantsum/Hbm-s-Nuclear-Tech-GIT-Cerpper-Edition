@@ -94,7 +94,10 @@ public class ItemPoolsComponent {
 					weighted(ModItems.fuel_tank_medium, 0, 1, 1, 4),
 					weighted(ModItems.bomb_caller, 0, 1, 1, 1),
 					weighted(ModItems.bomb_caller, 3, 1, 1, 1),
-					weighted(ModItems.bottle_nuka, 0, 1, 3, 10)
+					weighted(ModItems.bottle_nuka, 0, 1, 3, 10),
+					weighted(ModItems.can_cabo, 0, 1, 1, 1),
+					weighted(ModItems.can_splash, 0, 1, 1, 1),
+					weighted(ModItems.can_flash, 0, 1, 1, 1)
 			};
 		}};
 
@@ -117,6 +120,10 @@ public class ItemPoolsComponent {
 					weighted(ModItems.book_guide, 3, 1, 1, 1),
 					weighted(ModBlocks.deco_computer, 0, 1, 1, 1),
 					weighted(ModItems.blueprint_folder, 0, 1, 1, 1),
+					weighted(ModItems.can_dew, 0, 1, 1, 1),
+					weighted(ModItems.can_baja, 0, 1, 1, 1),
+					weighted(ModItems.can_blue, 0, 1, 1, 1),
+					weighted(ModItems.can_red, 0, 1, 1, 1),
 					weighted(ModItems.coin_token, 0, 1, 1, 2)
 			};
 		}};
@@ -134,6 +141,8 @@ public class ItemPoolsComponent {
 					weighted(ModItems.ink, 0, 1, 1, 1),
 					weighted(ModItems.screwdriver, 0, 1, 1, 10),
 					weighted(ModItems.blueprint_folder, 0, 1, 1, 5),
+					weighted(ModItems.can_dew, 0, 1, 1, 1),
+					weighted(ModItems.can_cabo, 0, 1, 1, 1),
 					weighted(ModItems.coin_token, 0, 1, 1, 30)
 			};
 		}};
