@@ -306,6 +306,11 @@ public class ItemBedrockOreNew extends Item {
 			return oreTypes;
 		}
 
+		public static int getTotalTypeCount() {
+			return index + 1;
+		}
+
+
 		private static int index;
 
 		private static CelestialBedrockOreType T(String suffix, BedrockOreOutput primary, BedrockOreOutput byproductAcid, BedrockOreOutput byproductSolvent, BedrockOreOutput byproductRad) {

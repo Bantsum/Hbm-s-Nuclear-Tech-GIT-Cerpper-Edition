@@ -223,7 +223,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 				case MIKU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case NERU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case DERG: GL11.glScaled(1.5, 1.5, 1.5); break;
-				case COPPER: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
+				case COPPER: GL11.glTranslated(0, 0, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				//case CREPER: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				}
 				renderPlushie(type, 0);
