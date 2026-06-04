@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.input.Mouse;
@@ -13,11 +14,13 @@ import org.lwjgl.opengl.GL13;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.trait.CBT_Impact;
 import com.hbm.dim.trait.CBT_Lights;
+import com.hbm.handler.CelestialNukeShockHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.NTMSounds;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTItemControlPacket;
 import com.hbm.render.shader.Shader;
+import com.hbm.render.util.AtmosphereRenderUtil;
 import com.hbm.saveddata.SatelliteSavedData;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteFoeq;
@@ -66,7 +69,12 @@ public class GUIScreenSatSettings extends GuiScreen {
 		new ResourceLocation(RefStrings.MODID, "textures/misc/space/citylights_2.png"),
 		new ResourceLocation(RefStrings.MODID, "textures/misc/space/citylights_3.png")
 	};
-	private static final Shader planetShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/crescent.frag"));
+	private static final Shader crescentShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/crescent.frag"));
+	private static final Shader atmosphereShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/atmosphere.frag"));
+	private static final Shader atmosphereEmissiveShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/atmosphere_emissive.frag"));
+	private static final Shader lightningShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/lightning.frag"));
+	private static final Shader nukeShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/nuke.frag"));
+	private static final Shader nightLightsShader = new Shader(new ResourceLocation(RefStrings.MODID, "shaders/nightlights.frag"));
 
 	static {
 		satelliteTextureByClass.put(SatelliteMapper.class, satelliteTextureMapper);
@@ -746,6 +754,8 @@ public class GUIScreenSatSettings extends GuiScreen {
 			if(body.parent == null) {
 				drawTexturedQuad(centerX, centerY, size, 0F);
 			} else {
+				AtmosphereRenderUtil.renderAtmosphereGlow2D(Tessellator.instance, body, centerX, centerY, size, 1.0F);
+
 				float phase = getBodyRotationPhase(body, dayTicks);
 				float bodyRotationAngle = phase * 360F;
 				boolean rotateBody = hasTransparentPixels(body.texture);
@@ -758,7 +768,7 @@ public class GUIScreenSatSettings extends GuiScreen {
 					textureUOffset = phase;
 				}
 
-				drawBodyCrescentOverlay(body, centerX, centerY, size, rotateBody, bodyRotationAngle, dayTicks, textureUOffset);
+				drawBodyOverlays(body, centerX, centerY, size, rotateBody, bodyRotationAngle, dayTicks, textureUOffset);
 			}
 		} else {
 			int color = 0xFF666666;
@@ -793,34 +803,81 @@ public class GUIScreenSatSettings extends GuiScreen {
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
 
-	private void drawBodyCrescentOverlay(CelestialBody body, float bodyScreenX, float bodyScreenY, float drawSize, boolean rotateBody, float bodyRotationAngle, double dayTicks, float textureUOffset) {
+	private void drawBodyOverlays(CelestialBody body, float bodyScreenX, float bodyScreenY, float drawSize, boolean rotateBody, float bodyRotationAngle, double dayTicks, float textureUOffset) {
 		float phase = calculateBodyCrescentPhase(body, dayTicks);
 		CBT_Impact impact = body.getTrait(CBT_Impact.class);
 		CBT_Lights light = body.getTrait(CBT_Lights.class);
+		List<CelestialNukeShockHandler.ShockStatus> nukeShocks = CelestialNukeShockHandler.getClientShocks(body);
 		double impactTime = impact != null ? dayTicks - impact.time : 0.0D;
+		float impactAnimationTime = impact != null ? (float) impactTime : -1.0F;
 		int lightIntensity = light != null && impactTime < 40.0D ? MathHelper.clamp_int(light.getIntensity(), 0, citylights.length - 1) : 0;
 		int activeBlackouts = Math.max(0, Math.min((int) (impactTime / 8.0D), 5));
+		float atmosphereAlpha = AtmosphereRenderUtil.getAtmosphereSurfaceAlpha(body);
+		float atmosphereDensity = AtmosphereRenderUtil.getAtmosphereDensity(body);
+		net.minecraft.util.Vec3 atmosphereColor = AtmosphereRenderUtil.getBodyAtmosphereColor(body);
+		net.minecraft.util.Vec3 cloudColor = AtmosphereRenderUtil.getBodyCloudColor(body);
+		float cloudTintStrength = AtmosphereRenderUtil.getBodyCloudTintStrength(body);
+		float weatherPartialTicks = (float) (dayTicks - Math.floor(dayTicks));
+		float cloudStormDarkness = AtmosphereRenderUtil.getBodyCloudStormDarkness(body, weatherPartialTicks);
+		float cloudLightningStrength = AtmosphereRenderUtil.getBodyCloudLightningStrength(body, weatherPartialTicks);
+		int atmosphereStyle = AtmosphereRenderUtil.getAtmosphereStyle(body);
+		float atmosphereTime = (float) (dayTicks / 20.0D);
+		float atmospherePatternOffset = textureUOffset;
+		if(!rotateBody && body != null) {
+			double period = body.getRotationalPeriod();
+			if(period > 0D && !Double.isNaN(period) && !Double.isInfinite(period)) {
+				atmospherePatternOffset = (float) (dayTicks / period);
+			}
+		}
+
+		if(atmosphereAlpha > 0.001F) {
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+
+			atmosphereShader.use();
+			atmosphereShader.setUniform1f("offset", textureUOffset);
+			atmosphereShader.setUniform1f("patternOffset", atmospherePatternOffset);
+			atmosphereShader.setUniform1i("bodyTex", 0);
+			atmosphereShader.setUniform1i("useBodyAlphaMask", 1);
+			atmosphereShader.setUniform1f("atmosphereColorR", (float) atmosphereColor.xCoord);
+			atmosphereShader.setUniform1f("atmosphereColorG", (float) atmosphereColor.yCoord);
+			atmosphereShader.setUniform1f("atmosphereColorB", (float) atmosphereColor.zCoord);
+			atmosphereShader.setUniform1f("cloudColorR", (float) cloudColor.xCoord);
+			atmosphereShader.setUniform1f("cloudColorG", (float) cloudColor.yCoord);
+			atmosphereShader.setUniform1f("cloudColorB", (float) cloudColor.zCoord);
+			atmosphereShader.setUniform1f("cloudTintStrength", cloudTintStrength);
+			atmosphereShader.setUniform1f("cloudStormDarkness", cloudStormDarkness);
+			atmosphereShader.setUniform1f("atmosphereAlpha", atmosphereAlpha);
+			atmosphereShader.setUniform1f("atmosphereTime", atmosphereTime);
+			atmosphereShader.setUniform1i("atmosphereStyle", atmosphereStyle);
+			atmosphereShader.setUniform1f("impactTime", impactAnimationTime);
+			AtmosphereRenderUtil.applyNukeShockUniforms(atmosphereShader, nukeShocks, dayTicks);
+
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			mc.getTextureManager().bindTexture(body.texture);
+
+			if(rotateBody) {
+				drawTexturedQuadRotating(bodyScreenX, bodyScreenY, drawSize, bodyRotationAngle);
+			} else {
+				drawTexturedQuad(bodyScreenX, bodyScreenY, drawSize, 0F);
+			}
+
+			atmosphereShader.stop();
+		}
 
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 
-		planetShader.use();
-		planetShader.setUniform1f("phase", phase);
-		planetShader.setUniform1f("offset", textureUOffset);
-		planetShader.setUniform1i("bodyTex", 0);
-		planetShader.setUniform1i("lights", 1);
-		planetShader.setUniform1i("cityMask", 2);
-		planetShader.setUniform1i("blackouts", activeBlackouts);
-		planetShader.setUniform1i("useBodyAlphaMask", 1);
+		crescentShader.use();
+		crescentShader.setUniform1f("phase", phase);
+		crescentShader.setUniform1f("offset", textureUOffset);
+		crescentShader.setUniform1i("bodyTex", 0);
+		crescentShader.setUniform1i("useBodyAlphaMask", 1);
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		mc.getTextureManager().bindTexture(body.texture);
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		mc.getTextureManager().bindTexture(citylights[lightIntensity]);
-		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		mc.getTextureManager().bindTexture(body.cityMask != null ? body.cityMask : defaultMask);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 
 		if(rotateBody) {
 			drawTexturedQuadRotating(bodyScreenX, bodyScreenY, drawSize, bodyRotationAngle);
@@ -828,7 +885,123 @@ public class GUIScreenSatSettings extends GuiScreen {
 			drawTexturedQuad(bodyScreenX, bodyScreenY, drawSize, 0F);
 		}
 
-		planetShader.stop();
+		crescentShader.stop();
+
+			if(lightIntensity > 0
+				&& atmosphereDensity > 0.001F
+				&& (atmosphereStyle == AtmosphereRenderUtil.ATMOSPHERE_STYLE_CLOUDS || atmosphereStyle == AtmosphereRenderUtil.ATMOSPHERE_STYLE_HAZE)) {
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+
+			atmosphereEmissiveShader.use();
+			atmosphereEmissiveShader.setUniform1f("phase", phase);
+			atmosphereEmissiveShader.setUniform1f("offset", textureUOffset);
+			atmosphereEmissiveShader.setUniform1f("atmosphereDensity", atmosphereDensity);
+			atmosphereEmissiveShader.setUniform1f("patternOffset", atmospherePatternOffset);
+			atmosphereEmissiveShader.setUniform1f("atmosphereTime", atmosphereTime);
+			atmosphereEmissiveShader.setUniform1i("atmosphereStyle", atmosphereStyle);
+			atmosphereEmissiveShader.setUniform1f("impactTime", impactAnimationTime);
+			AtmosphereRenderUtil.applyNukeShockUniforms(atmosphereEmissiveShader, nukeShocks, dayTicks);
+			atmosphereEmissiveShader.setUniform1i("bodyTex", 0);
+			atmosphereEmissiveShader.setUniform1i("lights", 1);
+			atmosphereEmissiveShader.setUniform1i("cityMask", 2);
+			atmosphereEmissiveShader.setUniform1i("blackouts", activeBlackouts);
+			atmosphereEmissiveShader.setUniform1i("useBodyAlphaMask", 1);
+
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			mc.getTextureManager().bindTexture(body.texture);
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			mc.getTextureManager().bindTexture(citylights[lightIntensity]);
+			GL13.glActiveTexture(GL13.GL_TEXTURE2);
+			mc.getTextureManager().bindTexture(body.cityMask != null ? body.cityMask : defaultMask);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+
+			if(rotateBody) {
+				drawTexturedQuadRotating(bodyScreenX, bodyScreenY, drawSize, bodyRotationAngle);
+			} else {
+				drawTexturedQuad(bodyScreenX, bodyScreenY, drawSize, 0F);
+			}
+
+			atmosphereEmissiveShader.stop();
+		}
+
+			if(lightIntensity > 0) {
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+				GL11.glColor4f(1F, 1F, 1F, 1F);
+
+				nightLightsShader.use();
+				nightLightsShader.setUniform1f("phase", phase);
+				nightLightsShader.setUniform1f("offset", textureUOffset);
+				nightLightsShader.setUniform1f("atmosphereDensity", atmosphereDensity);
+				nightLightsShader.setUniform1f("patternOffset", atmospherePatternOffset);
+				nightLightsShader.setUniform1f("atmosphereTime", atmosphereTime);
+				nightLightsShader.setUniform1i("atmosphereStyle", atmosphereStyle);
+				nightLightsShader.setUniform1f("impactTime", impactAnimationTime);
+				AtmosphereRenderUtil.applyNukeShockUniforms(nightLightsShader, nukeShocks, dayTicks);
+				nightLightsShader.setUniform1i("bodyTex", 0);
+				nightLightsShader.setUniform1i("lights", 1);
+				nightLightsShader.setUniform1i("cityMask", 2);
+				nightLightsShader.setUniform1i("blackouts", activeBlackouts);
+				nightLightsShader.setUniform1i("useBodyAlphaMask", 1);
+
+				GL13.glActiveTexture(GL13.GL_TEXTURE0);
+				mc.getTextureManager().bindTexture(body.texture);
+				GL13.glActiveTexture(GL13.GL_TEXTURE1);
+				mc.getTextureManager().bindTexture(citylights[lightIntensity]);
+				GL13.glActiveTexture(GL13.GL_TEXTURE2);
+				mc.getTextureManager().bindTexture(body.cityMask != null ? body.cityMask : defaultMask);
+				GL13.glActiveTexture(GL13.GL_TEXTURE0);
+
+				if(rotateBody) {
+					drawTexturedQuadRotating(bodyScreenX, bodyScreenY, drawSize, bodyRotationAngle);
+				} else {
+					drawTexturedQuad(bodyScreenX, bodyScreenY, drawSize, 0F);
+				}
+
+				nightLightsShader.stop();
+			}
+
+		if(atmosphereAlpha > 0.001F && cloudLightningStrength > 0.001F
+			&& (atmosphereStyle == AtmosphereRenderUtil.ATMOSPHERE_STYLE_CLOUDS || atmosphereStyle == AtmosphereRenderUtil.ATMOSPHERE_STYLE_HAZE)) {
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+
+			lightningShader.use();
+			lightningShader.setUniform1f("phase", phase);
+			lightningShader.setUniform1f("offset", textureUOffset);
+			lightningShader.setUniform1f("patternOffset", atmospherePatternOffset);
+			lightningShader.setUniform1i("bodyTex", 0);
+			lightningShader.setUniform1i("cityMask", 1);
+			lightningShader.setUniform1i("useBodyAlphaMask", 1);
+			lightningShader.setUniform1f("cloudTintStrength", cloudTintStrength);
+			lightningShader.setUniform1f("cloudLightningStrength", cloudLightningStrength);
+			lightningShader.setUniform1f("atmosphereAlpha", atmosphereAlpha);
+			lightningShader.setUniform1f("atmosphereTime", atmosphereTime);
+			lightningShader.setUniform1f("eveFlashStrength", AtmosphereRenderUtil.getBodyEveFlashStrength(body, atmosphereTime));
+			lightningShader.setUniform1i("atmosphereStyle", atmosphereStyle);
+			lightningShader.setUniform1i("lightningMode", AtmosphereRenderUtil.getBodyLightningMode(body));
+			lightningShader.setUniform1f("impactTime", impactAnimationTime);
+			AtmosphereRenderUtil.applyNukeShockUniforms(lightningShader, nukeShocks, dayTicks);
+
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			mc.getTextureManager().bindTexture(body.texture);
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			mc.getTextureManager().bindTexture(body.cityMask != null ? body.cityMask : defaultMask);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+
+			if(rotateBody) {
+				drawTexturedQuadRotating(bodyScreenX, bodyScreenY, drawSize, bodyRotationAngle);
+			} else {
+				drawTexturedQuad(bodyScreenX, bodyScreenY, drawSize, 0F);
+			}
+
+			lightningShader.stop();
+		}
+
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		if(impact != null) {
 			float lavaAlpha = (float) Math.min(impactTime * 0.1D, 1.0D);
@@ -845,7 +1018,30 @@ public class GUIScreenSatSettings extends GuiScreen {
 			}
 		}
 
+		if(!nukeShocks.isEmpty()) {
+			renderNukeImpactOverlay(bodyScreenX, bodyScreenY, drawSize, rotateBody, bodyRotationAngle, phase, nukeShocks, dayTicks);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		}
+
 		GL11.glColor4f(1F, 1F, 1F, 1F);
+	}
+
+	private void renderNukeImpactOverlay(float bodyScreenX, float bodyScreenY, float drawSize, boolean rotateBody, float bodyRotationAngle, float phase, List<CelestialNukeShockHandler.ShockStatus> nukeShocks, double currentShockTime) {
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+
+		nukeShader.use();
+		nukeShader.setUniform1f("phase", phase);
+		AtmosphereRenderUtil.applyNukeShockUniforms(nukeShader, nukeShocks, currentShockTime);
+
+		if(rotateBody) {
+			drawTexturedQuadRotating(bodyScreenX, bodyScreenY, drawSize, bodyRotationAngle);
+		} else {
+			drawTexturedQuad(bodyScreenX, bodyScreenY, drawSize, 0F);
+		}
+
+		nukeShader.stop();
 	}
 
 	private boolean hasTransparentPixels(ResourceLocation texture) {

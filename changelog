@@ -1,8 +1,24 @@
-Includes all changes and bugfixes from the latest upstream NTMain update - [X5687 - oughpho](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5687)
+Includes all changes and bugfixes from the latest upstream NTMain update - [X5714 - random bullshit, go! ](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT/releases/tag/1.0.27_X5714)
+
+## Added
+* Celestial body cloud rendering!
+    * Can be seen from orbit/other celestial bodies
+    * Current weather of the planet can be seen, thunderstorms make for denser clouds and lightning
+    * Clouds are tinted by atmospheric composition
+    * Denser atmospheres can have up to three cloud layers
+    * Rain now matches the water table
+    * Gerald impacts briefly clear the clouds
+* Nukes are now visible from space
+    * They also interact with the new clouds
+* New expensive mode parts and recipes for space machines
+* Config for disabling tilting on "unavoidable gravity" machines like the Big-Ass Tank
 
 ## Changed
-* Demeter is affixed
+* Martian mode now supports 528 + expensive mode
+* Drive processor recipes rebalanced
+* Astroturf now blocks mob spawns
+* New gas giant harvester texture
 
 ## Fixed
-* Rocket launch pad does not connect with OC cables
-* Lodestar renders in the wrong position with broken alpha
+* Teto could not consume butter
+* Mun heavy bedrock ore density not showing on scanner

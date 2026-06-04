@@ -30,6 +30,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
@@ -112,9 +113,20 @@ public class ItemBedrockOreNew extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
+		int meta = stack.getItemDamage();
+		BedrockOreGrade grade = this.getGrade(meta);
+		CelestialBedrockOreType type = this.getType(meta);
 
-		for(ProcessingTrait trait : this.getGrade(stack.getItemDamage()).traits) {
+		for(ProcessingTrait trait : grade.traits) {
 			list.add(I18nUtil.resolveKey(this.getUnlocalizedNameInefficiently(stack) + ".trait." + trait.name().toLowerCase(Locale.US)));
+		}
+
+		if(grade == BedrockOreGrade.BASE) {
+			list.add(EnumChatFormatting.DARK_GRAY + "Processing outputs");
+			list.add(EnumChatFormatting.DARK_GRAY + "Main: " + EnumChatFormatting.GRAY + I18nUtil.resolveKey(type.primary.mat.getUnlocalizedName()));
+			list.add(EnumChatFormatting.DARK_GRAY + "Sulfuric: " + EnumChatFormatting.GRAY + I18nUtil.resolveKey(type.byproductAcid.mat.getUnlocalizedName()));
+			list.add(EnumChatFormatting.DARK_GRAY + "Solvent: " + EnumChatFormatting.GRAY + I18nUtil.resolveKey(type.byproductSolvent.mat.getUnlocalizedName()));
+			list.add(EnumChatFormatting.DARK_GRAY + "HPS: " + EnumChatFormatting.GRAY + I18nUtil.resolveKey(type.byproductRad.mat.getUnlocalizedName()));
 		}
 	}
 
@@ -260,7 +272,6 @@ public class ItemBedrockOreNew extends Item {
 				T("nonmetal",	o(MAT_CHLOROCALCITE, 18),	o(MAT_COAL, 9),				o(MAT_FLUORITE, 6),			o(MAT_SILICON, 3)),
 				T("crystal",	o(MAT_ASBESTOS, 18),		o(MAT_SODALITE, 9),			o(MAT_DIAMOND, 6),			o(MAT_SODALITE, 3))
 			);
-
 			register(
 				SolarSystem.Body.TEKTO,
 				T("light",		o(MAT_TITANIUM, 18),		o(MAT_COPPER, 9),			o(MAT_NICKEL, 6),			o(MAT_LITHIUM, 3)),
@@ -270,13 +281,17 @@ public class ItemBedrockOreNew extends Item {
 				T("crystal",	o(MAT_EMERALD, 18),			o(MAT_SILICON, 9),			o(MAT_MOLYSITE, 6),			o(MAT_BORAX, 3)),
 				T("plastic",	o(MAT_POLYMER, 18),			o(MAT_RUBBER, 9),			o(MAT_SEMTEX, 6),			o(MAT_PVC, 3))
 			);
-
+			/*
 			register(
 				SolarSystem.Body.THATMO,
-				T("heavy",		o(MAT_GOLD, 18),			o(MAT_NIOBIUM, 9),			o(MAT_CADMIUM, 6),			o(MAT_ARSENIC, 3)),
-				T("scrap",		o(MAT_STEEL, 18),			o(MAT_MINGRADE, 9),			o(MAT_WEAPONSTEEL, 6),		o(MAT_SATURN, 3)),
-				T("hazard",		o(MAT_PU238, 18),			o(MAT_CO60, 9),				o(MAT_GAAS, 6),				o(MAT_AU198, 3))
-			);
+				T("light",		o(MAT_CRYOLITE, 24),		o(MAT_TITANIUM, 12),			o(MAT_GALLIUM, 6),		o(MAT_HAFNIUM, 3)),
+				T("heavy",		o(MAT_BERYLLIUM, 24),	o(MAT_TUNGSTEN, 12),			o(MAT_LEAD, 6),			o(MAT_ARSENIC, 3)),
+				T("rare",		o(MAT_RAREEARTH, 24),	o(MAT_NEODYMIUM, 12),		o(MAT_STRONTIUM, 6),		o(MAT_NIOBIUM, 3)),
+				T("actinide",	o(MAT_URANIUM, 24),		o(MAT_THORIUM, 12),			o(MAT_POLONIUM, 6),		o(MAT_U235, 3)),
+				T("nonmetal",	o(MAT_CHLOROCALCITE, 24),o(MAT_COAL, 12),				o(MAT_FLUORITE, 6),		o(MAT_SILICON, 3)),
+				T("crystal",		o(MAT_ASBESTOS, 24),		o(MAT_SODALITE, 12),			o(MAT_DIAMOND, 6),		o(MAT_SODALITE, 3))
+				);
+				*/
 		}
 
 		public CelestialBedrockOreType[] types;
@@ -309,7 +324,6 @@ public class ItemBedrockOreNew extends Item {
 		public static int getTotalTypeCount() {
 			return index + 1;
 		}
-
 
 		private static int index;
 

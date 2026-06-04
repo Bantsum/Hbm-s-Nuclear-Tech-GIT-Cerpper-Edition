@@ -39,6 +39,7 @@ public class Fluids {
 
 	public static FluidType NONE;
 	public static FluidType AIR;
+	public static FluidType AIRBLAST;
 	public static FluidType WATER;
 	public static FluidType STEAM;
 	public static FluidType HOTSTEAM;
@@ -201,6 +202,7 @@ public class Fluids {
 	public static FluidType OIL_COKER;			//heavy fractions from coking, mostly bitumen
 	public static FluidType NAPHTHA_COKER;		//medium fractions from coking, aromatics and fuel oil
 	public static FluidType GAS_COKER;			//light fractions from coking, natgas and co2
+	public static FluidType FLUE;
 	public static FluidType EGG;
 	public static FluidType CHOLESTEROL;
 	public static FluidType ESTRADIOL;
@@ -253,9 +255,6 @@ public class Fluids {
 	public static FluidType DHC;
 	public static FluidType LITHYDRO;
 	public static FluidType LITHCARBONATE;
-	public static FluidType BAJA;
-	public static FluidType BAJA_HOT;
-	public static FluidType DEW;
 
 	/* Lagacy names for compatibility purposes */
 	@Deprecated public static FluidType ACID;	//JAOPCA uses this, apparently
@@ -305,7 +304,7 @@ public class Fluids {
 	public static final FT_Polluting P_OIL =			new FT_Polluting().burn(PollutionType.SOOT, SOOT_UNREFINED_OIL).release(PollutionType.POISON, POISON_OIL);
 	public static final FT_Polluting P_FUEL =			new FT_Polluting().burn(PollutionType.SOOT, SOOT_REFINED_OIL).release(PollutionType.POISON, POISON_OIL);
 	public static final FT_Polluting P_FUEL_LEADED =	new FT_Polluting().burn(PollutionType.SOOT, SOOT_REFINED_OIL).burn(PollutionType.HEAVYMETAL, LEAD_FUEL).release(PollutionType.POISON, POISON_OIL).release(PollutionType.HEAVYMETAL, LEAD_FUEL * 0.1F);
-	public static final FT_Polluting P_GAS =			new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS);
+	public static final FT_Polluting P_GAS =			new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.POISON, POISON_OIL);
 	public static final FT_Polluting P_LIQUID_GAS =		new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS * 2F);
 
 	public static void init() {
@@ -423,11 +422,11 @@ public class Fluids {
 		HEAVYOIL_VACUUM =		new FluidType("HEAVYOIL_VACUUM",	0x131214, 2, 1, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS, P_OIL).addContainers(new CD_Canister(0x513F39));
 		REFORMATE =				new FluidType("REFORMATE",			0x835472, 2, 2, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS, P_FUEL).addContainers(new CD_Canister(0xD180D6));
 		LIGHTOIL_VACUUM =		new FluidType("LIGHTOIL_VACUUM",	0x8C8851, 1, 2, 0, EnumSymbol.NONE).addTraits(LIQUID, P_FUEL).addContainers(new CD_Canister(0xB46B52));
-		SOURGAS =				new FluidType("SOURGAS",			0xC9BE0D, 4, 4, 0, EnumSymbol.ACID).addContainers(new CD_Gastank(0xC9BE0D, 0x303030)).addTraits(GASEOUS, new FT_Corrosive(10), new FT_Poison(false, 1), P_GAS);
+		SOURGAS =				new FluidType("SOURGAS",			0xC9BE0D, 4, 4, 0, EnumSymbol.ACID).addContainers(new CD_Gastank(0xC9BE0D, 0x303030)).addTraits(GASEOUS, new FT_Corrosive(10), new FT_Poison(false, 1), new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.POISON, POISON_EXTREME));
 		XYLENE =				new FluidType("XYLENE",				0x5C4E76, 2, 3, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS, P_FUEL).addContainers(new CD_Canister(0xA380D6));
-		NEON =  				new FluidType("NEON",				0xF1F600, 0, 0, 0, EnumSymbol.CROYGENIC).addTraits(GASEOUS);
-		ARGON = 				new FluidType("ARGON",				0xFD70D0, 0, 0, 0, EnumSymbol.CROYGENIC).addTraits(GASEOUS);
-		KRYPTON = 				new FluidType("KRYPTON",			0x9AC6E6, 0, 0, 0, EnumSymbol.CROYGENIC).addTraits(GASEOUS);
+		NEON =  				new FluidType("NEON",				0xF1F600, 0, 0, 0, EnumSymbol.CROYGENIC).addContainers(new CD_Gastank(0xF1F600, 0x303030)).addTraits(GASEOUS);
+		ARGON = 				new FluidType("ARGON",				0xFD70D0, 0, 0, 0, EnumSymbol.CROYGENIC).addContainers(new CD_Gastank(0xFD70D0, 0x303030)).addTraits(GASEOUS);
+		KRYPTON = 				new FluidType("KRYPTON",			0x9AC6E6, 0, 0, 0, EnumSymbol.CROYGENIC).addContainers(new CD_Gastank(0x9AC6E6, 0x303030)).addTraits(GASEOUS);
 		COFFEE =				new FluidType("COFFEE",				0x57493D, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
 		TEA =					new FluidType("TEA",				0x76523C, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
 		HONEY =					new FluidType("HONEY",				0xD99A02, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
@@ -476,10 +475,10 @@ public class Fluids {
 		SMOKE =					new FluidType("SMOKE",				0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS, NOID, NOCON);
 		SMOKE_LEADED =			new FluidType( "SMOKE_LEADED",		0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS, NOID, NOCON);
 		SMOKE_POISON =			new FluidType("SMOKE_POISON",		0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS, NOID, NOCON);
-		JOOLGAS =				new FluidType("JOOLGAS",			0x829F82, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0x68A368, 0xFF8400)).addTraits(GASEOUS);
+		JOOLGAS =				new FluidType("JOOLGAS",			0x96B596, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0x78B878, 0xFF8400)).addTraits(GASEOUS);
 		SARNUSGAS =				new FluidType("SARNUSGAS",			0xE47D5C, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0xB56847, 0xFF8400)).addTraits(GASEOUS);
 		UGAS =					new FluidType("UGAS",				0x718C9A, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0x5099BF, 0xFF8400)).addTraits(GASEOUS);
-		NGAS =					new FluidType("NGAS",				0x8A668A, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0xAC82D1, 0xFF8400)).addTraits(GASEOUS);
+		NGAS =					new FluidType("NGAS",				0xA37BA3, 0, 0, 0, EnumSymbol.ASPHYXIANT).addContainers(new CD_Gastank(0xBE92E0, 0xFF8400)).addTraits(GASEOUS);
 		EMILK =					new FluidType("EMILK",				0xCFCFCF, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);//F5DEE4
 		CMILK =					new FluidType("CMILK",				0xCFCFCF, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);//F5DEE4
 		CREAM =					new FluidType("CREAM",				0xCFCFCF, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);//F5DEE4
@@ -536,10 +535,9 @@ public class Fluids {
 		DHC =					new FluidType("DHC",				0xD2AFFF, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
 		AIR =					new FluidType("AIR",				0xE7EAEB, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
 		LITHYDRO =				new FluidType("LITHYDRO",			0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
-		LITHCARBONATE =		       new FluidType("LITHCARBONATE",	       0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
-		BAJA = 					new FluidType("BAJA", 			0x86C9C3, 0, 0,0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
-		BAJA_HOT =				new FluidType("BAJA_HOT",			0xACF1D2, 0, 0, 0, EnumSymbol.NONE).setTemp(600).addTraits(DELICIOUS, LIQUID);
-		DEW = 					new FluidType("DEW", 			0x94C93D, 0, 0,0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
+		LITHCARBONATE =			new FluidType("LITHCARBONATE",		0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
+		AIRBLAST =				new FluidType("AIRBLAST",			0xFFDADA, 0, 3, 0, EnumSymbol.NONE).setTemp(1_200).addTraits(GASEOUS);
+		FLUE =					new FluidType("FLUE",				0x131313, 1, 4, 1, EnumSymbol.NONE).addContainers(new CD_Gastank(0xFF4545, 0xFFE97F)).addTraits(new FT_Flammable(10_000), GASEOUS, new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.SOOT, SOOT_GAS * 25));
 
 		// ^ ^ ^ ^ ^ ^ ^ ^
 		//ADD NEW FLUIDS HERE
@@ -558,6 +556,7 @@ public class Fluids {
 		metaOrder.add(NONE);
 		//vanilla
 		metaOrder.add(AIR);
+		metaOrder.add(AIRBLAST);
 		metaOrder.add(WATER);
 		metaOrder.add(HEAVYWATER);
 		metaOrder.add(HEAVYWATER_HOT);
@@ -584,9 +583,6 @@ public class Fluids {
 		metaOrder.add(GASEOUS_PLUTONIUM_BROMIDE);
 		metaOrder.add(GASEOUS_SCHRABIDIUM_BROMIDE);
 		metaOrder.add(GASEOUS_THORIUM_BROMIDE);
-		metaOrder.add(BAJA);
-		metaOrder.add(BAJA_HOT);
-		metaOrder.add(DEW);
 		//blood
 		metaOrder.add(BLOOD);
 		metaOrder.add(BLOODGAS);
@@ -638,6 +634,7 @@ public class Fluids {
 		metaOrder.add(HEATINGOIL_VACUUM);
 		metaOrder.add(RECLAIMED);
 		metaOrder.add(LUBRICANT);
+		metaOrder.add(FLUE);
 		metaOrder.add(GAS);
 		metaOrder.add(GAS_COKER);
 		metaOrder.add(PETROLEUM);
@@ -815,6 +812,8 @@ public class Fluids {
 		ESTRADIOL.addTraits(new FT_Toxin().addEntry(new ToxinEffects(HazardClass.PARTICLE_FINE, false).add(new PotionEffect(HbmPotion.death.id, 60 * 60 * 20, 0))));
 		REDMUD.addTraits(new FT_Toxin().addEntry(new ToxinEffects(HazardClass.GAS_BLISTERING, false).add(new PotionEffect(Potion.wither.id, 30 * 20, 2))));
 
+		AIR.addTraits(new FT_Heatable().setEff(HeatingType.BOILER, 1.0D).addStep(5, 1, AIRBLAST, 1));
+
 		double eff_steam_boil = 1.0D;
 		double eff_steam_heatex = 0.25D;
 
@@ -823,10 +822,6 @@ public class Fluids {
 				.addStep(220, 1, HOTSTEAM, 10)
 				.addStep(238, 1, SUPERHOTSTEAM, 1)
 				.addStep(2500, 10, ULTRAHOTSTEAM, 1));
-
-		STEAM.addTraits(new FT_Heatable().setEff(HeatingType.BOILER, eff_steam_boil).setEff(HeatingType.HEATEXCHANGER, eff_steam_heatex).addStep(2, 10, HOTSTEAM, 1));
-		HOTSTEAM.addTraits(new FT_Heatable().setEff(HeatingType.BOILER, eff_steam_boil).setEff(HeatingType.HEATEXCHANGER, eff_steam_heatex).addStep(18, 10, SUPERHOTSTEAM, 1));
-		SUPERHOTSTEAM.addTraits(new FT_Heatable().setEff(HeatingType.BOILER, eff_steam_boil).setEff(HeatingType.HEATEXCHANGER, eff_steam_heatex).addStep(120, 10, ULTRAHOTSTEAM, 1));
 
 		double eff_steam_turbine = 1.0D;
 		double eff_steam_cool = 0.5D;
@@ -887,9 +882,6 @@ public class Fluids {
 
 		THORIUM_SALT.addTraits(new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(400, 1, THORIUM_SALT_HOT, 1), new FT_PWRModerator(2.5D));
 		THORIUM_SALT_HOT.addTraits(new FT_Coolable(THORIUM_SALT_DEPLETED, 1, 1, 400).setEff(CoolingType.HEATEXCHANGER, 1.0D));
-
-		BAJA.addTraits(new FT_Heatable().setEff(HeatingType.HEATEXCHANGER, 1.0D).setEff(HeatingType.PWR, 1.30D).setEff(HeatingType.ICF, 1.50D).addStep(600, 1, BAJA_HOT, 1), new FT_PWRModerator(1.25D));
-		BAJA_HOT.addTraits(new FT_Coolable(BAJA, 1, 1, 600).setEff(CoolingType.HEATEXCHANGER, 1.0D));
 
 		if(idMapping.size() != metaOrder.size()) {
 			throw new IllegalStateException("A severe error has occoured during NTM's fluid registering process! The MetaOrder and Mappings are inconsistent! Mapping size: " + idMapping.size()+ " / MetaOrder size: " + metaOrder.size());

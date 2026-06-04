@@ -4,9 +4,6 @@ uniform float phase;
 uniform float offset;
 
 uniform sampler2D bodyTex;
-uniform sampler2D lights;
-uniform sampler2D cityMask;
-uniform int blackouts;
 uniform int useBodyAlphaMask;
 
 #define PI 3.1415926538
@@ -14,8 +11,6 @@ uniform int useBodyAlphaMask;
 vec2 quantize(vec2 inp, vec2 period) {
 	return floor(inp / period) * period;
 }
-
-float hash(float x){ return fract(cos(x*124.123)*412.0); }
 
 void main() {
 	vec2 movingUV = gl_TexCoord[0].xy + vec2(offset, 0);
@@ -54,21 +49,5 @@ void main() {
 	// minimum brightness
 	brightness = max(brightness, 0.05);
 
-	// Apply night lights and mask out cities
-	vec4 city = texture2D(cityMask, movingUV);
-	gl_FragColor = texture2D(lights, movingUV);
-	gl_FragColor = gl_FragColor * city * (0.8 - brightness) * alphaMask;
-	gl_FragColor.rgb *= city.a;
-	// ^ i hate weird black transparent pixels
-
-	for (int i = 0; i < blackouts; i++) {
-		float bx = hash(i * 100.0 + 1.0);
-		float by = hash(i * 100.0 + 2.0);
-
-		if (gl_TexCoord[0].x > bx - 0.15 && gl_TexCoord[0].x < bx + 0.15 && gl_TexCoord[0].y > by - 0.15 && gl_TexCoord[0].y < by + 0.15) {
-			gl_FragColor = vec4(0.0);
-		}
-	}
-
-	gl_FragColor.a = (1.0 - brightness) * alphaMask;
+	gl_FragColor = vec4(0.0, 0.0, 0.0, (1.0 - brightness) * alphaMask);
 }

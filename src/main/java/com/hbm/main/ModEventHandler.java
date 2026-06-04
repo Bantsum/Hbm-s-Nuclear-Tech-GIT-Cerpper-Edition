@@ -11,7 +11,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.logging.log4j.Level;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -26,6 +25,7 @@ import com.hbm.config.ServerConfig;
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.CelestialTeleporter;
+import com.hbm.dim.SolarSystemWorldSavedData;
 import com.hbm.dim.WorldGeneratorCelestial;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.WorldProviderEarth;
@@ -35,14 +35,11 @@ import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.dim.trait.CBT_Invasion;
 import com.hbm.dim.trait.CBT_Lights;
+import com.hbm.dim.trait.CBT_Weather;
 import com.hbm.dim.trait.CelestialBodyTrait;
 import com.hbm.entity.missile.EntityRideableRocket;
-import com.hbm.entity.missile.EntityRideableRocket.RocketState;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.mob.EntityCyberCrab;
-import com.hbm.entity.mob.EntityUFO;
-import com.hbm.entity.mob.siege.EntitySiegeCraft;
-import com.hbm.entity.mob.siege.EntitySiegeUFO;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
 import com.hbm.entity.train.EntityRailCarBase;
@@ -123,8 +120,12 @@ import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.IGrowable;
 import net.minecraft.command.CommandGameRule;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.CommandWeather;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLiving;
@@ -198,7 +199,7 @@ public class ModEventHandler {
 		if(!event.player.worldObj.isRemote) {
 
 			if(GeneralConfig.enableMOTD) {
-				event.player.addChatMessage(new ChatComponentText("Loaded world with Bantsum's NTM: Space Cerpper Edition " + RefStrings.VERSION + " for Minecraft 1.7.10!"));
+				event.player.addChatMessage(new ChatComponentText("Loaded world with JamesH2 & Mellow's NTM: Space " + RefStrings.VERSION + " for Minecraft 1.7.10!"));
 
 				if(HTTPHandler.newVersion) {
 					event.player.addChatMessage(
@@ -206,7 +207,7 @@ public class ModEventHandler {
 							.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))
 							.appendSibling(new ChatComponentText("[here]")
 									.setChatStyle(new ChatStyle()
-										.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Bantsum/Hbm-s-Nuclear-Tech-GIT-Test/releases"))
+										.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/JameH2/Hbm-s-Nuclear-Tech-GIT/releases"))
 										.setUnderlined(true)
 										.setColor(EnumChatFormatting.RED)
 									)
@@ -494,7 +495,7 @@ public class ModEventHandler {
 							((IBomb) player.worldObj.getBlock(x, y, z)).explode(player.worldObj, x, y, z);
 
 							if(GeneralConfig.enableExtendedLogging)
-								MainRegistry.logger.log(Level.INFO, "[DET] Tried to detonate block at " + x + " / " + y + " / " + z + " by dead man's switch from " + player.getDisplayName() + "!");
+								MainRegistry.logger.info("[DET] Tried to detonate block at " + x + " / " + y + " / " + z + " by dead man's switch from " + player.getDisplayName() + "!");
 						}
 
 						player.inventory.setInventorySlotContents(i, null);
@@ -520,10 +521,10 @@ public class ModEventHandler {
 				MobUtil.equipFullSet(entity, ModItems.hazmat_helmet, ModItems.hazmat_plate, ModItems.hazmat_legs, ModItems.hazmat_boots);
 				return;
 			}
-			slotPools = MobUtil.slotPoolCommon;
+			slotPools = MobUtil.slotPoolCommonS;
 
 		} else if(entity instanceof EntitySkeleton) {
-			slotPools = MobUtil.slotPoolRanged;
+			slotPools = MobUtil.slotPoolRangedS;
 			ItemStack bowReplacement = getSkelegun(soot, world.rand);
 			slotPools.put(0, createSlotPool(50, bowReplacement != null ? new Object[][]{{bowReplacement, 1}} : new Object[][]{}));
 		}
@@ -549,7 +550,7 @@ public class ModEventHandler {
 
 	private static ItemStack getSkelegun(float soot, Random rand) {
 		if(!MobConfig.enableMobWeapons) return null;
-		
+
 		soot -= MobConfig.mobWeaponSootReduction;
 		if(rand.nextDouble() > Math.log(soot) * 0.25) return null;
 
@@ -1525,13 +1526,13 @@ public class ModEventHandler {
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 
 		if(event.phase == Phase.START) {
-				for(CelestialBody body : CelestialBody.getAllBodies()) {
-					List<CelestialBodyTrait> traits = new ArrayList<>(body.getTraits().values());
-					for (CelestialBodyTrait trait : traits) {
-						trait.update(false, body);
-
-					}
+			CBT_Weather.updateGlobalWeather();
+			for(CelestialBody body : CelestialBody.getAllBodies()) {
+				List<CelestialBodyTrait> traits = new ArrayList<>(body.getTraits().values());
+				for(CelestialBodyTrait trait : traits) {
+					trait.update(false, body);
 				}
+			}
 
 			// do other shit I guess?
 			RTTYSystem.updateBroadcastQueue();
@@ -1568,13 +1569,57 @@ public class ModEventHandler {
 	public void commandEvent(CommandEvent event) {
 		ICommand command = event.command;
 		ICommandSender sender = event.sender;
-		if(command instanceof CommandGameRule) {
+		if(command instanceof CommandWeather) {
+			World world = sender.getEntityWorld();
+			if(world != null && (world.provider instanceof WorldProviderCelestial || world.provider instanceof WorldProviderOrbit)) {
+				handlePlanetaryWeatherCommand(sender, event.parameters, command);
+				event.setCanceled(true);
+			}
+		} else if(command instanceof CommandGameRule) {
 			if(command.canCommandSenderUseCommand(sender)) {
 				command.processCommand(sender,event.parameters);
 				RBMKDials.refresh(sender.getEntityWorld()); // Refresh RBMK gamerules.
 				event.setCanceled(true);
 			}
 		}
+	}
+
+	private void handlePlanetaryWeatherCommand(ICommandSender sender, String[] parameters, ICommand command) {
+		if(!command.canCommandSenderUseCommand(sender)) {
+			return;
+		}
+
+		if(parameters.length < 1 || parameters.length > 2) {
+			throw new WrongUsageException("commands.weather.usage", new Object[0]);
+		}
+
+		int duration = (300 + new Random().nextInt(600)) * 20;
+		if(parameters.length >= 2) {
+			duration = CommandBase.parseIntBounded(sender, parameters[1], 1, 1000000) * 20;
+		}
+
+		World world = sender.getEntityWorld();
+		ChunkCoordinates pos = sender.getPlayerCoordinates();
+		CelestialBody body = CelestialBody.getTarget(world, pos.posX, pos.posZ).body;
+		CBT_Weather weather = CBT_Weather.ensureTrait(body);
+		if(weather == null || !CBT_Weather.supportsWeather(body)) {
+			throw new CommandException("This celestial body has no weather cycle.");
+		}
+
+		if("clear".equalsIgnoreCase(parameters[0])) {
+			weather.forceClear(world.rand, duration);
+			CommandBase.func_152373_a(sender, command, "commands.weather.clear", new Object[0]);
+		} else if("rain".equalsIgnoreCase(parameters[0])) {
+			weather.forceRain(world.rand, duration);
+			CommandBase.func_152373_a(sender, command, "commands.weather.rain", new Object[0]);
+		} else if("thunder".equalsIgnoreCase(parameters[0])) {
+			weather.forceThunder(duration);
+			CommandBase.func_152373_a(sender, command, "commands.weather.thunder", new Object[0]);
+		} else {
+			throw new WrongUsageException("commands.weather.usage", new Object[0]);
+		}
+
+		SolarSystemWorldSavedData.get(world).markDirty();
 	}
 
 	@SubscribeEvent
@@ -1762,7 +1807,7 @@ public class ModEventHandler {
 				EntityItem entityitem = new EntityItem(world, x, y, z, new ItemStack(ModItems.bobmazon_hidden));
 				entityitem.delayBeforeCanPickup = 1;
 				world.spawnEntityInWorld(entityitem);
-				MainRegistry.logger.log(Level.FATAL, "THE HIDDENCAT HAS BEEN OBTAINED " + " x: " + x + " / "	+ " y: " + + y + " / "+ "z: " + + z + " by " + event.entityPlayer.getDisplayName() + "!");
+				MainRegistry.logger.fatal("THE HIDDENCAT HAS BEEN OBTAINED " + " x: " + x + " / "	+ " y: " + + y + " / "+ "z: " + + z + " by " + event.entityPlayer.getDisplayName() + "!");
 
 			}
 		}
@@ -1790,7 +1835,7 @@ public class ModEventHandler {
 		World world = event.world;
 
 		if(!world.isRemote && event.action == Action.RIGHT_CLICK_BLOCK && world.getBlock(x, y, z) == Blocks.lever && GeneralConfig.enableExtendedLogging == true) {
-			MainRegistry.logger.log(Level.INFO, "[DET] pulled lever at " + x + " / " + y + " / " + z + " by " + event.entityPlayer.getDisplayName() + "!");
+			MainRegistry.logger.info("[DET] pulled lever at " + x + " / " + y + " / " + z + " by " + event.entityPlayer.getDisplayName() + "!");
 		}
 	}
 
@@ -1878,9 +1923,12 @@ public class ModEventHandler {
 
 		if(stack != null && stack.getItem() instanceof ItemFood) {
 
-			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("ntmCyanide")) {
-				for(int i = 0; i < 10; i++) {
+			if(stack.hasTagCompound()) {
+				if(stack.getTagCompound().getBoolean("ntmCyanide")) for(int i = 0; i < 10; i++) {
 					event.entityPlayer.attackEntityFrom(rand.nextBoolean() ? ModDamageSource.euthanizedSelf : ModDamageSource.euthanizedSelf2, 1000);
+				}
+				if(stack.getTagCompound().getBoolean("ntmRedPill")) for(int i = 0; i < 10; i++) {
+					event.entityPlayer.addPotionEffect(new PotionEffect(HbmPotion.death.id, 60 * 60 * 20, 0));
 				}
 			}
 		}

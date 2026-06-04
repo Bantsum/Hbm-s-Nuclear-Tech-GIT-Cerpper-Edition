@@ -14,6 +14,7 @@ import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.dim.trait.CBT_War;
 import com.hbm.dim.trait.CBT_War.Projectile;
 import com.hbm.dim.trait.CelestialBodyTrait;
+import com.hbm.handler.CelestialNukeShockHandler;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionData;
@@ -49,6 +50,7 @@ public class PermaSyncHandler {
 		buf.writeFloat(data.dust);
 		buf.writeBoolean(data.impact);
 		buf.writeLong(data.time);
+		CelestialNukeShockHandler.writeSync(buf, world);
 		/// TOM IMPACT DATA ///
 
 		/// SHITTY MEMES ///
@@ -176,6 +178,7 @@ public class PermaSyncHandler {
 		ImpactWorldHandler.dust = buf.readFloat();
 		ImpactWorldHandler.impact = buf.readBoolean();
 		ImpactWorldHandler.time = buf.readLong();
+		CelestialNukeShockHandler.readSync(buf);
 		/// TOM IMPACT DATA ///
 
 		/// SHITTY MEMES ///

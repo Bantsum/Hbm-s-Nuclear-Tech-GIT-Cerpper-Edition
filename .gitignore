@@ -27,6 +27,9 @@
 # CurseForge configuration
 /curseforge.properties
 
+# Maven configuration
+/maven.properties
+
 # Changelog backup
 /changelog.bak
 gradle/wrapper/gradle-wrapper.jar
