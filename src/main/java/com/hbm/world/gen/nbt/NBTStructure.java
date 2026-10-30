@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.hbm.config.ServerConfig;
@@ -84,9 +85,25 @@ public class NBTStructure {
 
 	// incredibly shitty system for translating legacy block definitions to new ones
 	@Untested // i can't find a god damn factory
-	private static Map<String, String> substitutions = new HashMap() {{
-		put("hbm:tile.ore_coal_oil", "coal_ore");
+	private static Map<String, BlockMigration> substitutions = new HashMap() {{
+		put("hbm:tile.ore_coal_oil", new BlockMigration("coal_ore"));
 	}};
+	
+	public static class BlockMigration {
+		public String block;
+		public int meta;
+		// i may have misjudged, migration is only done when the palette is loaded, rendering this basically useless
+		public Consumer<TileEntity> tileEntityTransformerObject;
+		
+		public BlockMigration(String block)											{ this(block, 0, null); }
+		public BlockMigration(String block,	int meta)								{ this(block, meta, null); }
+		public BlockMigration(String block,				Consumer<TileEntity> teto)	{ this(block, 0, teto); }
+		public BlockMigration(String block,	int meta,	Consumer<TileEntity> teto)	{
+			this.block = block;
+			this.meta = meta;
+			this.tileEntityTransformerObject = teto;
+		}
+	}
 
 	public NBTStructure(ResourceLocation resource) {
 		// Can't use regular resource loading, servers don't know how!
@@ -95,6 +112,7 @@ public class NBTStructure {
 			name = resource.getResourcePath();
 			loadStructure(stream);
 		} else {
+			name = resource.getResourcePath();
 			MainRegistry.logger.error("NBT Structure not found: " + resource.getResourcePath());
 		}
 	}
@@ -328,13 +346,16 @@ public class NBTStructure {
 				NBTTagCompound p = paletteList.getCompoundTagAt(i);
 
 				String blockName = p.getString("Name");
+				int meta = 0;
 				NBTTagCompound prop = p.getCompoundTag("Properties");
 
 				/// BOB PATCH ///
-				if(substitutions.containsKey(blockName)) blockName = substitutions.get(blockName);
+				if(substitutions.containsKey(blockName)) {
+					BlockMigration mig = substitutions.get(blockName);
+					blockName = mig.block;
+					meta = mig.meta;
+				}
 				/// BOB PATCH ///
-
-				int meta = 0;
 				try {
 					meta = Integer.parseInt(prop.getString("meta"));
 				} catch(NumberFormatException ex) {
@@ -575,6 +596,15 @@ public class NBTStructure {
 
 		int sizeX = totalBounds.maxX - totalBounds.minX;
 		int sizeZ = totalBounds.maxZ - totalBounds.minZ;
+		
+		boolean swizzle = coordBaseMode == 1 || coordBaseMode == 3;
+		int expectedX = (swizzle ? size.z : size.x) - 1;
+		int expectedZ = (swizzle ? size.x : size.z) - 1;
+		
+		if(sizeX != expectedX || sizeZ != expectedZ) {
+			MainRegistry.logger.warn("NBT structure {} bounds mismatch (saved {}x{}, expected {}x{}) - structure changed since worldgen, skipping piece", name, sizeX, sizeZ, expectedX, expectedZ);
+			return false;
+		}
 
 		// voxel grid transforms can fuck you up
 		// you have my respect, vaer
@@ -1229,8 +1259,12 @@ public class NBTStructure {
 		private SpawnCondition nextSpawn;
 
 		public void generateStructures(World world, Random rand, IChunkProvider chunkProvider, int chunkX, int chunkZ) {
-			func_151539_a(chunkProvider, world, chunkX, chunkZ, null);
-			generateStructuresInChunk(world, rand, chunkX, chunkZ);
+			try {
+				func_151539_a(chunkProvider, world, chunkX, chunkZ, null);
+				generateStructuresInChunk(world, rand, chunkX, chunkZ);
+			} catch(Exception t) {
+				MainRegistry.logger.error("NTM structure gen failed at chunk {}, {} ({}) - chunk generates without it", chunkX, chunkZ, nextSpawn != null ? nextSpawn.name : "unknown", t);
+			}
 		}
 
 		@Override

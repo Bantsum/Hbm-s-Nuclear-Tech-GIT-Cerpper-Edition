@@ -44,6 +44,33 @@ public class MachineFusionMHDT extends BlockDummyable implements ILookOverlay, I
 	public int getOffset() {
 		return 7;
 	}
+	
+	@Override
+	public int[][] getAllDimensions() {
+		return new int[][] {
+			new int[] { 2, 0, 6, 7, 2, 2 },
+			new int[] { 3, -2, 6, 2, 1, 1 },
+			new int[] { 3, -2, -6, 7, 1, 1 },
+			new int[] { 3, -2, -3, 5, 2, 2 },
+			new int[] { 4, -3, -3, 5, 1, 1 },
+			new int[] { 1, 0, 0, 1, 3, 3, 3, 0, 0 },
+		};
+	}
+
+	@Override
+	public double[][] getAABBExtras() {
+		return new double[][] {
+			{1.5, 3.5, -6.5, -6.5, 1, -1}
+		};
+	}
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{3, 0, 4, ForgeDirection.EAST.ordinal()},
+			{-3, 0, 4, ForgeDirection.WEST.ordinal()},
+			{0, 1, 7, ForgeDirection.SOUTH.ordinal()}
+		}, dir);
+	}
 
 	@Override
 	public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
@@ -65,13 +92,9 @@ public class MachineFusionMHDT extends BlockDummyable implements ILookOverlay, I
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o, y, z + dir.offsetZ * o, new int[] {4, -3, -3, 5, 1, 1}, this, dir);
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * (o + 3), y, z + dir.offsetZ * (o + 3), new int[] {1, 0, 0, 1, 3, 3}, this, dir);
 
-		x += dir.offsetX * o;
-		z += dir.offsetZ * o;
-		
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		this.makeExtra(world, x + dir.offsetX * 4 + rot.offsetX * 3, y, z + dir.offsetZ * 4 + rot.offsetZ * 3);
-		this.makeExtra(world, x + dir.offsetX * 4 - rot.offsetX * 3, y, z + dir.offsetZ * 4 - rot.offsetZ * 3);
-		this.makeExtra(world, x + dir.offsetX * 7, y + 1, z + dir.offsetZ * 7);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 	}
 
 	@Override

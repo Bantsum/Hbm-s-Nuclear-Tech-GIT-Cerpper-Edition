@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.hbm.inventory.OreDictManager.DictFrame;
+import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -50,6 +51,10 @@ public class NTMMaterial {
 		return "hbmmat." + this.names[0].toLowerCase(Locale.US);
 	}
 	
+	public String getLocalizedName() {
+		return I18nUtil.resolveKey(getUnlocalizedName());
+	}
+	
 	public NTMMaterial setConversion(NTMMaterial mat, int in, int out) {
 		this.smeltsInto = mat;
 		this.convIn = in;
@@ -69,7 +74,9 @@ public class NTMMaterial {
 		return this;
 	}
 
+	/** Metal */
 	public NTMMaterial m() { this.traits.add(MatTraits.METAL); return this; }
+	/** Nonmetal */
 	public NTMMaterial n() { this.traits.add(MatTraits.NONMETAL); return this; }
 	
 	/** Defines smelting behavior */

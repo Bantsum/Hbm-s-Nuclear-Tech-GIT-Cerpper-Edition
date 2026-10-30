@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+@Deprecated
 public class SoyuzLauncher extends BlockDummyable {
 
 	public SoyuzLauncher(Material p_i45386_1_) {
@@ -70,6 +71,16 @@ public class SoyuzLauncher extends BlockDummyable {
 	}
 	
 	public static final int height = 4;
+
+	@Override
+	public int getHeightOffset() {
+		return height;
+	}
+	
+	@Override
+	protected ForgeDirection getDirModified(ForgeDirection dir) {
+		return ForgeDirection.EAST;
+	}
 	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack) {
@@ -168,7 +179,18 @@ public class SoyuzLauncher extends BlockDummyable {
 	public int getOffset() {
 		return 0;
 	}
-	
+	@Override
+	public int[][] getAllDimensions() {
+		return new int[][] {
+			new int[] { 0, 1, 6, 6, 6, 6 },
+			new int[] { -2, 4, -3, 6, -3, 6 },
+			new int[] { -2, 4, 6, -3, -3, 6 },
+			new int[] { -2, 4, 6, -3, 6, -3 },
+			new int[] { -2, 4, -3, 6, 6, -3 },
+			new int[] { 0, 4, 1, 1, -6, 8 },
+			new int[] { 0, 4, 2, 2, 9, -5 },
+		};
+	}
 	private final Random field_149933_a = new Random();
 	private static boolean keepInventory;
 	

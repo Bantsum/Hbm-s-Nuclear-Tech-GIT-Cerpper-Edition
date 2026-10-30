@@ -233,19 +233,12 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 
 				ItemStack armor = player.inventory.armorInventory[i];
 
-				if(armor == null || !(armor.getItem() instanceof ArmorFSB))
-					return false;
-
-				if(((ArmorFSB) armor.getItem()).getArmorMaterial() != chestplate.getArmorMaterial())
-					return false;
-
-				if(!((ArmorFSB) armor.getItem()).isArmorEnabled(armor))
-					return false;
+				if(armor == null || !(armor.getItem() instanceof ArmorFSB)) return false;
+				if(((ArmorFSB) armor.getItem()).getArmorMaterial() != chestplate.getArmorMaterial()) return false;
+				if(!((ArmorFSB) armor.getItem()).isArmorEnabled(armor)) return false;
 			}
-
 			return true;
 		}
-
 		return false;
 	}
 
@@ -262,16 +255,11 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 
 				ItemStack armor = player.inventory.armorInventory[i];
 
-				if(armor == null || !(armor.getItem() instanceof ArmorFSB))
-					return false;
-
-				if(((ArmorFSB) armor.getItem()).getArmorMaterial() != chestplate.getArmorMaterial())
-					return false;
+				if(armor == null || !(armor.getItem() instanceof ArmorFSB)) return false;
+				if(((ArmorFSB) armor.getItem()).getArmorMaterial() != chestplate.getArmorMaterial()) return false;
 			}
-
 			return true;
 		}
-
 		return false;
 	}
 
@@ -409,7 +397,7 @@ public class ArmorFSB extends ItemArmor implements IArmorDisableModel {
 				}
 			}
 
-			if(chestplate.fall != null)
+			if(chestplate.fall != null && player.fallDistance > 0.5)
 				player.playSound(chestplate.fall, 0.5F, 1.0F);
 		}
 	}

@@ -12,6 +12,7 @@ import com.hbm.items.weapon.sedna.hud.HUDComponentDurabilityBar;
 import com.hbm.items.weapon.sedna.impl.ItemGunChargeThrower;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.entity.projectile.RenderRBMKDebris;
 import com.hbm.render.item.weapon.sedna.ItemRenderFatMan;
 import com.hbm.render.tileentity.RenderArcFurnace;
 import com.hbm.render.util.BeamPronter;
@@ -155,10 +156,13 @@ public class LegoClient {
 		
 		if(bullet.ticksExisted < 2) return;
 		RenderArcFurnace.fullbright(true);
+		boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
+		GL11.glDisable(GL11.GL_FOG);
 		
 		double scale = Math.min(5, (bullet.ticksExisted + interp - 2) * 0.5) * (0.8 + bullet.worldObj.rand.nextDouble() * 0.4);
 		renderFlareSprite(bullet, interp, r, g, b, scale, 0.5F, 0.75F);
 		
+		if(fog) GL11.glEnable(GL11.GL_FOG);
 		RenderArcFurnace.fullbright(false);
 	}
 	public static void renderFlareSprite(Entity bullet, float interp, float r, float g, float b, double scale, float outerAlpha, float innerAlpha) {
@@ -209,6 +213,14 @@ public class LegoClient {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
+	
+	public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_GRAPHITE = (bullet, interp) -> {
+		GL11.glScalef(2F, 2F, 2F);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(RenderRBMKDebris.tex_graphite);
+		ResourceManager.deb_graphite.renderAll();
+		GL11.glShadeModel(GL11.GL_FLAT);
+	};
 	
 	public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_GRENADE = (bullet, interp) -> {
 		GL11.glScalef(0.25F, 0.25F, 0.25F);

@@ -14,7 +14,6 @@ import org.lwjgl.input.Keyboard;
 import com.hbm.blocks.IBlockMulti;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.config.StructureConfig;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.gui.element.GuiFileList;
 import com.hbm.lib.RefStrings;
@@ -322,8 +321,6 @@ public class BlockWandStructure extends BlockContainer implements IBlockMulti, I
 		public boolean hasPermission(EntityPlayer player) {
 			return true;
 		}
-
-		public void receiveControl(NBTTagCompound data) {}
 
 		@Override
 		public void receiveControl(EntityPlayer player, NBTTagCompound nbt) {

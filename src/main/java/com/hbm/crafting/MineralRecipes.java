@@ -248,37 +248,7 @@ public class MineralRecipes {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.billet_uranium, 2), new Object[] { ModItems.billet_u238, "nuggetUranium238", "nuggetUranium238", "nuggetUranium238", "nuggetUranium238", "nuggetUranium238", "nuggetUranium235" }));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.billet_uranium, 2), new Object[] { ModItems.billet_u238, "tinyU238", "tinyU238", "tinyU238", "tinyU238", "tinyU238", "tinyU235" }));
 
-		/*addBilletToIngot(ModItems.ingot_uranium, ModItems.billet_uranium);
-		addBilletToIngot(ModItems.ingot_u233, ModItems.billet_u233);
-		addBilletToIngot(ModItems.ingot_u235, ModItems.billet_u235);
-		addBilletToIngot(ModItems.ingot_u238, ModItems.billet_u238);
-		addBilletToIngot(ModItems.ingot_plutonium, ModItems.billet_plutonium);
-		addBilletToIngot(ModItems.ingot_pu238, ModItems.billet_pu238);
-		addBilletToIngot(ModItems.ingot_pu239, ModItems.billet_pu239);
-		addBilletToIngot(ModItems.ingot_pu240, ModItems.billet_pu240);
-		addBilletToIngot(ModItems.ingot_pu241, ModItems.billet_pu241);
-		addBilletToIngot(ModItems.ingot_pu_mix, ModItems.billet_pu_mix);
-		addBilletToIngot(ModItems.ingot_am241, ModItems.billet_am241);
-		addBilletToIngot(ModItems.ingot_am242, ModItems.billet_am242);
-		addBilletToIngot(ModItems.ingot_am_mix, ModItems.billet_am_mix);
-		addBilletToIngot(ModItems.ingot_uranium_fuel, ModItems.billet_uranium_fuel);
-		addBilletToIngot(ModItems.ingot_plutonium_fuel, ModItems.billet_plutonium_fuel);
-		addBilletToIngot(ModItems.ingot_americium_fuel, ModItems.billet_americium_fuel);
-		addBilletToIngot(ModItems.ingot_mox_fuel, ModItems.billet_mox_fuel);
-		addBilletToIngot(ModItems.ingot_neptunium, ModItems.billet_neptunium);
-		addBilletToIngot(ModItems.ingot_neptunium_fuel, ModItems.billet_neptunium_fuel);
-		addBilletToIngot(ModItems.ingot_polonium, ModItems.billet_polonium);
-		addBilletToIngot(ModItems.ingot_technetium, ModItems.billet_technetium);
-		addBilletToIngot(ModItems.ingot_schrabidium, ModItems.billet_schrabidium);
-		addBilletToIngot(ModItems.ingot_solinium, ModItems.billet_solinium);
-		addBilletToIngot(ModItems.ingot_les, ModItems.billet_les);
-		addBilletToIngot(ModItems.ingot_schrabidium_fuel, ModItems.billet_schrabidium_fuel);
-		addBilletToIngot(ModItems.ingot_hes, ModItems.billet_hes);
-		addBilletToIngot(ModItems.ingot_australium, ModItems.billet_australium);*/
 		addBilletToIngot(ModItems.billet_red_copper,	ModItems.ingot_red_copper);
-
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.billet_balefire_gold, 1), new Object[] { ModItems.billet_au198, ModItems.cell_antimatter, ModItems.pellet_charged });
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.billet_flashlead, 2), new Object[] { ModItems.billet_balefire_gold, ModItems.billet_pb209, ModItems.cell_antimatter });
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pellet_rtg), new Object[] { ModItems.billet_pu238, ModItems.billet_pu238, ModItems.billet_pu238, IRON.plate() }));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.pellet_rtg_radium), new Object[] { ModItems.billet_ra226, ModItems.billet_ra226, ModItems.billet_ra226, IRON.plate() }));
@@ -323,7 +293,6 @@ public class MineralRecipes {
 		GameRegistry.addRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.block_schrabidium), 1), new Object[] { "###", "###", "###", '#', ModItems.ingot_schrabidium });
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.block_schrabidium_cluster, 1), new Object[] { "#S#", "SXS", "#S#", '#', ModItems.ingot_schrabidium, 'S', ModItems.ingot_starmetal, 'X', ModItems.ingot_schrabidate });
 		GameRegistry.addRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.block_euphemium), 1), new Object[] { "###", "###", "###", '#', ModItems.ingot_euphemium });
-		GameRegistry.addRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.block_advanced_alloy), 1), new Object[] { "###", "###", "###", '#', ModItems.ingot_advanced_alloy });
 		GameRegistry.addRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.block_magnetized_tungsten), 1), new Object[] { "###", "###", "###", '#', ModItems.ingot_magnetized_tungsten });
 		GameRegistry.addRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.block_combine_steel), 1), new Object[] { "###", "###", "###", '#', ModItems.ingot_combine_steel });
 		GameRegistry.addRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.block_australium), 1), new Object[] { "###", "###", "###", '#', ModItems.ingot_australium });
@@ -374,7 +343,6 @@ public class MineralRecipes {
 		GameRegistry.addRecipe(new ItemStack(ModItems.ingot_beryllium, 9), new Object[] { "#", '#', Item.getItemFromBlock(ModBlocks.block_beryllium) });
 		GameRegistry.addRecipe(new ItemStack(ModItems.ingot_schrabidium, 9), new Object[] { "#", '#', Item.getItemFromBlock(ModBlocks.block_schrabidium) });
 		GameRegistry.addRecipe(new ItemStack(ModItems.ingot_euphemium, 9), new Object[] { "#", '#', Item.getItemFromBlock(ModBlocks.block_euphemium) });
-		GameRegistry.addRecipe(new ItemStack(ModItems.ingot_advanced_alloy, 9), new Object[] { "#", '#', Item.getItemFromBlock(ModBlocks.block_advanced_alloy) });
 		GameRegistry.addRecipe(new ItemStack(ModItems.ingot_magnetized_tungsten, 9), new Object[] { "#", '#', Item.getItemFromBlock(ModBlocks.block_magnetized_tungsten) });
 		GameRegistry.addRecipe(new ItemStack(ModItems.ingot_combine_steel, 9), new Object[] { "#", '#', Item.getItemFromBlock(ModBlocks.block_combine_steel) });
 		GameRegistry.addRecipe(new ItemStack(ModItems.ingot_australium, 9), new Object[] { "#", '#', Item.getItemFromBlock(ModBlocks.block_australium) });

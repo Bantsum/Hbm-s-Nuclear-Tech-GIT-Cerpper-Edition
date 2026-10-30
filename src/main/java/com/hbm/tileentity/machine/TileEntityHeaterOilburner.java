@@ -7,13 +7,13 @@ import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.inventory.fluid.trait.FluidTrait.FluidReleaseType;
 import com.hbm.inventory.gui.GUIOilburner;
-import com.hbm.lib.Library;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachinePolluting;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 
-import api.hbm.fluid.IFluidStandardTransceiver;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import api.hbm.redstoneoverradio.IRORInteractive;
 import api.hbm.redstoneoverradio.IRORValueProvider;
 import api.hbm.tile.IHeatSource;
@@ -26,8 +26,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
-public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implements IGUIProvider, IFluidStandardTransceiver, IHeatSource, IControlReceiver, IFluidCopiable, IRORValueProvider, IRORInteractive {
-
+public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implements IGUIProvider, IFluidStandardTransceiverMK2, IHeatSource, IControlReceiver, IFluidCopiable, IRORValueProvider, IRORInteractive {
+	
 	public boolean isOn = false;
 	public FluidTank tank;
 	public int setting = 1;
@@ -44,29 +44,21 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 	public String getName() {
 		return "container.heaterOilburner";
 	}
-
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 2, yCoord, zCoord, Library.POS_X),
-				new DirPos(xCoord - 2, yCoord, zCoord, Library.NEG_X),
-				new DirPos(xCoord, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord, yCoord, zCoord - 2, Library.NEG_Z)
-		};
-	}
-
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.flare(xCoord, yCoord, zCoord); return cachedPorts; }
+	
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
 
+			this.setupFluidPorts(getPorts());
+			this.updatePortFIFO();
+			
 			tank.loadTank(0, 1, slots);
 			tank.setType(2, slots);
-
-			for(DirPos pos : this.getConPos()) {
-				this.trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				this.sendSmoke(pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-			}
-
+			
 			boolean shouldCool = true;
 
 			if(this.isOn && this.heatEnergy < maxHeatEnergy) {
@@ -179,7 +171,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("toggle")) {
 			this.isOn = !this.isOn;
 		}
@@ -245,8 +237,8 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 				PREFIX_VALUE + "fuel",
 				PREFIX_VALUE + "burnRate",
 				PREFIX_VALUE + "state",
-				PREFIX_FUNCTION + "setState" + NAME_SEPARATOR + "active",
-				PREFIX_FUNCTION + "setBurnRate" + NAME_SEPARATOR + "rate"
+				PREFIX_FUNCTION + "setstate" + NAME_SEPARATOR + "active",
+				PREFIX_FUNCTION + "setburnrate" + NAME_SEPARATOR + "rate"
 		};
 	}
 
@@ -254,29 +246,23 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
 	public String provideRORValue(String name) {
 		if((PREFIX_VALUE + "heat").equals(name))		return "" + heatEnergy;
 		if((PREFIX_VALUE + "fuel").equals(name))		return "" + tank.getFill();
-		if((PREFIX_VALUE + "burnRate").equals(name))	return "" + setting;
+		if((PREFIX_VALUE + "burnrate").equals(name))	return "" + setting;
 		if((PREFIX_VALUE + "state").equals(name))		return isOn ? "1" : "0";
 		return null;
 	}
 
 	@Override
 	public String runRORFunction(String name, String[] params) {
-		if((PREFIX_FUNCTION + "setState").equals(name)) {
+		if((PREFIX_FUNCTION + "setstate").equals(name) && params.length > 0) {
 			this.isOn = params[0].equals("1");
 			this.markChanged();
 			return null;
 		}
-		if((PREFIX_FUNCTION + "setBurnRate").equals(name)) {
-			try {
-				int rate = Integer.parseInt(params[0]);
-				if(rate < 1) rate = 1;
-				if(rate > 10) rate = 10;
-				this.setting = rate;
-				this.markChanged();
-				return null;
-			} catch (NumberFormatException e) {
-				return "Invalid number";
-			}
+		if((PREFIX_FUNCTION + "setburnrate").equals(name) && params.length > 0) {
+			int rate = IRORInteractive.parseInt(params[0], 1, 10);
+			this.setting = rate;
+			this.markChanged();
+			return null;
 		}
 		return null;
 	}

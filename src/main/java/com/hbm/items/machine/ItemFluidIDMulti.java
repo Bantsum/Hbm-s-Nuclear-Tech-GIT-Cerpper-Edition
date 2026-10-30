@@ -64,12 +64,16 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
 	}
 
 	@Override
-	public void receiveControl(ItemStack stack, NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, ItemStack stack, NBTTagCompound data) {
 		if(data.hasKey("primary")) {
 			setType(stack, Fluids.fromID(data.getInteger("primary")), true);
 		}
 		if(data.hasKey("secondary")) {
 			setType(stack, Fluids.fromID(data.getInteger("secondary")), false);
+		}
+		if(data.hasKey("bookmarks")) {
+			if(!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
+			stack.stackTagCompound.setTag("bookmarks", data.getTag("bookmarks"));
 		}
 		
 		updateMeta(stack);

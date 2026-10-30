@@ -5,15 +5,15 @@ import java.util.List;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
-import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
 import com.hbm.main.MainRegistry;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.util.i18n.I18nUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import api.hbm.tile.IPropulsion;
@@ -41,10 +41,14 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPro
 
 	private int fuelCost;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+
 	public TileEntityMachineHTR3() {
 		super(0);
 		tanks = new FluidTank[1];
 		tanks[0] = new FluidTank(Fluids.SUPERHEATED_HYDROGEN, 1_280_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
 	}
 
 	@Override
@@ -52,16 +56,12 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPro
 		if(!CelestialBody.inOrbit(worldObj)) return;
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+
 			if(!hasRegistered) {
 				if(isFacingPrograde()) registerPropulsion();
 				hasRegistered = true;
 				isOn = false;
-			}
-
-			for(DirPos pos : getConPos()) {
-				for(FluidTank tank : tanks) {
-					trySubscribe(tank.getTankType(), worldObj, pos);
-				}
 			}
 
 			if(isOn) {
@@ -136,12 +136,18 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPro
 		return "missileContrail";
 	}
 
-	private DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getRotation(ForgeDirection.UP);
+	protected PortDef[] cachedPorts;
 
-		return new DirPos[] {
-			new DirPos(xCoord - dir.offsetX * 6, yCoord, zCoord - dir.offsetZ * 6, dir)
-		};
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getRotation(ForgeDirection.UP);
+	
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - dir.offsetX * 5, yCoord, zCoord - dir.offsetZ * 5, dir)
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	@Override
@@ -252,7 +258,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements IPro
 	public void addErrors(List<String> errors) {
 		for(FluidTank tank : tanks) {
 			if(tank.getFill() < fuelCost) {
-				errors.add(EnumChatFormatting.RED + I18nUtil.resolveKey(getBlockType().getUnlocalizedName() + ".name") + " - Insufficient fuel: needs " + fuelCost + "mB");
+				errors.add(EnumChatFormatting.RED + " - Insufficient fuel: needs " + fuelCost + "mB");
 			}
 		}
 	}

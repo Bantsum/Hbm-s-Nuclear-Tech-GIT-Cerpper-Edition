@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -76,7 +77,6 @@ public class NEIConfig implements IConfigureNEI {
 		API.hideItem(new ItemStack(ModBlocks.dummy_port_launch_table));
 		API.hideItem(new ItemStack(ModBlocks.dummy_plate_compact_launcher));
 		API.hideItem(new ItemStack(ModBlocks.dummy_plate_launch_table));
-		API.hideItem(new ItemStack(ModBlocks.dummy_plate_cargo));
 
 		API.hideItem(new ItemStack(ModBlocks.pink_log));
 		API.hideItem(new ItemStack(ModBlocks.pink_planks));
@@ -111,6 +111,10 @@ public class NEIConfig implements IConfigureNEI {
 				API.hideItem(ItemBedrockOreNew.make(grade, type));
 			}
 		}
+
+		API.hideItem(new ItemStack(ModBlocks.brick_forgotten, 1, OreDictionary.WILDCARD_VALUE));
+		API.hideItem(new ItemStack(ModBlocks.brick_forgotten_lock, 1, OreDictionary.WILDCARD_VALUE));
+		API.hideItem(new ItemStack(ModItems.coal_eternal));
 
 		API.registerHighlightIdentifier(ModBlocks.plushie, new IHighlightHandler() {
 			@Override public ItemStack identifyHighlight(World world, EntityPlayer player, MovingObjectPosition mop) {

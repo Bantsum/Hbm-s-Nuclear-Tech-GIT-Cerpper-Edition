@@ -42,7 +42,7 @@ public class MachineDiesel extends BlockMachineBase implements ITooltipProvider,
 		if(tile instanceof TileEntityMachineDiesel) {
 			TileEntityMachineDiesel diesel = (TileEntityMachineDiesel) tile;
 			
-			if(diesel.hasAcceptableFuel() && diesel.tank.getFill() > 0) {
+			if(diesel.isOn == true && diesel.hasAcceptableFuel() && diesel.tank.getFill() > 0) {
 				
 				ForgeDirection dir = ForgeDirection.getOrientation(tile.getBlockMetadata());
 				ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
@@ -60,7 +60,7 @@ public class MachineDiesel extends BlockMachineBase implements ITooltipProvider,
 			
 			if(efficiency != null) {
 				int eff = (int)(efficiency * 100);
-				list.add(EnumChatFormatting.YELLOW + "-" + grade.getGrade() + ": " + EnumChatFormatting.RED + "" + eff + "%");
+				list.add(EnumChatFormatting.YELLOW + "-" + grade.getLocalizedName() + ": " + EnumChatFormatting.RED + "" + eff + "%");
 			}
 		}
 	}

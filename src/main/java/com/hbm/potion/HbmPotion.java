@@ -125,7 +125,7 @@ public class HbmPotion extends Potion {
 			if(!(entity instanceof EntityCreeperTainted) && !(entity instanceof EntityTaintCrab) && entity.worldObj.rand.nextInt(40) == 0)
 				entity.attackEntityFrom(ModDamageSource.taint, (level + 1));
 
-			if(ServerConfig.TAINT_TRAILS.get() && !entity.worldObj.isRemote) {
+			if(ServerConfig.ENTITY_TAINT_TRAILS.get() && !entity.worldObj.isRemote) {
 
 				int x = (int) Math.floor(entity.posX);
 				int y = (int) Math.floor(entity.posY);
@@ -231,7 +231,7 @@ public class HbmPotion extends Potion {
 	public static boolean getIsBadEffect(Potion potion) {
 
 		try {
-			Field isBadEffect = ReflectionHelper.findField(Potion.class, "isBadEffect", "field_76418_K");
+			Field isBadEffect = ReflectionHelper.findField(Potion.class, "isBadEffect", "field_76418_K"); //TODO: use an AT for this
 			boolean ret = isBadEffect.getBoolean(potion);
 			return ret;
 

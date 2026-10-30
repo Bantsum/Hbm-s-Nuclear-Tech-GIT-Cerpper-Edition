@@ -42,6 +42,8 @@ public class StructureConfig {
 	public static int lighthouseSpawnWeight = 4;
 	public static int oilRigSpawnWeight = 5;
 	public static int broadcastingTowerSpawnWeight = 25;
+	public static int waterPumpSpawnWeight = 15;
+	public static int deadDishSmallSpawnWeight = 15;
 	public static int beachedPatrolSpawnWeight = 15;
 	public static int vertibirdSpawnWeight = 6;
 	public static int vertibirdCrashedSpawnWeight = 10;
@@ -50,6 +52,7 @@ public class StructureConfig {
 	public static int radioSpawnWeight = 30;
 	public static int forestChemSpawnWeight = 30;
 	public static int forestPostSpawnWeight = 30;
+	public static int towerBaseSpawnWeight = 30;
 
 	public static int spireSpawnWeight = 2;
 	public static int craneSpawnWeight = 20;
@@ -58,6 +61,11 @@ public class StructureConfig {
 	public static int featuresSpawnWeight = 50;
 
 	public static int aircraftCarrierSpawnWeight = 3;
+	
+	public static int falloutShelterHouseSpawnWeight = 15;
+	public static int abandonedArcticStationSpawnWeight = 5;
+	public static int militaryBaseSpawnWeight = 1;
+	public static int submarineSpawnWeight = 2;
 
 	// --- Null weights
 	public static int plainsNullWeight = 4;
@@ -115,6 +123,13 @@ public class StructureConfig {
 		oceanNullWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.38_oceanNullWeight", "Null spawn weight for ocean biomes", 35);
 		craneSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.39_craneSpawnWeight", "Spawn weight for crane structure.", 20);
 		broadcastingTowerSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.40_broadcastingTowerSpawnWeight", "Spawn weight for broadcasting tower structure.", 25);
+		towerBaseSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.41_towerBaseSpawnWeight", "Spawn weight for tower base.", 30);
+		waterPumpSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.42_waterPumpSpawnWeight", "Spawn weight for water pump structure.", 15);
+		deadDishSmallSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.43_deadDishSmallSpawnWeight", "Spawn weight for dead dish small structure.", 15);
+		falloutShelterHouseSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.44_falloutShelterHouseSpawnWeight", "Spawn weight for fallout shelter house.", 15);
+		abandonedArcticStationSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.45_abandonedArcticStationSpawnWeight", "Spawn weight for abandoned arctic station.", 5);
+		militaryBaseSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.46_militaryBaseSpawnWeight", "Spawn weight for military base.", 1);
+		submarineSpawnWeight = CommonConfig.createConfigInt(config, CATEGORY_STRUCTURES, "5.49_submarineSpawnWeight", "Spawn weight for submarine.", 2);
 
 
 		structureMinChunks = CommonConfig.setDef(structureMinChunks, 4);

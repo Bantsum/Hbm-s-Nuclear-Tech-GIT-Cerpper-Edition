@@ -5,11 +5,12 @@ import com.hbm.inventory.container.ContainerPARFC;
 import com.hbm.inventory.gui.GUIPARFC;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.PAState;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.Particle;
 import com.hbm.util.fauxpointtwelve.BlockPos;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,7 +25,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvider, IParticleUser, SimpleComponent, CompatHandler.OCComponent {
+public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvider, IParticleUser, SimpleComponent, CompatHandler.OCComponent, IRORValueProvider {
 
 	public static final long usage = 250_000;
 	public static final int momentumGain = 100;
@@ -32,6 +33,24 @@ public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvide
 
 	public TileEntityPARFC() {
 		super(1);
+	}
+
+	protected PortDef[] cachedPorts;
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10).getRotation(ForgeDirection.DOWN);
+
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord + dir.offsetX * 3, yCoord + 1, zCoord + dir.offsetZ * 3, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 3, yCoord + 1, zCoord - dir.offsetZ * 3, Library.POS_Y),
+					PortDef.make(xCoord, yCoord + 1, zCoord, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 3, yCoord - 1, zCoord + dir.offsetZ * 3, Library.NEG_Y),
+					PortDef.make(xCoord - dir.offsetX * 3, yCoord - 1, zCoord - dir.offsetZ * 3, Library.NEG_Y),
+					PortDef.make(xCoord, yCoord - 1, zCoord, Library.NEG_Y)
+			};
+		}
+		return cachedPorts;
 	}
 
 	@Override
@@ -75,6 +94,10 @@ public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvide
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			
+			this.setupAllPorts(getPorts());
+			this.updatePortPIFIFO();
+			
 			this.power = Library.chargeTEFromItems(slots, 0, power, this.getMaxPower());
 		}
 
@@ -107,19 +130,6 @@ public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvide
 	}
 
 	@Override
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10).getRotation(ForgeDirection.UP);
-		return new DirPos[] {
-				new DirPos(xCoord + dir.offsetX * 3, yCoord + 2, zCoord + dir.offsetZ * 3, Library.POS_Y),
-				new DirPos(xCoord - dir.offsetX * 3, yCoord + 2, zCoord - dir.offsetZ * 3, Library.POS_Y),
-				new DirPos(xCoord, yCoord + 2, zCoord, Library.POS_Y),
-				new DirPos(xCoord + dir.offsetX * 3, yCoord - 2, zCoord + dir.offsetZ * 3, Library.NEG_Y),
-				new DirPos(xCoord - dir.offsetX * 3, yCoord - 2, zCoord - dir.offsetZ * 3, Library.NEG_Y),
-				new DirPos(xCoord, yCoord - 2, zCoord, Library.NEG_Y)
-		};
-	}
-
-	@Override
 	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new ContainerPARFC(player.inventory, this);
 	}
@@ -127,6 +137,22 @@ public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvide
 	@Override
 	public Object provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIPARFC(player.inventory, this);
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+			PREFIX_VALUE + "temperature",
+			PREFIX_VALUE + "pfmcold",
+			PREFIX_VALUE + "pfm"
+		};
+	}
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "temperature").equals(name))	return "" + (int) this.temperature;
+		if((PREFIX_VALUE + "pfmcold").equals(name))		return "" + coolantTanks[0].getFill();
+		if((PREFIX_VALUE + "pfm").equals(name))			return "" + coolantTanks[1].getFill();
+		return null;
 	}
 
 	@Override

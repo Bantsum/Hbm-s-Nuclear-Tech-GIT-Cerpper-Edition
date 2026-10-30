@@ -9,7 +9,7 @@ import com.hbm.items.ISatChip;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ModItems;
 import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteBase;
 import com.hbm.saveddata.satellites.SatelliteWar;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -54,12 +54,6 @@ public class TileEntityMachineWarController extends TileEntityMachineBase implem
 	}
 
 	@Override
-	public boolean isLoaded() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new ContainerMachineWarController(player.inventory, this);
 	}
@@ -81,7 +75,7 @@ public class TileEntityMachineWarController extends TileEntityMachineBase implem
 			SolarSystem.Body target = ItemVOTVdrive.getDestination(slots[1]).body;
 			CelestialBody body = target.getBody();
 
-			Satellite sat = data.getSatFromFreq(id);
+			SatelliteBase sat = data.getSatFromFreq(id);
 
 			if(sat instanceof SatelliteWar) {
 				SatelliteWar satelliteWar = (SatelliteWar) sat;
@@ -92,7 +86,7 @@ public class TileEntityMachineWarController extends TileEntityMachineBase implem
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("xcoord") && data.hasKey("zcoord")) {
 			updateDriveCoords(data.getInteger("xcoord"), data.getInteger("zcoord"));
 		}

@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.dim.SolarSystem;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.inventory.fluid.trait.*;
@@ -247,6 +248,7 @@ public class Fluids {
 	public static FluidType ALUMINA;
 	public static FluidType AQUEOUS_NICKEL;
 	public static FluidType HGAS;
+	public static FluidType TITANIUM_TETRACHLORIDE;
 	public static FluidType CONCRETE;
 	public static FluidType VINYL;
 	public static FluidType TCRUDE;
@@ -256,7 +258,7 @@ public class Fluids {
 	public static FluidType LITHYDRO;
 	public static FluidType LITHCARBONATE;
 
-	/* Lagacy names for compatibility purposes */
+	/* Legacy names for compatibility purposes */
 	@Deprecated public static FluidType ACID;	//JAOPCA uses this, apparently
 
 	public static final HashBiMap<String, FluidType> renameMapping = HashBiMap.create();
@@ -407,7 +409,7 @@ public class Fluids {
 		NITROGEN =				new FluidType("NITROGEN",			0xB3C6D2, 1, 0, 0, EnumSymbol.CROYGENIC).setTemp(-90).addTraits(LIQUID, EVAP);
 		BLOOD =					new FluidType("BLOOD",				0xB22424, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS, DELICIOUS);
 		NITRIC_ACID =			new FluidType("NITRIC_ACID",		0xBB7A1E, 3, 0, 2, EnumSymbol.OXIDIZER).addTraits(LIQUID, new FT_Corrosive(60));
-		AMMONIA =				new FluidType("AMMONIA",			0x00A0F7, 2, 0, 1, EnumSymbol.ASPHYXIANT).addTraits(new FT_Poison(true, 4), GASEOUS);
+		AMMONIA =				new FluidType("AMMONIA",			0x00A0F7, 2, 0, 1, EnumSymbol.ASPHYXIANT).addTraits(new FT_Poison(true, 4), GASEOUS, new FT_Terraformer(SolarSystem.Body.DUNA));
 		HYDRAZINE =				new FluidType("HYDRAZINE",			0x31517D, 2, 3, 2, EnumSymbol.NONE).addContainers(new CD_Canister(0x31517D)).addTraits((new FT_Flammable(500_000)), new FT_Combustible(FuelGrade.HIGH, 1_250_000), new FT_Corrosive(30), LIQUID, new FT_Rocket(210, 600_000));
 		BLOODGAS =				new FluidType("BLOODGAS",			0x591000, 3, 1, 1, EnumSymbol.NONE).addContainers(new CD_Canister(0x591000)).addTraits(new FT_Flammable(1_000_000), new FT_Combustible(FuelGrade.AERO, 2_500_000)).addTraits(LIQUID);
 		EARTHAIR =				new FluidType("EARTHAIR",			0xD1CEEE, 0, 0, 0, EnumSymbol.NONE).addContainers(new CD_Gastank(0xC3BEE8, 0xFFFFFF)).addTraits(GASEOUS);
@@ -537,8 +539,9 @@ public class Fluids {
 		LITHYDRO =				new FluidType("LITHYDRO",			0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
 		LITHCARBONATE =			new FluidType("LITHCARBONATE",		0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
 		AIRBLAST =				new FluidType("AIRBLAST",			0xFFDADA, 0, 3, 0, EnumSymbol.NONE).setTemp(1_200).addTraits(GASEOUS);
-		FLUE =					new FluidType("FLUE",				0x131313, 1, 4, 1, EnumSymbol.NONE).addContainers(new CD_Gastank(0xFF4545, 0xFFE97F)).addTraits(new FT_Flammable(10_000), GASEOUS, new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.SOOT, SOOT_GAS * 25));
-
+		FLUE =					new FluidType("FLUE",				0x131313, 1, 4, 1, EnumSymbol.NONE).addContainers(new CD_Gastank(0xFF4545, 0xFFE97F)).addTraits(new FT_Flammable(25_000), GASEOUS, new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.SOOT, SOOT_GAS * 5));
+		TITANIUM_TETRACHLORIDE =new FluidType("TITANIUM_TETRACHLORIDE",0xDBF796, 3, 0, 2, EnumSymbol.NOWATER).addContainers(new CD_Canister(0xE1E549)).addTraits(LIQUID);
+		
 		// ^ ^ ^ ^ ^ ^ ^ ^
 		//ADD NEW FLUIDS HERE
 
@@ -740,6 +743,7 @@ public class Fluids {
 		metaOrder.add(BAUXITE_SOLUTION);
 		metaOrder.add(ALUMINA);
 		metaOrder.add(AQUEOUS_NICKEL);
+		metaOrder.add(TITANIUM_TETRACHLORIDE);
 		metaOrder.add(CONCRETE);
 		//solutions and working fluids
 		metaOrder.add(FRACKSOL);
@@ -979,7 +983,7 @@ public class Fluids {
 		registerCalculatedFuel(SOLVENT, 100_000, 0, null); // flammable, sure, but not combustable
 		registerCalculatedFuel(RADIOSOLVENT, 150_000, 0, null);
 
-		registerCalculatedFuel(SYNGAS, (coalHeat * (1000 /* bucket */ / 100 /* mB per coal */) * flammabilityLow * demandLow * complexityChemplant) * 2.5, 2.25, FuelGrade.GAS); //same as coal oil, +50% bonus
+		registerCalculatedFuel(SYNGAS, (coalHeat * (1000 /* bucket */ / 100 /* mB per coal */) * flammabilityLow * demandLow * complexityChemplant) * 1.5, 1.25, FuelGrade.GAS); //same as coal oil, +50% bonus
 		registerCalculatedFuel(OXYHYDROGEN, 5_000, 3, FuelGrade.GAS); // whatever
 
 		File config = new File(folder.getAbsolutePath() + File.separatorChar + "hbmFluidTraits.json");
@@ -1034,7 +1038,7 @@ public class Fluids {
 				int p = obj.get("p").getAsInt();
 				int f = obj.get("f").getAsInt();
 				int r = obj.get("r").getAsInt();
-				EnumSymbol symbol = EnumSymbol.valueOf(obj.get("symbol").getAsString());
+				EnumSymbol symbol = obj.has("symbol") ? EnumSymbol.valueOf(obj.get("symbol").getAsString()) : EnumSymbol.NONE;
 				String texture = obj.get("texture").getAsString();
 				int temperature = obj.get("temperature").getAsInt();
 
@@ -1251,6 +1255,10 @@ public class Fluids {
 		}
 
 		return all;
+	}
+	
+	public static boolean isSmoke(FluidType type) {
+		return type == Fluids.SMOKE || type == Fluids.SMOKE_POISON || type == Fluids.SMOKE_LEADED;
 	}
 
 	public static class CD_Canister {

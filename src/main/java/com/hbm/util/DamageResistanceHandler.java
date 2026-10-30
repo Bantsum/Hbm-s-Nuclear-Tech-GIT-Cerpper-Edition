@@ -131,8 +131,10 @@ public class DamageResistanceHandler {
 		itemStats.put(ModItems.jackt2, new ResistanceStats()
 				.addCategory(CATEGORY_PHYSICAL, 2F, 0.25F));
 
-		registerSet(ModItems.steel_helmet, ModItems.steel_plate, ModItems.steel_legs, ModItems.steel_boots, new ResistanceStats());
-		registerSet(ModItems.titanium_helmet, ModItems.titanium_plate, ModItems.titanium_legs, ModItems.titanium_boots, new ResistanceStats());
+		registerSet(ModItems.steel_helmet, ModItems.steel_plate, ModItems.steel_legs, ModItems.steel_boots, new ResistanceStats()
+				.addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
+		registerSet(ModItems.titanium_helmet, ModItems.titanium_plate, ModItems.titanium_legs, ModItems.titanium_boots, new ResistanceStats()
+				.addCategory(CATEGORY_PHYSICAL, 3F, 0.1F));
 		registerSet(ModItems.alloy_helmet, ModItems.alloy_plate, ModItems.alloy_legs, ModItems.alloy_boots, new ResistanceStats()
 				.addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
 		registerSet(ModItems.cobalt_helmet, ModItems.cobalt_plate, ModItems.cobalt_legs, ModItems.cobalt_boots, new ResistanceStats()
@@ -183,12 +185,12 @@ public class DamageResistanceHandler {
 				.addExact(DamageSource.fall.damageType, 0F, 1F)
 				.setOther(0F, 0.15F));
 		registerSet(ModItems.rpa_helmet, ModItems.rpa_plate, ModItems.rpa_legs, ModItems.rpa_boots, new ResistanceStats()
-				.addCategory(CATEGORY_PHYSICAL, 25F, 0.65F)
-				.addCategory(CATEGORY_FIRE, 10F, 0.9F)
+				.addCategory(CATEGORY_PHYSICAL, 50F, 0.75F)
+				.addCategory(CATEGORY_FIRE, 25F, 0.9F)
 				.addCategory(CATEGORY_EXPLOSION, 15F, 0.25F)
-				.addCategory(CATEGORY_ENERGY, 25F, 0.75F)
+				.addCategory(CATEGORY_ENERGY, 30F, 0.8F)
 				.addExact(DamageSource.fall.damageType, 0F, 1F)
-				.setOther(15F, 0.3F));
+				.setOther(15F, 0.45F));
 		registerSet(ModItems.ncrpa_helmet, ModItems.ncrpa_plate, ModItems.ncrpa_legs, ModItems.ncrpa_boots, new ResistanceStats()
 				.addCategory(CATEGORY_PHYSICAL, 25F, 0.65F)
 				.addCategory(CATEGORY_FIRE, 10F, 0.9F)
@@ -417,7 +419,11 @@ public class DamageResistanceHandler {
 		LASER,
 		MICROWAVE,
 		SUBATOMIC,
-		OTHER
+		OTHER;
+		
+		public boolean isApplicable(String name) {
+			return name.toLowerCase(Locale.US).equals(this.name().toLowerCase(Locale.US));
+		}
 	}
 	
 	public static void setup(float dt, float dr) {
@@ -469,11 +475,11 @@ public class DamageResistanceHandler {
 		if(source.isExplosion()) return CATEGORY_EXPLOSION;
 		if(source.isFireDamage()) return CATEGORY_FIRE;
 		if(source.isProjectile()) return CATEGORY_PHYSICAL;
-		if(source.damageType.toLowerCase(Locale.US).equals(DamageClass.LASER.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
-		if(source.damageType.toLowerCase(Locale.US).equals(DamageClass.PLASMA.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
-		if(source.damageType.toLowerCase(Locale.US).equals(DamageClass.MICROWAVE.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
-		if(source.damageType.toLowerCase(Locale.US).equals(DamageClass.SUBATOMIC.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
-		if(source.damageType.toLowerCase(Locale.US).equals(DamageClass.ELECTRIC.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
+		if(DamageClass.LASER.isApplicable(source.damageType)) return CATEGORY_ENERGY;
+		if(DamageClass.PLASMA.isApplicable(source.damageType)) return CATEGORY_ENERGY;
+		if(DamageClass.MICROWAVE.isApplicable(source.damageType)) return CATEGORY_ENERGY;
+		if(DamageClass.SUBATOMIC.isApplicable(source.damageType)) return CATEGORY_ENERGY;
+		if(DamageClass.ELECTRIC.isApplicable(source.damageType)) return CATEGORY_ENERGY;
 		if(source == DamageSource.cactus) return CATEGORY_PHYSICAL;
 		if(source == ModDamageSource.spikes) return CATEGORY_PHYSICAL;
 		if(source == ModDamageSource.electricity) return CATEGORY_ENERGY;

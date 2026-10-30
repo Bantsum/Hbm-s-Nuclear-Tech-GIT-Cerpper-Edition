@@ -10,7 +10,6 @@ import com.hbm.inventory.container.ContainerMachineChemicalPlant;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.gui.GUIMachineChemicalPlant;
-import com.hbm.inventory.recipes.ChemicalPlantRecipes;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -23,12 +22,15 @@ import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
+import api.hbm.redstoneoverradio.IRORInteractive;
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -40,7 +42,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider {
+public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IRORValueProvider, IRORInteractive {
 
 	public FluidTank[] inputTanks;
 	public FluidTank[] outputTanks;
@@ -73,6 +75,9 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
 				.fluidInput(inputTanks[0], inputTanks[1], inputTanks[2])
 				.fluidOutput(outputTanks[0], outputTanks[1], outputTanks[2]);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.assembler(xCoord, yCoord, zCoord); return cachedPorts; }
 
 	@Override
 	public String getName() {
@@ -85,8 +90,13 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
 		if(maxPower <= 0) this.maxPower = 1_000_000;
 		
 		if(!worldObj.isRemote) {
+
+			this.setupPowerPorts(getPorts());
+			this.setupFluidInPorts(getReceivingTanks(), PortDef.combine(getPorts()));
+			this.setupFluidOutPorts(getSendingTanks(), PortDef.combine(getPorts()));
+			this.updatePortPIFIFO();
 			
-			GenericRecipe recipe = ChemicalPlantRecipes.INSTANCE.recipeNameMap.get(chemplantModule.recipe);
+			GenericRecipe recipe = chemplantModule.getRecipe();
 			if(recipe != null) {
 				this.maxPower = recipe.power * 100;
 			}
@@ -103,12 +113,6 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
 			outputTanks[1].unloadTank(17, 20, slots);
 			outputTanks[2].unloadTank(18, 21, slots);
 			
-			for(DirPos pos : getConPos()) {
-				this.trySubscribe(worldObj, pos);
-				for(FluidTank tank : inputTanks) if(tank.getTankType() != Fluids.NONE) this.trySubscribe(tank.getTankType(), worldObj, pos);
-				for(FluidTank tank : outputTanks) if(tank.getFill() > 0) this.tryProvide(tank, worldObj, pos);
-			}
-
 			double speed = 1D;
 			double pow = 1D;
 
@@ -163,29 +167,13 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
 	}
 
 	@Override public void onChunkUnload() {
+		super.onChunkUnload();
 		if(audio != null) { audio.stopSound(); audio = null; }
 	}
 
 	@Override public void invalidate() {
 		super.invalidate();
 		if(audio != null) { audio.stopSound(); audio = null; }
-	}
-	
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 2, yCoord, zCoord - 1, Library.POS_X),
-				new DirPos(xCoord + 2, yCoord, zCoord + 0, Library.POS_X),
-				new DirPos(xCoord + 2, yCoord, zCoord + 1, Library.POS_X),
-				new DirPos(xCoord - 2, yCoord, zCoord - 1, Library.NEG_X),
-				new DirPos(xCoord - 2, yCoord, zCoord + 0, Library.NEG_X),
-				new DirPos(xCoord - 2, yCoord, zCoord + 1, Library.NEG_X),
-				new DirPos(xCoord - 1, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord + 1, yCoord, zCoord + 2, Library.POS_Z),
-				new DirPos(xCoord - 1, yCoord, zCoord - 2, Library.NEG_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord - 2, Library.NEG_Z),
-				new DirPos(xCoord + 1, yCoord, zCoord - 2, Library.NEG_Z),
-		};
 	}
 
 	@Override
@@ -273,12 +261,12 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
 	@Override public boolean hasPermission(EntityPlayer player) { return this.isUseableByPlayer(player); }
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("index") && data.hasKey("selection")) {
 			int index = data.getInteger("index");
 			String selection = data.getString("selection");
 			if(index == 0) {
-				this.chemplantModule.recipe = selection;
+				this.chemplantModule.setRecipe(selection, false);
 				this.markChanged();
 			}
 		}
@@ -325,5 +313,35 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
 		upgrades.put(UpgradeType.POWER, 3);
 		upgrades.put(UpgradeType.OVERDRIVE, 3);
 		return upgrades;
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_VALUE + "progress",
+				PREFIX_VALUE + "recipe",
+				PREFIX_VALUE + "active",
+				PREFIX_FUNCTION + "setrecipe" + NAME_SEPARATOR + "name",
+		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "progress").equals(name))	return "" + (int) Math.round(this.chemplantModule.progress * 100);
+		if((PREFIX_VALUE + "recipe").equals(name))		return this.chemplantModule.getRecipeName();
+		if((PREFIX_VALUE + "active").equals(name))		return "" + (this.didProcess ? 1 : 0);
+		return null;
+	}
+
+	@Override
+	public String runRORFunction(String name, String[] params) {
+
+		if((PREFIX_FUNCTION + "setrecipe").equals(name) && params.length == 1) {
+			this.chemplantModule.setRecipe(params[0], true);
+			this.markChanged();
+			return null;
+		}
+		
+		return null;
 	}
 }

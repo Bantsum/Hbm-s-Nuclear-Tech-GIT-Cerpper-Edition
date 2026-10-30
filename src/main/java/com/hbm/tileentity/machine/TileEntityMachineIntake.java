@@ -13,7 +13,8 @@ import com.hbm.main.MainRegistry;
 import com.hbm.main.NTMSounds;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.TileEntityLoadedBase;
-import com.hbm.util.fauxpointtwelve.DirPos;
+import com.hbm.tileentity.TilePortShapes;
+import com.hbm.tileentity.TilePort.PortDef;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardSenderMK2;
@@ -35,49 +36,26 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEn
 	public TileEntityMachineIntake() {
 		this.compair = new FluidTank(Fluids.AIR, 1_000);
 	}
+	
+	protected PortDef[] cachedPorts;
+	public PortDef[] getPorts() { if(cachedPorts == null) cachedPorts = TilePortShapes.solderer(xCoord, yCoord, zCoord, this.getBlockMetadata()); return cachedPorts; }
 
 	@Override
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
 
-			boolean isInPressurizedRoom = ChunkAtmosphereManager.proxy.hasAtmosphere(worldObj, xCoord, yCoord, zCoord);
-			CBT_Atmosphere atmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(worldObj, xCoord, yCoord, zCoord);
+			this.setupAllPorts(getPorts());
+			this.updatePortPIFIFO();
 
 			if(this.power >= this.getMaxPower() / 20) {
-				if(atmosphere != null && atmosphere.getPressure() > 0.01D) {
-
-					// 1mB of any given air -> 100mB of compressed air
-					// reasoning being: this is the same conversion ratio of water -> steam
-					// bob intends for this to absolutely shit out air, but that is just not feasible with air prod in space
-					// with a single klystron this is still 25mB/t, which is still more oxygen consumption than the old fusion reactor
-					int consumption = (this.compair.getMaxFill() - this.compair.getFill()) / 100;
-
-					if(consumption > 0) {
-						if(!isInPressurizedRoom) {
-							FT_Gaseous.capture(worldObj, atmosphere.getMainFluid(), consumption);
-						} else {
-							List<AtmosphereBlob> blobs = ChunkAtmosphereManager.proxy.getBlobs(worldObj, xCoord, yCoord, zCoord);
-							for(AtmosphereBlob blob : blobs) {
-								if(blob.hasPressure(0.1)) {
-									blob.consume(consumption);
-									break;
-								}
-							}
-						}
-					}
-
+				if(canCompress()) {
 					this.compair.setFill(this.compair.getMaxFill());
 				}
 
 				this.power -= this.getMaxPower() / 20;
 			}
-
-			for(DirPos pos : getConPos()) {
-				if(this.compair.getFill() > 0) this.tryProvide(compair, worldObj, pos);
-				this.trySubscribe(worldObj, pos);
-			}
-
+			
 			this.networkPackNT(50);
 
 		} else {
@@ -112,22 +90,34 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEn
 		}
 	}
 
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		return new DirPos[] {
-				new DirPos(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ, dir),
-				new DirPos(xCoord + dir.offsetX + rot.offsetX, yCoord, zCoord + dir.offsetZ + rot.offsetZ, dir),
+	private boolean canCompress() {
+		CBT_Atmosphere atmosphere = ChunkAtmosphereManager.proxy.getAtmosphere(worldObj, xCoord, yCoord, zCoord);
+		if(atmosphere == null || atmosphere.getPressure() <= 0.01D) return false;
 
-				new DirPos(xCoord - dir.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2, dir.getOpposite()),
-				new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX, yCoord, zCoord - dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite()),
+		boolean isInPressurizedRoom = ChunkAtmosphereManager.proxy.hasAtmosphere(worldObj, xCoord, yCoord, zCoord);
 
-				new DirPos(xCoord + rot.offsetX * 2, yCoord, zCoord + rot.offsetZ * 2, rot),
-				new DirPos(xCoord + rot.offsetX * 2 - dir.offsetX, yCoord, zCoord + rot.offsetZ * 2 - dir.offsetZ, rot),
+		// 1mB of any given air -> 100mB of compressed air
+		// reasoning being: this is the same conversion ratio of water -> steam
+		// bob intends for this to absolutely shit out air, but that is just not feasible with air prod in space
+		// with a single klystron this is still 25mB/t, which is still more oxygen consumption than the old fusion reactor
+		int consumption = this.compair.getMaxFill() - this.compair.getFill();
+		if(consumption <= 0) return true;
+		consumption = Math.max(1, consumption / 100);
 
-				new DirPos(xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, rot.getOpposite()),
-				new DirPos(xCoord - rot.offsetX - dir.offsetX, yCoord, zCoord - rot.offsetZ - dir.offsetZ, rot.getOpposite())
-		};
+		if(!isInPressurizedRoom) {
+			FT_Gaseous.capture(worldObj, atmosphere.getMainFluid(), consumption);
+			return true;
+		}
+
+		List<AtmosphereBlob> blobs = ChunkAtmosphereManager.proxy.getBlobs(worldObj, xCoord, yCoord, zCoord);
+		for(AtmosphereBlob blob : blobs) {
+			if(!blob.hasFluid(Fluids.AIR) && blob.hasPressure(0.1)) {
+				blob.consume(consumption);
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override public AudioWrapper createAudioLoop() {
@@ -135,6 +125,7 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements IEn
 	}
 
 	@Override public void onChunkUnload() {
+		super.onChunkUnload();
 		if(audio != null) { audio.stopSound(); audio = null; }
 	}
 

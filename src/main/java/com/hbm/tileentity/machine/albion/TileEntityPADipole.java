@@ -10,12 +10,14 @@ import com.hbm.items.machine.ItemPACoil.EnumCoilType;
 import com.hbm.items.special.ItemFusionShield;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.PAState;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.Particle;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.fauxpointtwelve.BlockPos;
 import com.hbm.util.fauxpointtwelve.DirPos;
 
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import api.hbm.redstoneoverradio.IRORInteractive;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -35,7 +37,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 @SuppressWarnings("unused")
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProvider, IControlReceiver, IParticleUser, OCComponent, SimpleComponent, IRORInteractive {
+public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProvider, IControlReceiver, IParticleUser, OCComponent, SimpleComponent, IRORInteractive, IRORValueProvider {
 
 	public int dirLower;
 	public int dirUpper;
@@ -46,6 +48,27 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
 
 	public TileEntityPADipole() {
 		super(2);
+	}
+
+	protected PortDef[] cachedPorts;
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord + 1, yCoord + 1, zCoord, Library.POS_Y),
+					PortDef.make(xCoord - 1, yCoord + 1, zCoord, Library.POS_Y),
+					PortDef.make(xCoord, yCoord + 1, zCoord + 1, Library.POS_Y),
+					PortDef.make(xCoord, yCoord + 1, zCoord - 1, Library.POS_Y),
+					PortDef.make(xCoord + 1, yCoord - 1, zCoord, Library.NEG_Y),
+					PortDef.make(xCoord - 1, yCoord - 1, zCoord, Library.NEG_Y),
+					PortDef.make(xCoord, yCoord - 1, zCoord + 1, Library.NEG_Y),
+					PortDef.make(xCoord, yCoord - 1, zCoord - 1, Library.NEG_Y)
+			};
+		}
+		return cachedPorts;
 	}
 
 	@Override
@@ -117,8 +140,8 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
 	}
 
 	public boolean checkRedstone() {
-		for(DirPos pos : getConPos()) {
-			if(worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) return true;
+		for(PortDef port : this.getPorts()) {
+			for(DirPos pos : port.portConnections) if(worldObj.isBlockIndirectlyGettingPowered(pos.getX(), pos.getY(), pos.getZ())) return true;
 		}
 		return false;
 	}
@@ -127,6 +150,10 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			
+			this.setupAllPorts(getPorts());
+			this.updatePortPIFIFO();
+			
 			this.power = Library.chargeTEFromItems(slots, 0, power, this.getMaxPower());
 		}
 
@@ -197,20 +224,6 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
 	}
 
 	@Override
-	public DirPos[] getConPos() {
-		return new DirPos[] {
-				new DirPos(xCoord + 1, yCoord + 2, zCoord, Library.POS_Y),
-				new DirPos(xCoord - 1, yCoord + 2, zCoord, Library.POS_Y),
-				new DirPos(xCoord, yCoord + 2, zCoord + 1, Library.POS_Y),
-				new DirPos(xCoord, yCoord + 2, zCoord - 1, Library.POS_Y),
-				new DirPos(xCoord + 1, yCoord - 2, zCoord, Library.NEG_Y),
-				new DirPos(xCoord - 1, yCoord - 2, zCoord, Library.NEG_Y),
-				new DirPos(xCoord, yCoord - 2, zCoord + 1, Library.NEG_Y),
-				new DirPos(xCoord, yCoord - 2, zCoord - 1, Library.NEG_Y)
-		};
-	}
-
-	@Override
 	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new ContainerPADipole(player.inventory, this);
 	}
@@ -226,7 +239,7 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("lower")) this.dirLower++;
 		if(data.hasKey("upper")) this.dirUpper++;
 		if(data.hasKey("redstone")) this.dirRedstone++;
@@ -391,8 +404,19 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
 	@Override
 	public String[] getFunctionInfo() {
 		return new String[] {
-				PREFIX_FUNCTION + "setthreshold" + NAME_SEPARATOR + "threshold",
+			PREFIX_VALUE + "temperature",
+			PREFIX_VALUE + "pfmcold",
+			PREFIX_VALUE + "pfm",
+			PREFIX_FUNCTION + "setthreshold" + NAME_SEPARATOR + "threshold"
 		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "temperature").equals(name))	return "" + (int) this.temperature;
+		if((PREFIX_VALUE + "pfmcold").equals(name))		return "" + coolantTanks[0].getFill();
+		if((PREFIX_VALUE + "pfm").equals(name))			return "" + coolantTanks[1].getFill();
+		return null;
 	}
 
 	@Override

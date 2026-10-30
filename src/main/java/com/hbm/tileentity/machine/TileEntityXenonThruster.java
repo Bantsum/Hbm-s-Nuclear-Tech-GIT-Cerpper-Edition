@@ -8,13 +8,14 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
+import com.hbm.module.portmanager.ModulePortManFluidAdaptive;
+import com.hbm.module.portmanager.ModulePortManPower;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.i18n.I18nUtil;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardReceiver;
+import api.hbm.fluidmk2.IFluidStandardReceiverMK2;
 import api.hbm.tile.IPropulsion;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,7 +26,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityXenonThruster extends TileEntityMachineBase implements IPropulsion, IFluidStandardReceiver, IEnergyReceiverMK2 {
+public class TileEntityXenonThruster extends TileEntityMachineBase implements IPropulsion, IFluidStandardReceiverMK2, IEnergyReceiverMK2 {
 
 	public FluidTank[] tanks;
 
@@ -41,10 +42,16 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 
 	private int fuelCost;
 
+	protected ModulePortManFluidAdaptive moduleFluidPorts;
+	protected ModulePortManPower modulePowerPorts;
+
 	public TileEntityXenonThruster() {
 		super(0);
 		tanks = new FluidTank[1];
 		tanks[0] = new FluidTank(Fluids.XENON, 4_000);
+
+		moduleFluidPorts = new ModulePortManFluidAdaptive(this).setInputTanks(getReceivingTanks());
+		modulePowerPorts = new ModulePortManPower(this);
 	}
 
 	@Override
@@ -57,17 +64,13 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 		if(!CelestialBody.inOrbit(worldObj)) return;
 
 		if(!worldObj.isRemote) {
+			moduleFluidPorts.update(getPorts());
+			modulePowerPorts.update(getPorts());
+
 			if(!hasRegistered) {
 				if(isFacingPrograde()) registerPropulsion();
 				hasRegistered = true;
 				isOn = false;
-			}
-
-			for(DirPos pos : getConPos()) {
-				for(FluidTank tank : tanks) {
-					trySubscribe(worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-					trySubscribe(tank.getTankType(), worldObj, pos.getX(), pos.getY(), pos.getZ(), pos.getDir());
-				}
 			}
 
 			networkPackNT(250);
@@ -82,15 +85,21 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 		}
 	}
 
-	private DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	protected PortDef[] cachedPorts;
 
-		return new DirPos[] {
-			new DirPos(xCoord - dir.offsetX - rot.offsetX, yCoord, zCoord - dir.offsetZ - rot.offsetZ, dir),
-			new DirPos(xCoord - dir.offsetX, yCoord, zCoord - dir.offsetZ, dir),
-			new DirPos(xCoord - dir.offsetX + rot.offsetX, yCoord, zCoord - dir.offsetZ + rot.offsetZ, dir),
-		};
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+	
+			cachedPorts = new PortDef[] {
+				PortDef.make(xCoord - rot.offsetX, yCoord, zCoord - rot.offsetZ, dir),
+				PortDef.make(xCoord, yCoord, zCoord, dir),
+				PortDef.make(xCoord + rot.offsetX, yCoord, zCoord + rot.offsetZ, dir),
+			};
+		}
+
+		return cachedPorts;
 	}
 
 	@Override
@@ -189,12 +198,12 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IP
 	@Override
 	public void addErrors(List<String> errors) {
 		if(power < fuelCost * POWER_COST_MULTIPLIER) {
-			errors.add(EnumChatFormatting.RED + I18nUtil.resolveKey(getBlockType().getUnlocalizedName() + ".name") + " - Insufficient power: needs " + BobMathUtil.getShortNumber(fuelCost * POWER_COST_MULTIPLIER) + "HE");
+			errors.add(EnumChatFormatting.RED + " - Insufficient power: needs " + BobMathUtil.getShortNumber(fuelCost * POWER_COST_MULTIPLIER) + "HE");
 		}
 
 		for(FluidTank tank : tanks) {
 			if(tank.getFill() < fuelCost) {
-				errors.add(EnumChatFormatting.RED + I18nUtil.resolveKey(getBlockType().getUnlocalizedName() + ".name") + " - Insufficient fuel: needs " + fuelCost + "mB");
+				errors.add(EnumChatFormatting.RED + " - Insufficient fuel: needs " + fuelCost + "mB");
 			}
 		}
 	}

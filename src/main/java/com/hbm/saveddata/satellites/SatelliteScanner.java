@@ -1,9 +1,22 @@
 package com.hbm.saveddata.satellites;
 
-public class SatelliteScanner extends Satellite {
+import com.hbm.items.ModItems;
 
-	public SatelliteScanner() {
-		this.ifaceAcs.add(InterfaceActions.HAS_ORES);
-		this.satIface = Interfaces.SAT_PANEL;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.World;
+
+public class SatelliteScanner extends SatelliteBase {
+	
+	public SatelliteScanner() { }
+
+	@Override public String getType() { return "DEPTH_SCANNER"; }
+	
+	@Override
+	public IChatComponent[] getInfo(World world) {
+		return new IChatComponent[] {
+				new ChatComponentTranslation(ModItems.sat_scanner.getUnlocalizedName(new ItemStack(ModItems.sat_scanner)) + ".name")
+		};
 	}
 }

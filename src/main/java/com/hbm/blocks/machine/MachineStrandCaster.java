@@ -47,14 +47,28 @@ public class MachineStrandCaster extends BlockDummyable implements ICrucibleAcce
 	public int getOffset() {
 		return 0;
 	}
-
+	@Override
+	public int[][] getAllDimensions() {
+		return new int[][] {
+			new int[] { 0, 0, 6, 0, 1, 0 },
+			new int[] { 2, 0, 1, 0, 1, 0 }
+		};
+	}
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		if(meta >= 12) return new TileEntityMachineStrandCaster();
 		if(meta >= 6) return new TileEntityProxyCombo(true, false, true).moltenMetal();
 		return null;
 	}
-
+	@Override
+	public int[][] getAllPorts(ForgeDirection dir) {
+		return rotatePorts(new int[][] {
+			{1, 0, -1, ForgeDirection.EAST.ordinal()},
+			{0, 0, -1, ForgeDirection.WEST.ordinal()},
+			{0, 0, -5, ForgeDirection.WEST.ordinal()},
+			{1, 0, -5, ForgeDirection.EAST.ordinal()}
+		}, dir);
+	}
 	@Override
 	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		super.fillSpace(world, x, y, z, dir, o);
@@ -67,10 +81,9 @@ public class MachineStrandCaster extends BlockDummyable implements ICrucibleAcce
 		// up,down;forward,backward;left,right
 		MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] { 2, 0, 1, 0, 1, 0 }, this, dir);
 		// Fluid ports
-		this.makeExtra(world, x + rot.offsetX - dir.offsetX, y, z + rot.offsetZ - dir.offsetZ);
-		this.makeExtra(world, x - dir.offsetX, y, z - dir.offsetZ);
-		this.makeExtra(world, x - dir.offsetX * 5, y, z - dir.offsetZ * 5);
-		this.makeExtra(world, x + rot.offsetX - dir.offsetX * 5, y, z + rot.offsetZ - dir.offsetZ * 5);
+		for(int[] offset : getAllPorts(dir)) {
+			this.makeExtra(world, x + offset[0], y + offset[1], z + offset[2]);
+		}
 		// Molten slop ports
 		this.makeExtra(world, x + rot.offsetX - dir.offsetX, y + 2, z + rot.offsetZ - dir.offsetZ);
 		this.makeExtra(world, x - dir.offsetX, y + 2, z - dir.offsetZ);

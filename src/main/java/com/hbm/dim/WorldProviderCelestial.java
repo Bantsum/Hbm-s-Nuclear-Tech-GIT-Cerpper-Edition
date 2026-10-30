@@ -1,7 +1,6 @@
 package com.hbm.dim;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Random;
 import java.util.List;
 import java.util.ListIterator;
@@ -21,9 +20,6 @@ import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
-import com.hbm.saveddata.SatelliteSavedData;
-import com.hbm.saveddata.satellites.Satellite;
-import com.hbm.saveddata.satellites.SatelliteWar;
 import com.hbm.util.Compat;
 
 import cpw.mods.fml.common.Loader;
@@ -52,6 +48,8 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 
 public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
+	public CelestialBody body;
+
 	public List<AstroMetric> metrics;
 
 	private double eclipseAmount;
@@ -74,7 +72,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 
 	// Should we generate bedrock ice
 	public boolean hasIce() {
-		return CelestialBody.getBody(worldObj).hasIce;
+		return body.hasIce;
 	}
 
 	public boolean hasLife() {
@@ -85,10 +83,16 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return 3;
 	}
 
+	// this is the stupidest possible method to override, but also our only reasonable option
+	@Override
+	protected void generateLightBrightnessTable() {
+		super.generateLightBrightnessTable();
+		body = CelestialBody.getBody(worldObj);
+	}
+
 	@Override
 	public void updateWeather() {
-		CelestialBody body = CelestialBody.getBody(worldObj);
-		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
+		CBT_Atmosphere atmosphere = body.getTrait(CBT_Atmosphere.class);
 		double pressure = atmosphere != null ? atmosphere.getPressure() : 0;
 
 		// Will prevent water from existing, will be unset immediately before using a bucket if inside a pressurized room
@@ -200,8 +204,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	// so we use this to memoise expensive calcs
 	@SideOnly(Side.CLIENT)
 	protected void updateSky(float partialTicks) {
-		CelestialBody body = CelestialBody.getBody(worldObj);
-
 		// First fetch the suns true size
 		double sunSize = SolarSystem.calculateSunSize(body);
 		float solarAngle = worldObj.getCelestialAngle(partialTicks);
@@ -388,18 +390,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		CBT_Atmosphere atmosphere = CelestialBody.getTrait(worldObj, CBT_Atmosphere.class);
 		Vec3 color = Vec3.createVectorHelper(0, 0, 0);
 
-		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
-			if(entry instanceof SatelliteWar) {
-				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.interp;
-				float alpd = 1.0F - Math.min(1.0F, flame / 100);
-
-				color.xCoord += alpd * 1.5;
-				color.yCoord += alpd * 1.5;
-				color.zCoord += alpd * 1.5;
-			}
-		}
-
 		// The cold hard vacuum of space
 		if(atmosphere == null) {
 			return color;
@@ -434,31 +424,19 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 			);
 		}
 
-		if(CelestialBody.getBody(worldObj).hasTrait(CBT_War.class)) {
-			CBT_War wardat = CelestialBody.getTrait(worldObj, CBT_War.class);
-				for(int i = 0; i < wardat.getProjectiles().size(); i++) {
-					CBT_War.Projectile projectile = wardat.getProjectiles().get(i);
-					float flash = projectile.getFlashtime();
-					if(projectile.getAnimtime() > 0) {
-						float invertedFlash = 100 - flash;
+		CBT_War wardat = body.getTrait(CBT_War.class);
 
-						color.xCoord += invertedFlash * 0.5;
-						color.yCoord += invertedFlash * 0.5;
-						color.zCoord += invertedFlash * 0.5;
-					}
+		if(wardat != null) {
+			for(int i = 0; i < wardat.getProjectiles().size(); i++) {
+				CBT_War.Projectile projectile = wardat.getProjectiles().get(i);
+				float flash = projectile.getFlashtime();
+				if(projectile.getAnimtime() > 0) {
+					float invertedFlash = 100 - flash;
+
+					color.xCoord += invertedFlash * 0.5;
+					color.yCoord += invertedFlash * 0.5;
+					color.zCoord += invertedFlash * 0.5;
 				}
-			}
-
-
-		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
-			if(entry instanceof SatelliteWar) {
-				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.interp;
-				float alpd = 1.0F - Math.min(1.0F, flame / 100);
-
-				color.xCoord += alpd * 1.5;
-				color.yCoord += alpd * 1.5;
-				color.zCoord += alpd * 1.5;
 			}
 		}
 
@@ -556,7 +534,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		return 1;
 	}
 	public boolean hasWeatherCycle() {
-		return CBT_Weather.supportsWeather(CelestialBody.getBody(worldObj));
+		return CBT_Weather.supportsWeather(body);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -650,18 +628,10 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		// brightness _inside_ of the atmosphere, from effects like lightning or war weapons
 		float insideBrightness = 0;
 
-		for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
-			if(entry instanceof SatelliteWar) {
-				SatelliteWar war = (SatelliteWar) entry.getValue();
-				float flame = war.interp;
-				float alpd = 1.0F - Math.min(1.0F, flame / 100);
-				insideBrightness += alpd;
-			}
-		}
+		CBT_War wardat = body.getTrait(CBT_War.class);
 
-		if(CelestialBody.getBody(worldObj).hasTrait(CBT_War.class)) {
-			CBT_War wardat = CelestialBody.getTrait(worldObj, CBT_War.class);
-			for (int i = 0; i < wardat.getProjectiles().size(); i++) {
+		if(wardat != null) {
+			for(int i = 0; i < wardat.getProjectiles().size(); i++) {
 				CBT_War.Projectile projectile = wardat.getProjectiles().get(i);
 				float flash = projectile.getFlashtime();
 				if(projectile.getAnimtime() > 0) {
@@ -736,7 +706,7 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	// which means we can set the time of day to local morning safely here!
 	@Override
 	public void resetRainAndThunder() {
-		CBT_Weather weather = CBT_Weather.ensureTrait(CelestialBody.getBody(worldObj));
+		CBT_Weather weather = CBT_Weather.ensureTrait(body);
 		if(weather != null) {
 			weather.forceClear(worldObj.rand, worldObj.rand.nextInt(168000) + 12000);
 			SolarSystemWorldSavedData.get(worldObj).markDirty();
@@ -834,7 +804,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	}
 
 	protected double getDayLength() {
-		CelestialBody body = CelestialBody.getBody(worldObj);
 		return body.getRotationalPeriod() / (1 - (1 / body.getPlanet().getOrbitalPeriod()));
 	}
 
@@ -864,8 +833,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 		// Uncomment this line as well to return moon phase difficulty calcs to vanilla
 		// if(dimensionId == 0) return super.getMoonPhase(worldTime);
 
-		CelestialBody body = CelestialBody.getBody(worldObj);
-
 		// if no moons, default to half-moon difficulty
 		if(body.satellites.size() == 0) return 2;
 
@@ -888,8 +855,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	public double getEclipseAmount() {
 		if(eclipseAmount > -1) return eclipseAmount;
 
-		CelestialBody body = CelestialBody.getBody(worldObj);
-
 		// First fetch the suns true size
 		double sunSize = SolarSystem.calculateSunSize(body);
 		float solarAngle = worldObj.getCelestialAngle(0);
@@ -908,8 +873,6 @@ public abstract class WorldProviderCelestial extends WorldProviderSurface {
 	}
 
 	public float getSunPower() {
-		CelestialBody body = CelestialBody.getBody(worldObj);
-
 		return body.getSunPower() * (1 - (float)getEclipseAmount());
 	}
 

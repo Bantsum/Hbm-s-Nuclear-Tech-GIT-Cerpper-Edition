@@ -10,7 +10,6 @@ import com.hbm.inventory.container.ContainerMachineChemicalFactory;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.gui.GUIMachineChemicalFactory;
-import com.hbm.inventory.recipes.ChemicalPlantRecipes;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -24,13 +23,16 @@ import com.hbm.tileentity.IConditionalInvAccess;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.TilePort;
 import com.hbm.tileentity.TileEntityProxyDyn.IProxyDelegateProvider;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -43,11 +45,14 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityMachineChemicalFactory extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IProxyDelegateProvider, IConditionalInvAccess {
+public class TileEntityMachineChemicalFactory extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IProxyDelegateProvider, IConditionalInvAccess, IRORValueProvider {
 
 	public FluidTank[] allTanks;
 	public FluidTank[] inputTanks;
 	public FluidTank[] outputTanks;
+	
+	public TilePort coolantInPort;
+	public TilePort coolantOutPort;
 
 	public FluidTank water;
 	public FluidTank lps;
@@ -92,6 +97,44 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
 				.itemOutput(8 + i * 7, 9 + i * 7, 10 + i * 7)
 				.fluidInput(inputTanks[0 + i * 3], inputTanks[1 + i * 3], inputTanks[2 + i * 3])
 				.fluidOutput(outputTanks[0 + i * 3], outputTanks[1 + i * 3], outputTanks[2 + i * 3]);
+	}
+	
+	protected PortDef[] powerPorts;
+	public PortDef[] getPowerPorts() {
+		if(powerPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			
+			powerPorts = new PortDef[] {
+					PortDef.make(xCoord + rot.offsetX + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ + dir.offsetZ * 2, dir),
+					PortDef.make(xCoord - rot.offsetX + dir.offsetX * 2, yCoord, zCoord - rot.offsetZ + dir.offsetZ * 2, dir),
+					PortDef.make(xCoord + rot.offsetX - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
+					PortDef.make(xCoord - rot.offsetX - dir.offsetX * 2, yCoord, zCoord - rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
+					PortDef.make(xCoord + dir.offsetX + rot.offsetX * 2, yCoord, zCoord + dir.offsetZ + rot.offsetZ * 2, rot),
+					PortDef.make(xCoord - dir.offsetX + rot.offsetX * 2, yCoord, zCoord - dir.offsetZ + rot.offsetZ * 2, rot),
+					PortDef.make(xCoord + dir.offsetX - rot.offsetX * 2, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 2, rot.getOpposite()),
+					PortDef.make(xCoord - dir.offsetX - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 2, rot.getOpposite()),
+					PortDef.make(xCoord + 2, yCoord, zCoord + 0, Library.POS_X),
+					PortDef.make(xCoord + 2, yCoord, zCoord + 2, Library.POS_X, Library.POS_Z),
+					PortDef.make(xCoord + 0, yCoord, zCoord + 2, Library.POS_Z),
+					PortDef.make(xCoord - 2, yCoord, zCoord + 2, Library.NEG_X, Library.POS_Z),
+					PortDef.make(xCoord - 2, yCoord, zCoord + 0, Library.NEG_X),
+					PortDef.make(xCoord - 2, yCoord, zCoord - 2, Library.NEG_X, Library.NEG_Z),
+					PortDef.make(xCoord + 0, yCoord, zCoord - 2, Library.NEG_Z),
+					PortDef.make(xCoord + 2, yCoord, zCoord - 2, Library.POS_X, Library.NEG_Z),
+					PortDef.make(xCoord + dir.offsetX * 2 + rot.offsetX * 2, yCoord + 2, zCoord + dir.offsetZ * 2 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 1 + rot.offsetX * 2, yCoord + 2, zCoord + dir.offsetZ * 1 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 0 + rot.offsetX * 2, yCoord + 2, zCoord + dir.offsetZ * 0 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 1 + rot.offsetX * 2, yCoord + 2, zCoord - dir.offsetZ * 1 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 2 + rot.offsetX * 2, yCoord + 2, zCoord - dir.offsetZ * 2 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 2 - rot.offsetX * 2, yCoord + 2, zCoord + dir.offsetZ * 2 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 1 - rot.offsetX * 2, yCoord + 2, zCoord + dir.offsetZ * 1 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 0 - rot.offsetX * 2, yCoord + 2, zCoord + dir.offsetZ * 0 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 1 - rot.offsetX * 2, yCoord + 2, zCoord - dir.offsetZ * 1 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 2 - rot.offsetX * 2, yCoord + 2, zCoord - dir.offsetZ * 2 - rot.offsetZ * 2, Library.POS_Y),
+			};
+		}
+		return powerPorts;
 	}
 
 	@Override
@@ -156,9 +199,19 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
 		
 		if(!worldObj.isRemote) {
 			
+			this.setupPowerPorts(getPowerPorts());
+			this.setupFluidPorts(getFluidPorts());
+			if(coolantInPort == null) coolantInPort = new TilePort().setupOwner(delegate).setupPort(getCoolantPort()).setupType(water.getTankType().getNetworkProvider());
+			if(coolantOutPort == null) coolantOutPort = new TilePort().setupOwner(delegate).setupPort(getCoolantPort()).setupType(lps.getTankType().getNetworkProvider());
+			this.updatePortPIFIFO();
+			coolantInPort.update(worldObj);
+			coolantInPort.checkSubscribe(worldObj);
+			coolantOutPort.update(worldObj);
+			coolantOutPort.checkProvide(worldObj);
+			
 			long nextMaxPower = 0;
 			for(int i = 0; i < 4; i++) {
-				GenericRecipe recipe = ChemicalPlantRecipes.INSTANCE.recipeNameMap.get(chemplantModule[i].recipe);
+				GenericRecipe recipe = chemplantModule[i].getRecipe();
 				if(recipe != null) {
 					nextMaxPower += recipe.power * 100;
 				}
@@ -168,18 +221,6 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
 			
 			this.power = Library.chargeTEFromItems(slots, 0, power, maxPower);
 			upgradeManager.checkSlots(slots, 1, 3);
-			
-			for(DirPos pos : getConPos()) {
-				this.trySubscribe(worldObj, pos);
-				for(FluidTank tank : inputTanks) if(tank.getTankType() != Fluids.NONE) this.trySubscribe(tank.getTankType(), worldObj, pos);
-				for(FluidTank tank : outputTanks) if(tank.getFill() > 0) this.tryProvide(tank, worldObj, pos);
-			}
-			
-			for(DirPos pos : getCoolPos()) {
-				delegate.trySubscribe(worldObj, pos);
-				delegate.trySubscribe(water.getTankType(), worldObj, pos);
-				delegate.tryProvide(lps, worldObj, pos);
-			}
 
 			double speed = 1D;
 			double pow = 1D;
@@ -265,54 +306,60 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
 		return water.getFill() >= 100 && lps.getFill() <= lps.getMaxFill() - 100;
 	}
 	
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		return new DirPos[] {
-				new DirPos(xCoord + 3, yCoord, zCoord - 2, Library.POS_X),
-				new DirPos(xCoord + 3, yCoord, zCoord + 0, Library.POS_X),
-				new DirPos(xCoord + 3, yCoord, zCoord + 2, Library.POS_X),
-				new DirPos(xCoord - 3, yCoord, zCoord - 2, Library.NEG_X),
-				new DirPos(xCoord - 3, yCoord, zCoord + 0, Library.NEG_X),
-				new DirPos(xCoord - 3, yCoord, zCoord + 2, Library.NEG_X),
-				new DirPos(xCoord - 2, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord + 2, yCoord, zCoord + 3, Library.POS_Z),
-				new DirPos(xCoord - 2, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord + 0, yCoord, zCoord - 3, Library.NEG_Z),
-				new DirPos(xCoord + 2, yCoord, zCoord - 3, Library.NEG_Z),
-
-				new DirPos(xCoord + dir.offsetX * 2 + rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 2 + rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord + dir.offsetX * 1 + rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 1 + rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord + dir.offsetX * 0 + rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 0 + rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord - dir.offsetX * 1 + rot.offsetX * 2, yCoord + 3, zCoord - dir.offsetZ * 1 + rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX * 2, yCoord + 3, zCoord - dir.offsetZ * 2 + rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord + dir.offsetX * 2 - rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 2 - rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord + dir.offsetX * 1 - rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 1 - rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord + dir.offsetX * 0 - rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 0 - rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord - dir.offsetX * 1 - rot.offsetX * 2, yCoord + 3, zCoord - dir.offsetZ * 1 - rot.offsetZ * 2, Library.POS_Y),
-				new DirPos(xCoord - dir.offsetX * 2 - rot.offsetX * 2, yCoord + 3, zCoord - dir.offsetZ * 2 - rot.offsetZ * 2, Library.POS_Y),
-
-				new DirPos(xCoord + dir.offsetX + rot.offsetX * 3, yCoord, zCoord + dir.offsetZ + rot.offsetZ * 3, rot),
-				new DirPos(xCoord - dir.offsetX + rot.offsetX * 3, yCoord, zCoord - dir.offsetZ + rot.offsetZ * 3, rot),
-				new DirPos(xCoord + dir.offsetX - rot.offsetX * 3, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 3, rot.getOpposite()),
-				new DirPos(xCoord - dir.offsetX - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 3, rot.getOpposite()),
-		};
+	protected PortDef coolantPort;
+	public PortDef getCoolantPort() {
+		if(coolantPort == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			
+			coolantPort = PortDef.combine(
+					PortDef.make(xCoord + rot.offsetX + dir.offsetX * 2, yCoord, zCoord + rot.offsetZ + dir.offsetZ * 2, dir),
+					PortDef.make(xCoord - rot.offsetX + dir.offsetX * 2, yCoord, zCoord - rot.offsetZ + dir.offsetZ * 2, dir),
+					PortDef.make(xCoord + rot.offsetX - dir.offsetX * 2, yCoord, zCoord + rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
+					PortDef.make(xCoord - rot.offsetX - dir.offsetX * 2, yCoord, zCoord - rot.offsetZ - dir.offsetZ * 2, dir.getOpposite())
+			);
+		}
+		return coolantPort;
 	}
 
-	
-	public DirPos[] getCoolPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		
-		return new DirPos[] {
-				new DirPos(xCoord + rot.offsetX + dir.offsetX * 3, yCoord, zCoord + rot.offsetZ + dir.offsetZ * 3, dir),
-				new DirPos(xCoord - rot.offsetX + dir.offsetX * 3, yCoord, zCoord - rot.offsetZ + dir.offsetZ * 3, dir),
-				new DirPos(xCoord + rot.offsetX - dir.offsetX * 3, yCoord, zCoord + rot.offsetZ - dir.offsetZ * 3, dir.getOpposite()),
-				new DirPos(xCoord - rot.offsetX - dir.offsetX * 3, yCoord, zCoord - rot.offsetZ - dir.offsetZ * 3, dir.getOpposite()),
-		};
+	protected PortDef[] fluidPorts;
+	public PortDef[] getFluidPorts() {
+		if(fluidPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			
+			fluidPorts = new PortDef[] {
+					PortDef.make(xCoord + dir.offsetX + rot.offsetX * 2, yCoord, zCoord + dir.offsetZ + rot.offsetZ * 2, rot),
+					PortDef.make(xCoord - dir.offsetX + rot.offsetX * 2, yCoord, zCoord - dir.offsetZ + rot.offsetZ * 2, rot),
+					PortDef.make(xCoord + dir.offsetX - rot.offsetX * 2, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 2, rot.getOpposite()),
+					PortDef.make(xCoord - dir.offsetX - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 2, rot.getOpposite()),
+					PortDef.make(xCoord + 2, yCoord, zCoord + 0, Library.POS_X),
+					PortDef.make(xCoord + 2, yCoord, zCoord + 2, Library.POS_X, Library.POS_Z),
+					PortDef.make(xCoord + 0, yCoord, zCoord + 2, Library.POS_Z),
+					PortDef.make(xCoord - 2, yCoord, zCoord + 2, Library.NEG_X, Library.POS_Z),
+					PortDef.make(xCoord - 2, yCoord, zCoord + 0, Library.NEG_X),
+					PortDef.make(xCoord - 2, yCoord, zCoord - 2, Library.NEG_X, Library.NEG_Z),
+					PortDef.make(xCoord + 0, yCoord, zCoord - 2, Library.NEG_Z),
+					PortDef.make(xCoord + 2, yCoord, zCoord - 2, Library.POS_X, Library.NEG_Z),
+					PortDef.make(xCoord + dir.offsetX * 2 + rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 2 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 1 + rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 1 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 0 + rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 0 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 1 + rot.offsetX * 2, yCoord + 3, zCoord - dir.offsetZ * 1 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 2 + rot.offsetX * 2, yCoord + 3, zCoord - dir.offsetZ * 2 + rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 2 - rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 2 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 1 - rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 1 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX * 0 - rot.offsetX * 2, yCoord + 3, zCoord + dir.offsetZ * 0 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 1 - rot.offsetX * 2, yCoord + 3, zCoord - dir.offsetZ * 1 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord - dir.offsetX * 2 - rot.offsetX * 2, yCoord + 3, zCoord - dir.offsetZ * 2 - rot.offsetZ * 2, Library.POS_Y),
+					PortDef.make(xCoord + dir.offsetX + rot.offsetX * 3, yCoord, zCoord + dir.offsetZ + rot.offsetZ * 3, rot),
+					PortDef.make(xCoord - dir.offsetX + rot.offsetX * 3, yCoord, zCoord - dir.offsetZ + rot.offsetZ * 3, rot),
+					PortDef.make(xCoord + dir.offsetX - rot.offsetX * 3, yCoord, zCoord + dir.offsetZ - rot.offsetZ * 3, rot.getOpposite()),
+					PortDef.make(xCoord - dir.offsetX - rot.offsetX * 3, yCoord, zCoord - dir.offsetZ - rot.offsetZ * 3, rot.getOpposite()),
+			};
+		}
+		return fluidPorts;
 	}
-	
+
 	public DirPos[] getIOPos() {
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
@@ -395,12 +442,12 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
 	@Override public boolean hasPermission(EntityPlayer player) { return this.isUseableByPlayer(player); }
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("index") && data.hasKey("selection")) {
 			int index = data.getInteger("index");
 			String selection = data.getString("selection");
 			if(index >= 0 && index < 4) {
-				this.chemplantModule[index].recipe = selection;
+				this.chemplantModule[index].setRecipe(selection, false);
 				this.markChanged();
 			}
 		}
@@ -479,5 +526,35 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
 		@Override public FluidTank[] getSendingTanks() { return new FluidTank[] {TileEntityMachineChemicalFactory.this.lps}; }
 
 		@Override public FluidTank[] getAllTanks() { return TileEntityMachineChemicalFactory.this.getAllTanks(); }
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_VALUE + "progress1",
+				PREFIX_VALUE + "progress2",
+				PREFIX_VALUE + "progress3",
+				PREFIX_VALUE + "progress4",
+				PREFIX_VALUE + "recipe1",
+				PREFIX_VALUE + "recipe2",
+				PREFIX_VALUE + "recipe3",
+				PREFIX_VALUE + "recipe4",
+				PREFIX_VALUE + "anyactive",
+				PREFIX_VALUE + "active1",
+				PREFIX_VALUE + "active2",
+				PREFIX_VALUE + "active3",
+				PREFIX_VALUE + "active4",
+		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "anyactive").equals(name))			return "" + ((this.didProcess[0] || this.didProcess[1] || this.didProcess[2] || this.didProcess[3]) ? 1 : 0);
+		for(int i = 0; i < 4; i++) {
+			if((PREFIX_VALUE + "progress" + (i + 1)).equals(name))	return "" + (int) Math.round(this.chemplantModule[i].progress * 100);
+			if((PREFIX_VALUE + "recipe" + (i + 1)).equals(name))		return this.chemplantModule[i].getRecipeName();
+			if((PREFIX_VALUE + "active" + (i + 1)).equals(name))		return "" + (this.didProcess[i] ? 1 : 0);
+		}
+		return null;
 	}
 }

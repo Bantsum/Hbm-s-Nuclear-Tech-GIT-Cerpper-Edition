@@ -169,6 +169,15 @@ public abstract class GuiInfoContainer extends GuiContainer implements INEIGuiHa
 	public FontRenderer getFontRenderer() {
 		return this.fontRendererObj;
 	}
+	
+	protected void drawConstrainedLabel(String label, int x, int y, int color, float maxScale, float divisor) {
+
+		float scale = Math.min(1F, 22F / this.fontRendererObj.getStringWidth(label));
+		
+		GL11.glScalef(scale, scale, 1);
+		this.fontRendererObj.drawString(label, (int)(x / scale - this.fontRendererObj.getStringWidth(label) / 2F), (int)(y / scale - this.fontRendererObj.FONT_HEIGHT / 2F), color);
+		GL11.glScalef(1 / scale, 1 / scale, 1);
+	}
 
 	public void pushScissor(int x, int y, int width, int height) {
 		ScaledResolution res = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
@@ -342,10 +351,21 @@ public abstract class GuiInfoContainer extends GuiContainer implements INEIGuiHa
 		mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 	}
 
+	public void clickSendFlag(TileEntity tile, int x, int y, int left, int top, int sizeX, int sizeY, String name) {
+		if(checkClick(x, y, left, top, sizeX, sizeY)) {
+			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+			NBTTagCompound data = new NBTTagCompound();
+			data.setBoolean(name, true);
+			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, tile.xCoord, tile.yCoord, tile.zCoord));
+		}
+	}
+
 	///NEI drag and drop support
 	@Override
 	@Optional.Method(modid = "NotEnoughItems")
 	public boolean handleDragNDrop(GuiContainer gui, int x, int y, ItemStack stack, int button) {
+		// BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD! BALD!
+
 		if(gui instanceof GuiInfoContainer && stack != null){
 			Slot slot = getSlotAtPosition(x,y);
 			if(slot instanceof SlotPattern){

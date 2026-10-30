@@ -10,6 +10,7 @@ import static com.hbm.inventory.OreDictManager.*;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.RecipesCommon.AStack;
@@ -20,6 +21,8 @@ import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.machine.ItemCircuit.EnumCircuitType;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -118,7 +121,7 @@ public class SolderingRecipes extends SerializableRecipe {
 							new ComparableStack(ModItems.circuit, lbsm ? 8 : 16, EnumCircuitType.CAPACITOR_TANTALIUM)},
 					new AStack[] {
 							new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_CHASSIS),
-							new ComparableStack(ModItems.upgrade_speed_1)},
+							new OreDictStack(RUBBER.ingot(), 4)},
 					new AStack[] {
 							new OreDictStack(PB.wireFine(), 16)}
 			));
@@ -130,7 +133,7 @@ public class SolderingRecipes extends SerializableRecipe {
 							new ComparableStack(ModItems.circuit, lbsm ? 8 : 32, EnumCircuitType.CAPACITOR_LANTHANIUM)},
 					new AStack[] {
 							new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_CHASSIS),
-							new ComparableStack(ModItems.upgrade_speed_3)},
+							new OreDictStack(ANY_HARDPLASTIC.ingot(), 4)},
 					new AStack[] {
 							new OreDictStack(PB.wireFine(), 24)}
 			));
@@ -143,11 +146,21 @@ public class SolderingRecipes extends SerializableRecipe {
 							new ComparableStack(ModItems.circuit, lbsm ? 1 : 8, EnumCircuitType.ATOMIC_CLOCK)},
 					new AStack[] {
 							new ComparableStack(ModItems.circuit, 2, EnumCircuitType.CONTROLLER_ADVANCED),
-							new ComparableStack(ModItems.upgrade_overdrive_1)},
+							new ComparableStack(ModItems.upgrade_speed_3)},
 					new AStack[] {
 							new OreDictStack(PB.wireFine(), 32)}
 			));
 		}
+		
+		recipes.add(new SolderingRecipe(new ItemStack(ModItems.sat_chip), 100, 100,
+				new AStack[] {
+						new ComparableStack(ModItems.circuit, 8, EnumCircuitType.CHIP),
+						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.CAPACITOR)},
+				new AStack[] {
+						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.PCB)},
+				new AStack[] {
+						new OreDictStack(PB.wireFine(), 4)}
+		));
 
 		/*
 		 * SPACE
@@ -259,6 +272,18 @@ public class SolderingRecipes extends SerializableRecipe {
 			addSecondUpgrade(ModItems.upgrade_fortune_2, ModItems.upgrade_fortune_3);
 			addFirstUpgrade(ModItems.upgrade_afterburn_1, ModItems.upgrade_afterburn_2);
 			addSecondUpgrade(ModItems.upgrade_afterburn_2, ModItems.upgrade_afterburn_3);
+		}
+		
+		if (Loader.isModLoaded("OpenComputers")) {
+			Item ocItem = GameRegistry.findItem("OpenComputers", "item");
+			recipes.add(new SolderingRecipe(new ItemStack(ModItems.rtty_card), 100, 1_000,
+					new AStack[] {
+						    new ComparableStack(ModBlocks.radio_torch_receiver),
+						    new ComparableStack(ModBlocks.radio_torch_sender),
+						    new ComparableStack(ocItem, 1, 25 /* Microchip (Tier 2) */)},
+					new AStack[] {new ComparableStack(ocItem, 1, 33 /* Card Base */)},
+					new AStack[] {new OreDictStack(PB.wireFine(), 4)}
+			));
 		}
 	}
 

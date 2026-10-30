@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine.albion;
 
+import api.hbm.redstoneoverradio.IRORInteractive;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.IControlReceiver;
@@ -8,10 +9,11 @@ import com.hbm.inventory.gui.GUIPASource;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IConditionalInvAccess;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.TilePort.PortDef;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.fauxpointtwelve.BlockPos;
-import com.hbm.util.fauxpointtwelve.DirPos;
 
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -32,7 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityPASource extends TileEntityCooledBase implements IGUIProvider, IConditionalInvAccess, IControlReceiver, SimpleComponent, CompatHandler.OCComponent {
+public class TileEntityPASource extends TileEntityCooledBase implements IGUIProvider, IConditionalInvAccess, IControlReceiver, SimpleComponent, CompatHandler.OCComponent, IRORValueProvider, IRORInteractive {
 
 	public static final long usage = 100_000;
 	public Particle particle;
@@ -77,11 +79,16 @@ public class TileEntityPASource extends TileEntityCooledBase implements IGUIProv
 	public void updateEntity() {
 
 		if(!worldObj.isRemote) {
+			
+			
+			this.setupAllPorts(getPorts());
+			this.updatePortPIFIFO();
+			
 			this.power = Library.chargeTEFromItems(slots, 0, power, this.getMaxPower());
 
 			int steps = 1;
 			if(this.particle != null) steps = 1 + MathHelper.clamp_int(this.particle.momentum / 1_000, 0, 9);
-			
+
 			for(int i = 0; i < steps; i++) {
 				if(particle != null) {
 					this.state = PAState.RUNNING;
@@ -152,19 +159,27 @@ public class TileEntityPASource extends TileEntityCooledBase implements IGUIProv
 		this.lastSpeed = buf.readInt();
 	}
 
-	@Override
-	public DirPos[] getConPos() {
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		return new DirPos[] {
-				new DirPos(xCoord + dir.offsetX * 2, yCoord, zCoord + dir.offsetZ * 2, dir),
-				new DirPos(xCoord + dir.offsetX * 2 + rot.offsetX * 2, yCoord, zCoord + dir.offsetZ * 2 + rot.offsetZ * 2, dir),
-				new DirPos(xCoord + dir.offsetX * 2 - rot.offsetX * 2, yCoord, zCoord + dir.offsetZ * 2 - rot.offsetZ * 2, dir),
-				new DirPos(xCoord - dir.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2, dir.getOpposite()),
-				new DirPos(xCoord - dir.offsetX * 2 + rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2 + rot.offsetZ * 2, dir.getOpposite()),
-				new DirPos(xCoord - dir.offsetX * 2 - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 2 - rot.offsetZ * 2, dir.getOpposite()),
-				new DirPos(xCoord + rot.offsetX * 5, yCoord, zCoord + rot.offsetZ * 5, rot),
-		};
+	protected PortDef[] cachedPorts;
+
+	public PortDef[] getPorts() {
+		if(cachedPorts == null) {
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			
+			cachedPorts = new PortDef[] {
+					PortDef.make(xCoord + dir.offsetX * 1, yCoord, zCoord + dir.offsetZ * 1, dir),
+					PortDef.make(xCoord + dir.offsetX * 1 + rot.offsetX * 2, yCoord, zCoord + dir.offsetZ * 1 + rot.offsetZ * 2, dir),
+					PortDef.make(xCoord + dir.offsetX * 1 - rot.offsetX * 2, yCoord, zCoord + dir.offsetZ * 1 - rot.offsetZ * 2, dir),
+					PortDef.make(xCoord - dir.offsetX * 1, yCoord, zCoord - dir.offsetZ * 1, dir.getOpposite()),
+					PortDef.make(xCoord - dir.offsetX * 1 + rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 1 + rot.offsetZ * 2, dir.getOpposite()),
+					PortDef.make(xCoord - dir.offsetX * 1 - rot.offsetX * 2, yCoord, zCoord - dir.offsetZ * 1 - rot.offsetZ * 2, dir.getOpposite()),
+					PortDef.make(xCoord + rot.offsetX * 4, yCoord, zCoord + rot.offsetZ * 4, rot),
+					PortDef.make(xCoord, yCoord - 1, zCoord, Library.NEG_Y),
+					PortDef.make(xCoord + rot.offsetX * 2, yCoord - 1, zCoord + rot.offsetZ * 2, Library.NEG_Y),
+					PortDef.make(xCoord - rot.offsetX * 2, yCoord - 1, zCoord - rot.offsetZ * 2, Library.NEG_Y),
+			};
+		}
+		return cachedPorts;
 	}
 
 	//ISidedInventory
@@ -238,7 +253,7 @@ public class TileEntityPASource extends TileEntityCooledBase implements IGUIProv
 	}
 
 	@Override
-	public void receiveControl(NBTTagCompound data) {
+	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
 		if(data.hasKey("cancel")) {
 			this.particle = null;
 			this.state = PAState.IDLE;
@@ -447,5 +462,41 @@ public class TileEntityPASource extends TileEntityCooledBase implements IGUIProv
 			this.defocus -= amount;
 			if(this.defocus < 0) this.defocus = 0;
 		}
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+			PREFIX_VALUE + "status",
+			PREFIX_VALUE + "momentum",
+			PREFIX_VALUE + "defocus",
+			PREFIX_VALUE + "temperature",
+			PREFIX_VALUE + "pfmcold",
+			PREFIX_VALUE + "pfm",
+			PREFIX_FUNCTION + "cancel"
+		};
+	}
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "status").equals(name))		return "" + this.state;
+		if((PREFIX_VALUE + "momentum").equals(name))	return "" + this.lastSpeed;
+		if((PREFIX_VALUE + "defocus").equals(name)) {
+			return this.particle != null ? "" + this.particle.defocus : "0";
+		}
+		if((PREFIX_VALUE + "temperature").equals(name))	return "" + (int) this.temperature;
+		if((PREFIX_VALUE + "pfmcold").equals(name))		return "" + coolantTanks[0].getFill();
+		if((PREFIX_VALUE + "pfm").equals(name))			return "" + coolantTanks[1].getFill();
+		return null;
+	}
+
+	@Override
+	public String runRORFunction(String name, String[] params) {
+
+		if ((PREFIX_FUNCTION + "cancel").equals(name)) {
+			particle = null;
+			state = PAState.IDLE;
+			return null;
+		}
+		return null;
 	}
 }
