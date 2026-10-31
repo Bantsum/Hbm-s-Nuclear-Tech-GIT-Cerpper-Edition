@@ -180,7 +180,8 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		MIKU(		"Hatsune Miku",		"In your wifi, and your heart.", "hbm:block.miku"),
 		NERU(		"Akita Neru",		"Careful, she might electrocute you.", "hbm:block.akita"),
 		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy"), // blerg
-		FATO(		"FAT TETO",			"pls don't bully me", "hbm:block.teto");
+		FATO(		"FAT TETO",			"pls don't bully me", "hbm:block.teto"),
+		COPPER(		"Copper",			"If you see this guy near you it's over.", "hbm:block.copper");
 
 		public String label;
 		public String inscription;

@@ -257,6 +257,9 @@ public class Fluids {
 	public static FluidType DHC;
 	public static FluidType LITHYDRO;
 	public static FluidType LITHCARBONATE;
+	public static FluidType BAJA;
+	public static FluidType BAJA_HOT;
+	public static FluidType DEW;
 
 	/* Legacy names for compatibility purposes */
 	@Deprecated public static FluidType ACID;	//JAOPCA uses this, apparently
@@ -541,6 +544,9 @@ public class Fluids {
 		AIRBLAST =				new FluidType("AIRBLAST",			0xFFDADA, 0, 3, 0, EnumSymbol.NONE).setTemp(1_200).addTraits(GASEOUS);
 		FLUE =					new FluidType("FLUE",				0x131313, 1, 4, 1, EnumSymbol.NONE).addContainers(new CD_Gastank(0xFF4545, 0xFFE97F)).addTraits(new FT_Flammable(25_000), GASEOUS, new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.SOOT, SOOT_GAS * 5));
 		TITANIUM_TETRACHLORIDE =new FluidType("TITANIUM_TETRACHLORIDE",0xDBF796, 3, 0, 2, EnumSymbol.NOWATER).addContainers(new CD_Canister(0xE1E549)).addTraits(LIQUID);
+		BAJA = 					new FluidType("BAJA", 			0x86C9C3, 0, 0,0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
+		BAJA_HOT =				new FluidType("BAJA_HOT",			0xACF1D2, 0, 0, 0, EnumSymbol.NONE).setTemp(600).addTraits(DELICIOUS, LIQUID);
+		DEW = 					new FluidType("DEW", 			0x94C93D, 0, 0,0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
 		
 		// ^ ^ ^ ^ ^ ^ ^ ^
 		//ADD NEW FLUIDS HERE
@@ -586,6 +592,9 @@ public class Fluids {
 		metaOrder.add(GASEOUS_PLUTONIUM_BROMIDE);
 		metaOrder.add(GASEOUS_SCHRABIDIUM_BROMIDE);
 		metaOrder.add(GASEOUS_THORIUM_BROMIDE);
+		metaOrder.add(BAJA);
+		metaOrder.add(BAJA_HOT);
+		metaOrder.add(DEW);
 		//blood
 		metaOrder.add(BLOOD);
 		metaOrder.add(BLOODGAS);
@@ -886,6 +895,9 @@ public class Fluids {
 
 		THORIUM_SALT.addTraits(new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(400, 1, THORIUM_SALT_HOT, 1), new FT_PWRModerator(2.5D));
 		THORIUM_SALT_HOT.addTraits(new FT_Coolable(THORIUM_SALT_DEPLETED, 1, 1, 400).setEff(CoolingType.HEATEXCHANGER, 1.0D));
+
+		BAJA.addTraits(new FT_Heatable().setEff(HeatingType.HEATEXCHANGER, 1.0D).setEff(HeatingType.PWR, 1.30D).setEff(HeatingType.ICF, 1.50D).addStep(600, 1, BAJA_HOT, 1), new FT_PWRModerator(1.25D));
+		BAJA_HOT.addTraits(new FT_Coolable(BAJA, 1, 1, 600).setEff(CoolingType.HEATEXCHANGER, 1.0D));
 
 		if(idMapping.size() != metaOrder.size()) {
 			throw new IllegalStateException("A severe error has occoured during NTM's fluid registering process! The MetaOrder and Mappings are inconsistent! Mapping size: " + idMapping.size()+ " / MetaOrder size: " + metaOrder.size());

@@ -277,6 +277,7 @@ public class SolarSystem {
 						.withOrbitalParameters(32_301, 0.0534F, 0.0F, 4.02F, 284.0F)
 						.withRotationalPeriod(306_443)
 						.withColor(0.757F, 0.765F, 0.773F)
+						.withMinProcessingLevel(3)
 						.withTraits(new CBT_Atmosphere(Fluids.NITROGEN, 0.005F), new CBT_BATTLEFIELD())
 						.withBlockTextures(RefStrings.MODID + ":textures/blocks/sellafield_slaked_3.png", RefStrings.MODID + ":textures/blocks/sellafield_slaked.png")
 						.withIce(true),
